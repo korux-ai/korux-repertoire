@@ -1,22 +1,31 @@
 {
   "spec_version": "korux_governor_v1",
-  "capability_id": "notion",
+  "capability_id": "notion/pages",
   "capability_version": "1.0.0",
   "defaults": {
     "intercept_on_invoke": true,
-    "editable_fields": ["title", "body"]
+    "editable_fields": [
+      "title",
+      "body"
+    ]
   },
   "rules": [
     {
       "id": "block_empty_body",
-      "when": { "args.body": { "empty": true } },
+      "when": {
+        "args.body": {
+          "empty": true
+        }
+      },
       "action": "reject",
       "code": "VALIDATION",
       "message": "Notion 正文为空；须使用上游步骤产出"
     },
     {
       "id": "require_human_by_default",
-      "when": { "writes_external": true },
+      "when": {
+        "writes_external": true
+      },
       "action": "intercept",
       "gate": "require_human",
       "message": "写入 Notion 前须人工确认"

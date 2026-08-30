@@ -1,22 +1,32 @@
 {
   "spec_version": "korux_governor_v1",
-  "capability_id": "place-trade-order",
+  "capability_id": "alpaca/place-order",
   "capability_version": "1.0.0",
   "defaults": {
     "intercept_on_invoke": true,
-    "editable_fields": ["symbol", "side", "quantity"]
+    "editable_fields": [
+      "symbol",
+      "side",
+      "quantity"
+    ]
   },
   "rules": [
     {
       "id": "quantity_over_workspace_limit",
-      "when": { "args.quantity": { "exceeds_workspace_max": true } },
+      "when": {
+        "args.quantity": {
+          "exceeds_workspace_max": true
+        }
+      },
       "action": "intercept",
       "policy_id": "external.quantity_limit",
       "message": "交易数量超过工作区上限，须人工审批"
     },
     {
       "id": "require_human_by_default",
-      "when": { "writes_external": true },
+      "when": {
+        "writes_external": true
+      },
       "action": "intercept",
       "gate": "require_human",
       "message": "下单前须人工确认"

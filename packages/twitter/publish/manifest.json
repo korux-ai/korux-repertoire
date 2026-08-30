@@ -1,6 +1,6 @@
 {
   "spec_version": "korux_capability_v1",
-  "id": "twitter",
+  "id": "twitter/publish",
   "version": "1.0.0",
   "kind": "connector",
   "label": "Twitter / X post",
@@ -11,31 +11,52 @@
   "boundary": "External",
   "default_gate": "require_human",
   "risk": "medium",
-  "aliases": ["x"],
+  "aliases": [
+    "x"
+  ],
   "produces_content": false,
   "propose_guide": "External post after Internal compose/summarize: tweet body must be upstream structured output, not the task NL verbatim. Optional image_file_id from a prior file step.",
   "input_schema": {
     "type": "object",
-    "required": ["content"],
+    "required": [
+      "content"
+    ],
     "properties": {
-      "content": { "type": "string", "maxLength": 280 },
-      "image_file_id": { "type": "string" }
+      "content": {
+        "type": "string",
+        "maxLength": 280
+      },
+      "image_file_id": {
+        "type": "string"
+      }
     }
   },
   "output_schema": {
     "type": "object",
     "properties": {
-      "ok": { "type": "boolean" },
-      "tweet_id": { "type": "string" },
-      "content": { "type": "string" },
-      "summary": { "type": "string" }
+      "ok": {
+        "type": "boolean"
+      },
+      "tweet_id": {
+        "type": "string"
+      },
+      "content": {
+        "type": "string"
+      },
+      "summary": {
+        "type": "string"
+      }
     }
   },
   "params": [
     {
       "name": "content",
       "required": true,
-      "sources": ["upstream", "step_field", "nl_fixed"],
+      "sources": [
+        "upstream",
+        "step_field",
+        "nl_fixed"
+      ],
       "description": "推文正文；须来自上游起草步骤，不得使用任务 NL 原文",
       "example_nl": "把上一步摘要发到 Twitter",
       "propose_hint": "Set step field `content` from a prior compose/summarize step. Do not paste task NL as the tweet.",
@@ -44,7 +65,10 @@
     {
       "name": "image_file_id",
       "required": false,
-      "sources": ["step_field", "upstream"],
+      "sources": [
+        "step_field",
+        "upstream"
+      ],
       "description": "可选工作区图片 file_id（JPEG/PNG，一张）",
       "confirm_if_missing": false
     }
@@ -52,14 +76,18 @@
   "editable_governor_config": {
     "blocked_keywords": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "label": "禁止关键字",
       "description": "推文含子串（大小写不敏感）则 reject",
       "default": []
     },
     "blocked_url_hosts": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "label": "禁止链接域名",
       "description": "文案中 http(s) URL 的 host 命中则 reject",
       "default": []
@@ -85,14 +113,37 @@
   },
   "auth": {
     "required": true,
-    "binding_tool": "twitter",
+    "binding_tool": "twitter/publish",
     "secret_kind": "twitter",
     "credential_doc": "docs/credential.md",
     "fields": [
-      { "name": "api_key", "label": "API key (Consumer)", "type": "text", "required": true },
-      { "name": "api_secret", "label": "API secret (Consumer)", "type": "password", "required": true, "sensitive": true },
-      { "name": "access_token", "label": "Access token", "type": "password", "required": true, "sensitive": true },
-      { "name": "access_token_secret", "label": "Access token secret", "type": "password", "required": true, "sensitive": true }
+      {
+        "name": "api_key",
+        "label": "API key (Consumer)",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "api_secret",
+        "label": "API secret (Consumer)",
+        "type": "password",
+        "required": true,
+        "sensitive": true
+      },
+      {
+        "name": "access_token",
+        "label": "Access token",
+        "type": "password",
+        "required": true,
+        "sensitive": true
+      },
+      {
+        "name": "access_token_secret",
+        "label": "Access token secret",
+        "type": "password",
+        "required": true,
+        "sensitive": true
+      }
     ]
   },
   "runtime": {
@@ -101,8 +152,8 @@
     "timeout_ms": 60000,
     "idempotent": false
   },
-  "invoke_tool": "twitter",
-  "binding_tool": "twitter",
+  "invoke_tool": "twitter/publish",
+  "binding_tool": "twitter/publish",
   "status": "beta",
   "trust": "first-party"
 }

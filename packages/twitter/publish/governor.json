@@ -1,57 +1,86 @@
 {
   "spec_version": "korux_governor_v1",
-  "capability_id": "twitter",
+  "capability_id": "twitter/publish",
   "capability_version": "1.0.0",
   "defaults": {
     "intercept_on_invoke": true,
-    "editable_fields": ["content", "image_file_id"]
+    "editable_fields": [
+      "content",
+      "image_file_id"
+    ]
   },
   "rules": [
     {
       "id": "block_empty_content",
-      "when": { "args.content": { "empty": true } },
+      "when": {
+        "args.content": {
+          "empty": true
+        }
+      },
       "action": "reject",
       "code": "VALIDATION",
       "message": "推文正文为空；须使用上游步骤产出"
     },
     {
       "id": "block_denied_keywords",
-      "when": { "args.content": { "matches_any_owner": "blocked_keywords" } },
+      "when": {
+        "args.content": {
+          "matches_any_owner": "blocked_keywords"
+        }
+      },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
       "message": "推文包含禁止关键字"
     },
     {
       "id": "block_denied_url_hosts",
-      "when": { "args.content": { "url_host_in_owner": "blocked_url_hosts" } },
+      "when": {
+        "args.content": {
+          "url_host_in_owner": "blocked_url_hosts"
+        }
+      },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
       "message": "推文包含禁止的链接域名"
     },
     {
       "id": "block_over_max_chars",
-      "when": { "args.content": { "length_gt_owner": "max_chars" } },
+      "when": {
+        "args.content": {
+          "length_gt_owner": "max_chars"
+        }
+      },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
       "message": "推文超过 Owner 设定的字数上限"
     },
     {
       "id": "block_over_max_mentions",
-      "when": { "args.content": { "mentions_gt_owner": "max_mentions" } },
+      "when": {
+        "args.content": {
+          "mentions_gt_owner": "max_mentions"
+        }
+      },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
       "message": "推文 @ 次数超过上限"
     },
     {
       "id": "require_image_when_configured",
-      "when": { "args.image_file_id": { "empty_when_owner_true": "require_image" } },
+      "when": {
+        "args.image_file_id": {
+          "empty_when_owner_true": "require_image"
+        }
+      },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
       "message": "Owner 要求发帖必须带图"
     },
     {
       "id": "require_human_by_default",
-      "when": { "writes_external": true },
+      "when": {
+        "writes_external": true
+      },
       "action": "intercept",
       "gate": "require_human",
       "message": "发布推文前须人工确认"

@@ -10,32 +10,39 @@ Trust levels, PR review, and safety rails follow the Korux [contributor-guide](h
 
 ```text
 korux-repertoire/
-  packages/              # capability packages; _template is scaffolding, not in the release catalog
-    send-email/          # runtime.entry may still point at Korux modules
-    web-research/
-    twitter/             # runtime.invoke (X API)
-    facebook/            # runtime.invoke (Graph API)
-    place-trade-order/   # runtime.invoke (Alpaca paper)
-    notion/              # runtime.invoke (Notion API)
-    zoom/                # runtime.invoke (Zoom OAuth + users/me)
-    _template/
-  schemas/               # optional: manifest / governor JSON Schema
-  scripts/               # validate_all.sh · package_release.sh
-  .github/workflows/     # CI (PR/push) and tag Release
+  packages/
+    <namespace>/<name>/   # stable id = namespace/name (e.g. twitter/publish)
+      manifest.json
+      governor.json
+      runtime/            # optional package-local invoke
+      docs/
+    _template/            # scaffolding only; not in release zip
+  scripts/                # validate_all.sh · package_release.sh
+  .github/workflows/
   CONTRIBUTING.md
   LICENSE
   README.md
 ```
 
-`send-email` / `web-research` may keep `runtime.entry` as `korux.modules.*`. First-party packages with live vendor HTTP (`twitter`, `facebook`, `place-trade-order`, `notion`, `zoom`) ship executable `runtime/` in this repo. Google Meet / Microsoft Teams stay out until Korux has a non-mock live path.
+Current packages:
+
+| id | notes |
+|----|--------|
+| `general/mail` | SMTP send (may keep `korux.modules.*` entry) |
+| `tavily/web-search` | Tavily web research |
+| `twitter/publish` | X API post (`runtime.invoke`) |
+| `facebook/publish` | Graph API post |
+| `alpaca/place-order` | Alpaca paper trade |
+| `notion/pages` | Notion page create |
+| `zoom/account` | Zoom OAuth + users/me |
+
+Google Meet / Microsoft Teams stay out until Korux has a non-mock live path. Platform kernel skills (`korux/*`) live in the Korux main repo, not here.
 
 ## Consumption
 
 1. Download `korux-repertoire-vX.Y.Z.zip` from [Releases](https://github.com/korux-ai/korux-repertoire/releases).
 2. Validate, then unpack into the Korux workspace at `.data/capability/repertoire-vX.Y.Z/`.
-3. Workflow / Run pin `repertoire_ref` (`builtin` or `vX.Y.Z`). With no imported remote catalog, Korux falls back to main-repo builtin `packages/`.
-
-The public catalog is a superset; main-repo `packages/` is the offline first-party subset. Moving from `builtin` to a tag requires an explicit import and pin change — never a silent swap. Existing workflows keep their ref; new flows inherit the workspace default pin.
+3. Workflow / Run pin `repertoire_ref` (`builtin` or `vX.Y.Z`). Catalog = Korux **core** (`packages/korux/*`) ∪ selected release.
 
 A package on disk is not enough to invoke: catalog **enabled**, staff Vault binding, and trust level still apply. In-package `runtime/` is loaded by Korux from `runtime.entry` (**first-party** only).
 
@@ -43,7 +50,7 @@ A package on disk is not enough to invoke: catalog **enabled**, staff Vault bind
 
 ```bash
 ./scripts/validate_all.sh
-./scripts/package_release.sh v0.2.0
+./scripts/package_release.sh v0.4.0
 ```
 
 Pushing tag `vX.Y.Z` uploads the zip to [Releases](https://github.com/korux-ai/korux-repertoire/releases) via Actions.

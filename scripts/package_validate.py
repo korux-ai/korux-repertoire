@@ -186,8 +186,10 @@ def validate_manifest(manifest: dict[str, Any], *, path: str = "manifest") -> li
         errors.append(f"{path}: spec_version must be {CAPABILITY_SPEC_VERSION!r}")
 
     cid = str(manifest.get("id") or "")
-    if cid and not re.fullmatch(r"[a-z0-9][a-z0-9-]*", cid):
-        errors.append(f"{path}: id must be kebab-case")
+    if cid and not re.fullmatch(r"[a-z0-9][a-z0-9-]*(?:/[a-z0-9][a-z0-9-]*)?", cid):
+        errors.append(
+            f"{path}: id must be kebab-case or namespace/name (e.g. twitter/publish)"
+        )
 
     version = str(manifest.get("version") or "")
     if version and not re.fullmatch(r"\d+\.\d+\.\d+", version):
