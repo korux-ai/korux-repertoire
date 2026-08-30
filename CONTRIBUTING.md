@@ -40,6 +40,18 @@ PR 必须过 Korux 评审清单（本仓不另写一套规则）：
 
 完整步骤见 [新增能力流程](https://github.com/korux-ai/korux/blob/main/docs/spec/capability-package/contributor-guide.md#2-新增能力流程)。若必须改 Korux 内核接口，另开主仓 RFC，与本仓能力包 PR 分离。
 
+## 许可与 DCO
+
+本仓为 Apache-2.0。提交即视为 **inbound = outbound**：贡献按同一许可证授权，不附加额外条款（除非事先另有书面约定）。
+
+每个 commit 须含 Developer Certificate of Origin 署名，例如：
+
+```text
+Signed-off-by: Your Name <you@example.com>
+```
+
+Git 可用 `git commit -s`。禁止提交密钥、token、真实 PII。许可证不含 Korux 商标。
+
 ## 发版
 
 维护者推送不可变 tag `vX.Y.Z`。GitHub Actions `release.yml` 会校验、打 `korux-repertoire-vX.Y.Z.zip` 并挂到 Release（附 `SHA256SUMS`）。生产禁止依赖浮动 `latest`。

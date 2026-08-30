@@ -29,10 +29,11 @@ for dir in "$ROOT"/packages/*/; do
   fi
   cp -R "$dir" "$STAGE/packages/$name"
 done
+find "$STAGE" \( -name '__pycache__' -o -name '*.pyc' -o -name '.DS_Store' \) -exec rm -rf {} + 2>/dev/null || true
 
 (
   cd "$STAGE"
-  zip -r "$ZIP_PATH" packages
+  zip -r "$ZIP_PATH" packages -x '*/__pycache__/*' -x '*.pyc' -x '*/.DS_Store'
 )
 
 (

@@ -2,6 +2,8 @@
 
 官方 Korux 能力目录。本仓发布 **catalog 快照**（manifest、governor、凭证说明，以及 first-party 包内 `runtime/`）；Korux 只消费 **锁定的 GitHub Release zip**，不依赖浮动 `latest`。
 
+SPDX-License-Identifier: Apache-2.0
+
 信任分级、PR 评审与安全红线以 Korux [contributor-guide](https://github.com/korux-ai/korux/blob/main/docs/spec/capability-package/contributor-guide.md) 为准。包字段见 [package-manifest](https://github.com/korux-ai/korux/blob/main/docs/spec/capability-package/package-manifest.md)。
 
 ## 目录
@@ -18,6 +20,7 @@ korux-repertoire/
   scripts/               # validate_all.sh · package_release.sh
   .github/workflows/     # CI（PR/push）与 tag Release
   CONTRIBUTING.md
+  LICENSE
   README.md
 ```
 
@@ -45,3 +48,7 @@ korux-repertoire/
 ## 贡献
 
 见 [CONTRIBUTING.md](./CONTRIBUTING.md)。
+
+## 许可
+
+本仓库以 [Apache License 2.0](./LICENSE) 授权（SPDX: `Apache-2.0`）。本许可证 **不** 授予 Korux 名称、商标或标识的使用权。官方 `trust: first-party` 发版与审核仍由 Korux 维护者执行；合并进本仓不等于默认可在生产 invoke。

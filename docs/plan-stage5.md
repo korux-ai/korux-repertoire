@@ -136,7 +136,7 @@ Governor 硬底线（Owner **不可**关掉）：空正文 reject；`writes_exte
 - [x] 实现 `runtime/`（纯文本发帖、单图上传+发帖、可选 HTTP mock）
 - [x] `validate_all.sh` 绿。仅当 `runtime.entry` 为包相对路径（本阶段固定 `runtime.invoke`）时，要求存在 `runtime/invoke.py` 且导出 `invoke`；`send-email` / `web-research` 的 `korux.modules.*` 入口不要求包内 `runtime/`
 - [x] 更新 README / CONTRIBUTING：本仓发版含 first-party `runtime/`，不再写「只收 manifest+governor」
-- [ ] merge 后打 tag `v0.2.0`，确认 zip 含四包：`send-email`、`web-research`、`twitter`、`facebook`（无 `_template`）
+- [x] merge 后打 tag `v0.2.0`，确认 zip 含四包：`send-email`、`web-research`、`twitter`、`facebook`（无 `_template`）
 
 ---
 
