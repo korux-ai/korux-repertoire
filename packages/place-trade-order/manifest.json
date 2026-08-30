@@ -1,0 +1,79 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "place-trade-order",
+  "version": "1.0.0",
+  "kind": "connector",
+  "label": "Place trade order",
+  "description": "Submit a market order to Alpaca paper trading after Vault binding and Governor gate (not a local stub)",
+  "category": "trading",
+  "reads_external": false,
+  "writes_external": true,
+  "boundary": "External",
+  "default_gate": "require_human",
+  "risk": "high",
+  "produces_content": false,
+  "propose_guide": "Gated paper trade only. Set symbol, side, and quantity from NL or step fields. Live Alpaca URLs are refused.",
+  "input_schema": {
+    "type": "object",
+    "required": ["symbol", "side", "quantity"],
+    "properties": {
+      "symbol": { "type": "string", "maxLength": 16 },
+      "side": { "type": "string", "enum": ["buy", "sell"] },
+      "quantity": { "type": "number", "minimum": 0.0001 }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "ok": { "type": "boolean" },
+      "order_id": { "type": "string" },
+      "order_status": { "type": "string" },
+      "summary": { "type": "string" }
+    }
+  },
+  "params": [
+    {
+      "name": "symbol",
+      "required": true,
+      "sources": ["nl_fixed", "step_field"],
+      "description": "Ticker symbol",
+      "example_nl": "Buy 1 share of AAPL on paper",
+      "confirm_if_missing": true
+    },
+    {
+      "name": "side",
+      "required": true,
+      "sources": ["nl_fixed", "step_field"],
+      "description": "buy or sell",
+      "confirm_if_missing": true
+    },
+    {
+      "name": "quantity",
+      "required": true,
+      "sources": ["nl_fixed", "step_field"],
+      "description": "Positive quantity",
+      "confirm_if_missing": true
+    }
+  ],
+  "auth": {
+    "required": true,
+    "binding_tool": "place-trade-order",
+    "secret_kind": "broker",
+    "credential_doc": "docs/credential.md",
+    "fields": [
+      { "name": "api_key", "label": "API key", "type": "password", "required": true, "sensitive": true },
+      { "name": "api_secret", "label": "API secret", "type": "password", "required": true, "sensitive": true },
+      { "name": "base_url", "label": "Paper API base URL (optional)", "type": "text", "required": false, "default_value": "https://paper-api.alpaca.markets" }
+    ]
+  },
+  "runtime": {
+    "entry": "runtime.invoke",
+    "transport": "in_process",
+    "timeout_ms": 30000,
+    "idempotent": false
+  },
+  "invoke_tool": "place-trade-order",
+  "binding_tool": "place-trade-order",
+  "status": "stable",
+  "trust": "first-party"
+}

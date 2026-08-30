@@ -11,10 +11,13 @@ Trust levels, PR review, and safety rails follow the Korux [contributor-guide](h
 ```text
 korux-repertoire/
   packages/              # capability packages; _template is scaffolding, not in the release catalog
-    send-email/          # runtime.entry still points at Korux modules
+    send-email/          # runtime.entry may still point at Korux modules
     web-research/
-    twitter/             # includes runtime.invoke
-    facebook/
+    twitter/             # runtime.invoke (X API)
+    facebook/            # runtime.invoke (Graph API)
+    place-trade-order/   # runtime.invoke (Alpaca paper)
+    notion/              # runtime.invoke (Notion API)
+    zoom/                # runtime.invoke (Zoom OAuth + users/me)
     _template/
   schemas/               # optional: manifest / governor JSON Schema
   scripts/               # validate_all.sh · package_release.sh
@@ -24,7 +27,7 @@ korux-repertoire/
   README.md
 ```
 
-`send-email` / `web-research` keep `runtime.entry` as `korux.modules.*`. First-party posting packages such as `twitter` / `facebook` ship executable `runtime/` in this repo.
+`send-email` / `web-research` may keep `runtime.entry` as `korux.modules.*`. First-party packages with live vendor HTTP (`twitter`, `facebook`, `place-trade-order`, `notion`, `zoom`) ship executable `runtime/` in this repo. Google Meet / Microsoft Teams stay out until Korux has a non-mock live path.
 
 ## Consumption
 
