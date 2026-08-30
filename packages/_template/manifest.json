@@ -1,0 +1,26 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "example-connector",
+  "version": "0.1.0",
+  "kind": "connector",
+  "label": "Example connector",
+  "description": "Template capability package for contributors",
+  "category": "other",
+  "reads_external": false,
+  "writes_external": true,
+  "boundary": "External",
+  "default_gate": "require_human",
+  "risk": "medium",
+  "auth": {
+    "required": false,
+    "binding_tool": "example-connector"
+  },
+  "runtime": {
+    "entry": "runtime.invoke",
+    "transport": "in_process",
+    "timeout_ms": 30000,
+    "idempotent": false
+  },
+  "status": "beta",
+  "trust": "community"
+}

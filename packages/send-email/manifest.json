@@ -1,0 +1,91 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "send-email",
+  "version": "1.0.0",
+  "kind": "connector",
+  "label": "Send email",
+  "description": "Send email via SMTP after Vault binding and Governor gate",
+  "category": "email",
+  "reads_external": false,
+  "writes_external": true,
+  "boundary": "External",
+  "default_gate": "require_human",
+  "risk": "medium",
+  "aliases": ["smtp"],
+  "produces_content": false,
+  "propose_guide": "External send after Internal summarize/read steps: email body must be upstream structured output, not the task NL verbatim.",
+  "input_schema": {
+    "type": "object",
+    "required": ["to", "subject", "body"],
+    "properties": {
+      "to": { "type": "string", "format": "email" },
+      "subject": { "type": "string", "maxLength": 200 },
+      "body": { "type": "string", "maxLength": 20000 }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "ok": { "type": "boolean" },
+      "to": { "type": "string" }
+    }
+  },
+  "params": [
+    {
+      "name": "to",
+      "required": true,
+      "sources": ["nl_fixed", "step_field", "runtime_override", "trigger"],
+      "description": "收件人邮箱地址",
+      "example_nl": "发邮件到 legal@company.com 通知法务团队",
+      "propose_hint": "When NL names a recipient, set step field `to` to a valid email. Team or role names without @ are NOT enough.",
+      "trigger_match": {
+        "kinds": ["monitor"],
+        "connectors": ["inbound-email-monitor", "inbound_email", "inbound-email", "inbound"]
+      },
+      "confirm_if_missing": true
+    },
+    {
+      "name": "body",
+      "required": true,
+      "sources": ["upstream", "trigger"],
+      "description": "邮件正文；须来自上游步骤产出或入站 trigger，不得使用任务 NL 原文",
+      "example_nl": "邮件正文使用上一步的结构化摘要",
+      "propose_hint": "Do not paste task NL as body; prior llm-summarize / read / web-research step must feed this step.",
+      "trigger_match": {
+        "kinds": ["monitor", "file_arrival"],
+        "connectors": ["inbound-email-monitor", "inbound_email", "inbound-email", "inbound"]
+      },
+      "confirm_if_missing": true
+    },
+    {
+      "name": "subject",
+      "required": false,
+      "sources": ["upstream", "nl_fixed", "step_field", "default"],
+      "description": "邮件主题；缺省时可取上游输出首行",
+      "confirm_if_missing": false
+    }
+  ],
+  "auth": {
+    "required": true,
+    "binding_tool": "send-email",
+    "secret_kind": "smtp",
+    "fields": [
+      { "name": "host", "label": "Host", "type": "text", "required": true },
+      { "name": "port", "label": "Port", "type": "number", "required": true, "default_value": "587" },
+      { "name": "username", "label": "Username", "type": "text", "required": true },
+      { "name": "password", "label": "Password", "type": "password", "required": true, "sensitive": true },
+      { "name": "from", "label": "From", "type": "text", "required": true },
+      { "name": "use_tls", "label": "Use TLS", "type": "checkbox", "default_value": "true" }
+    ]
+  },
+  "runtime": {
+    "entry": "korux.modules.connectors.proxy._send_email",
+    "transport": "in_process",
+    "timeout_ms": 30000,
+    "idempotent": false
+  },
+  "invoke_tool": "send-email",
+  "binding_tool": "send-email",
+  "status": "stable",
+  "trust": "first-party"
+}

@@ -1,0 +1,71 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "web-research",
+  "version": "1.0.0",
+  "kind": "connector",
+  "label": "Web research",
+  "description": "Search the public web via Tavily and return ranked snippets for downstream summarize steps",
+  "category": "research",
+  "reads_external": true,
+  "writes_external": false,
+  "boundary": "External",
+  "default_gate": "auto",
+  "risk": "low",
+  "produces_content": true,
+  "propose_guide": "Separate step before llm-summarize when NL asks to search the web. Set `query` on the step when NL states a fixed search theme.",
+  "input_schema": {
+    "type": "object",
+    "required": ["query"],
+    "properties": {
+      "query": { "type": "string", "maxLength": 500 },
+      "max_results": { "type": "integer", "minimum": 1, "maximum": 10 }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "required": ["content"],
+    "properties": {
+      "content": { "type": "string" },
+      "summary": { "type": "string" },
+      "results": { "type": "array" }
+    }
+  },
+  "params": [
+    {
+      "name": "query",
+      "required": true,
+      "sources": ["upstream", "nl_fixed", "step_field"],
+      "description": "搜索关键词；通常来自上一步邮件/任务正文，或在 NL 中写明固定主题",
+      "example_nl": "根据邮件主题与正文关键词搜索公开资料",
+      "propose_hint": "Set step field `query` when NL names a fixed search theme; otherwise place after email/read step for upstream keywords.",
+      "confirm_if_missing": true
+    },
+    {
+      "name": "max_results",
+      "required": false,
+      "sources": ["default", "nl_fixed", "step_field"],
+      "description": "返回结果条数上限",
+      "default_value": 5,
+      "confirm_if_missing": false
+    }
+  ],
+  "auth": {
+    "required": true,
+    "binding_tool": "web-research",
+    "secret_kind": "web-research",
+    "fields": [
+      { "name": "api_key", "label": "Tavily API key", "type": "password", "required": true, "sensitive": true },
+      { "name": "provider", "label": "Provider", "type": "text", "default_value": "tavily" }
+    ]
+  },
+  "runtime": {
+    "entry": "korux.modules.connectors.web_research_api.search_web",
+    "transport": "in_process",
+    "timeout_ms": 45000,
+    "idempotent": true
+  },
+  "invoke_tool": "web-research",
+  "binding_tool": "web-research",
+  "status": "beta",
+  "trust": "first-party"
+}

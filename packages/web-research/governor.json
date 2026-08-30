@@ -1,0 +1,18 @@
+{
+  "spec_version": "korux_governor_v1",
+  "capability_id": "web-research",
+  "capability_version": "1.0.0",
+  "defaults": {
+    "intercept_on_invoke": false,
+    "editable_fields": ["query", "max_results"]
+  },
+  "rules": [
+    {
+      "id": "reject_empty_query",
+      "when": { "args.query": { "empty": true } },
+      "action": "reject",
+      "code": "VALIDATION",
+      "message": "搜索关键词为空；请在上游步骤提供查询文本"
+    }
+  ]
+}
