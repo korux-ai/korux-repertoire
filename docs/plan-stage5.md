@@ -103,15 +103,36 @@ packages/twitter/
 
 `facebook` 同结构，无 `oauth1.py`。`packages/_template` 本阶段可补一节「runtime 签名」说明，不把示例当成可发版包。
 
-Governor：空正文 reject；`writes_external` → intercept + `require_human`。`editable_fields` 为 `content` / `message`，以及可选 `image_file_id`。人审卡须展示文案；有图时展示文件名（及平台已有的预览，若有）。
+Governor 硬底线（Owner **不可**关掉）：空正文 reject；`writes_external` → intercept + `require_human`。`editable_fields` 为 `content` / `message`，以及可选 `image_file_id`。人审卡须展示文案；有图时展示文件名（及平台已有的预览，若有）。
+
+每日发帖上限、静默时段不放在本能力 governor（属 Workflow `per_window`）。必带 hashtag、法律免责声明、PII/LLM 审核不在本阶段。
+
+### Owner 可配（`editable_governor_config`）
+
+两包均声明下列字段；空列表 / 未填表示该项不额外收紧。求值用 `$owner.*`，命中则 **reject**（不调用供应商）。配置只可加严，不可放宽硬底线。
+
+| 字段 | 类型 | 默认 | 规则 |
+|------|------|------|------|
+| `blocked_keywords` | string[] | `[]` | 文案（`content` / `message`）含子串（大小写不敏感）则 reject |
+| `blocked_url_hosts` | string[] | `[]` | 从文案解析 `http(s)` URL；host 小写后若在列表中则 reject |
+| `max_chars` | integer | twitter `280`；facebook `5000` | 文案长度超过则 reject；默认不超过平台上限（X 280） |
+
+可选（本阶段写入 manifest，默认不收紧）：
+
+| 字段 | 类型 | 默认 | 规则 |
+|------|------|------|------|
+| `max_mentions` | integer | 不限制（字段缺省或 `null`） | 文案中 `@` 次数超过则 reject |
+| `require_image` | boolean | `false` | `true` 且无有效 `image_file_id` / `context.image` 则 reject |
+
+主仓 invoke 前把绑定上的 `owner_config` 传入能力 governor（与 `web-research` 禁搜词同一路径）。
 
 ---
 
 ## 本仓任务清单
 
 - [ ] 从 `_template` 建立 `packages/twitter`、`packages/facebook`
-- [ ] 填写 manifest（I/O、schema、auth、params、`runtime.entry=runtime.invoke`、trust）
-- [ ] 写 governor + `docs/credential.md` + README + CHANGELOG
+- [ ] 填写 manifest（I/O、schema、auth、params、`editable_governor_config`、`runtime.entry=runtime.invoke`、trust）
+- [ ] 写 governor（硬底线 + `$owner` 禁词 / 禁域名 / 字数；可选 mentions / 须带图）+ `docs/credential.md` + README + CHANGELOG
 - [ ] 实现 `runtime/`（纯文本发帖、单图上传+发帖、可选 HTTP mock）
 - [ ] `validate_all.sh` 绿。仅当 `runtime.entry` 为包相对路径（本阶段固定 `runtime.invoke`）时，要求存在 `runtime/invoke.py` 且导出 `invoke`；`send-email` / `web-research` 的 `korux.modules.*` 入口不要求包内 `runtime/`
 - [ ] 更新 README / CONTRIBUTING：本仓发版含 first-party `runtime/`，不再写「只收 manifest+governor」
@@ -127,7 +148,8 @@ Governor：空正文 reject；`writes_external` → intercept + `require_human`�
 2. **Connector 表：** 磁盘包 overlay 后 `get_connector("facebook")` 可用（从 catalog 推导 External + requires_secret，避免只认 `BUILTINS`）。
 3. **Vault：** `facebook` 模板与 `twitter` 字段与包内 `auth.fields` 一致（当前主仓 Vault 无 twitter 专用模板时一并补）。
 4. **文件注入：** 有 `image_file_id` 时从工作区读文件，校验 JPEG/PNG 后把字节放入 `context.image`；缺失或类型不符则 fail-closed，不调用供应商。
-5. **验收：** 导入 `v0.2.0` → 工作区默认 pin → 启用 + 绑定 → 人审后真实发帖（纯文本与单图各至少一条，或 mock 关时对测试账号）；旧 Spec 仍钉 `v0.1.0` / `builtin`，看不到 facebook。
+5. **Governor 绑定：** overlay 后的 twitter / facebook 暴露 `editable_governor_config`；invoke 前合并 `owner_config` 求值（与 web-research 禁搜词同一路径）。
+6. **验收：** 导入 `v0.2.0` → 工作区默认 pin → 启用 + 绑定 → 人审后真实发帖（纯文本与单图各至少一条，或 mock 关时对测试账号）；旧 Spec 仍钉 `v0.1.0` / `builtin`，看不到 facebook。
 
 ---
 
@@ -136,6 +158,7 @@ Governor：空正文 reject；`writes_external` → intercept + `require_human`�
 - LinkedIn、Instagram（见下文「后续 `v0.3.0`」，不进本阶段 zip / 验收）
 - 多图、GIF/视频、从公网 URL 拉图、invoke 内 base64 图
 - 读评论、回评论、线程、删帖（后续独立能力，不塞进发帖包）
+- 能力包内做每日发帖上限、静默时段、必带 hashtag、PII/LLM 审核
 - 把 twitter/facebook 拷进主仓 git `packages/`（builtin 不强制同步；离线无导入则 facebook 不可用）
 - 社区包动态加载任意代码（本阶段仅官方 first-party zip）
 - 浮动 `latest`
