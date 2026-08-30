@@ -308,4 +308,31 @@ def validate_package_dir(package_dir: Path) -> list[str]:
             errors.append(f"{root}: auth.required=true requires docs/credential.md")
 
     errors.extend(validate_params(manifest.get("params"), path="params", manifest=manifest))
+    errors.extend(_validate_package_runtime(root, manifest))
     return errors
+
+
+def _is_package_relative_entry(entry: str) -> bool:
+    e = str(entry or "").strip()
+    if not e or e.startswith("korux."):
+        return False
+    return e == "runtime.invoke" or e.startswith("runtime.")
+
+
+def _validate_package_runtime(root: Path, manifest: dict[str, Any]) -> list[str]:
+    runtime = manifest.get("runtime")
+    if not isinstance(runtime, dict):
+        return []
+    entry = str(runtime.get("entry") or "").strip()
+    if not _is_package_relative_entry(entry):
+        return []
+    invoke_py = root / "runtime" / "invoke.py"
+    if not invoke_py.is_file():
+        return [f"{root}: runtime.entry {entry!r} requires runtime/invoke.py"]
+    try:
+        text = invoke_py.read_text(encoding="utf-8")
+    except OSError as exc:
+        return [f"{invoke_py}: {exc}"]
+    if not re.search(r"^(async\s+)?def\s+invoke\b", text, re.MULTILINE):
+        return [f"{invoke_py}: must define invoke"]
+    return []

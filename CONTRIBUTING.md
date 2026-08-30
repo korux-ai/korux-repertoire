@@ -1,6 +1,6 @@
 # Contributing to korux-repertoire
 
-本仓只收 **Capability Package**（manifest + governor + docs）。运行时由 Korux 消费锁定 Release zip。权威规则在 Korux 规范，本文件只作入口。
+本仓收 **Capability Package**：manifest、governor、docs；first-party 写外联包还须含可执行 `runtime/`。Korux 消费锁定 Release zip。权威规则在 Korux 规范，本文件只作入口。
 
 ## 本地校验
 
@@ -10,12 +10,12 @@
 python3 scripts/validate_capability_package.py packages/<id>
 ```
 
-`packages/_template` 不进 catalog / Release，不当生产包校验。
+`packages/_template` 不进 catalog / Release，不当生产包校验。`runtime.entry` 为 `runtime.invoke` 时须存在 `runtime/invoke.py` 并定义 `invoke`；`korux.modules.*` 入口不要求包内 `runtime/`。
 
 打包（不提交 `dist/`）：
 
 ```bash
-./scripts/package_release.sh v0.1.0
+./scripts/package_release.sh v0.2.0
 ```
 
 ## 写外联与 Governor
@@ -33,9 +33,10 @@ PR 必须过 Korux 评审清单（本仓不另写一套规则）：
 ## 新增包
 
 1. 复制 `packages/_template/` 为 `packages/<kebab-id>/`。
-2. 填写 `manifest.json`（或 yaml）：`id`、`version`、I/O 外联标志、schema、auth、`default_gate`。
+2. 填写 `manifest.json`：`id`、`version`、I/O 外联标志、schema、auth、`params`、`default_gate`。first-party 发帖包 `runtime.entry=runtime.invoke`。
 3. `writes_external=true` 时编写 governor；`auth.required=true` 时编写 `docs/credential.md`。
-4. 本地校验通过后提交 PR，附 invoke 示例与 CHANGELOG。
+4. 实现 `runtime/invoke.py`（标准库 HTTPS；不 import `korux.*`）。
+5. 本地校验通过后提交 PR，附 invoke 示例与 CHANGELOG。
 
 完整步骤见 [新增能力流程](https://github.com/korux-ai/korux/blob/main/docs/spec/capability-package/contributor-guide.md#2-新增能力流程)。若必须改 Korux 内核接口，另开主仓 RFC，与本仓能力包 PR 分离。
 

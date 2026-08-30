@@ -1,0 +1,105 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "facebook",
+  "version": "1.0.0",
+  "kind": "connector",
+  "label": "Facebook Page post",
+  "description": "Post to a Facebook Page (text, optional JPEG/PNG) via Graph API after Vault binding and Governor gate",
+  "category": "social",
+  "reads_external": false,
+  "writes_external": true,
+  "boundary": "External",
+  "default_gate": "require_human",
+  "risk": "medium",
+  "produces_content": false,
+  "propose_guide": "External Page post after Internal compose/summarize: message must be upstream structured output, not the task NL verbatim. Optional image_file_id from a prior file step.",
+  "input_schema": {
+    "type": "object",
+    "required": ["message"],
+    "properties": {
+      "message": { "type": "string", "maxLength": 5000 },
+      "image_file_id": { "type": "string" }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "ok": { "type": "boolean" },
+      "post_id": { "type": "string" },
+      "content": { "type": "string" },
+      "summary": { "type": "string" }
+    }
+  },
+  "params": [
+    {
+      "name": "message",
+      "required": true,
+      "sources": ["upstream", "step_field", "nl_fixed"],
+      "description": "Page 帖文案；须来自上游起草步骤，不得使用任务 NL 原文",
+      "example_nl": "把上一步摘要发到公司 Facebook Page",
+      "propose_hint": "Set step field `message` from a prior compose/summarize step. Do not paste task NL as the post.",
+      "confirm_if_missing": true
+    },
+    {
+      "name": "image_file_id",
+      "required": false,
+      "sources": ["step_field", "upstream"],
+      "description": "可选工作区图片 file_id（JPEG/PNG，一张）",
+      "confirm_if_missing": false
+    }
+  ],
+  "editable_governor_config": {
+    "blocked_keywords": {
+      "type": "array",
+      "items": { "type": "string" },
+      "label": "禁止关键字",
+      "description": "帖文含子串（大小写不敏感）则 reject",
+      "default": []
+    },
+    "blocked_url_hosts": {
+      "type": "array",
+      "items": { "type": "string" },
+      "label": "禁止链接域名",
+      "description": "文案中 http(s) URL 的 host 命中则 reject",
+      "default": []
+    },
+    "max_chars": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5000,
+      "default": 5000,
+      "label": "正文最长字符数"
+    },
+    "max_mentions": {
+      "type": "integer",
+      "minimum": 0,
+      "label": "最多 @ 次数",
+      "description": "缺省不限制"
+    },
+    "require_image": {
+      "type": "boolean",
+      "default": false,
+      "label": "必须带图"
+    }
+  },
+  "auth": {
+    "required": true,
+    "binding_tool": "facebook",
+    "secret_kind": "facebook",
+    "credential_doc": "docs/credential.md",
+    "fields": [
+      { "name": "page_id", "label": "Page ID", "type": "text", "required": true },
+      { "name": "page_access_token", "label": "Page access token", "type": "password", "required": true, "sensitive": true }
+    ]
+  },
+  "runtime": {
+    "entry": "runtime.invoke",
+    "transport": "in_process",
+    "timeout_ms": 60000,
+    "idempotent": false
+  },
+  "invoke_tool": "facebook",
+  "binding_tool": "facebook",
+  "status": "beta",
+  "trust": "first-party"
+}
