@@ -1,18 +1,17 @@
 # Example capability package
 
-贡献者脚手架。生产公开目录使用等价 `manifest.yaml` / `governor.yaml`；本目录以 JSON 供 `scripts/validate_capability_package.py` 零依赖校验。
+Contributor scaffolding. The public catalog uses equivalent `manifest.yaml` / `governor.yaml`; this tree uses JSON so `scripts/validate_capability_package.py` can validate with no extra deps.
 
-规范见 Korux `docs/spec/capability-package/`。本目录不进 Release catalog。
+Spec: Korux `docs/spec/capability-package/`. This directory is not in the Release catalog.
 
-## Runtime 签名（first-party 包内实现）
+## Runtime signature (first-party in-package implementation)
 
-`runtime.entry` 为包相对路径时固定：
+When `runtime.entry` is package-relative it is fixed as:
 
 ```text
 async def invoke(args: dict, secret: dict, context: dict) -> dict
 ```
 
-- 标准库 HTTPS；不 import `korux.*`；不声明 pip 依赖
-- 返回扁平 dict（`ok` / `stub` / 供应商 id）；平台再包装 runtime-contract 信封
-- `KORUX_CAPABILITY_HTTP_MOCK=1` 供无密钥 CI；生产默认关
-
+- Stdlib HTTPS; do not import `korux.*`; no pip dependencies
+- Return a flat dict (`ok` / `stub` / vendor id); the platform wraps the runtime-contract envelope
+- `KORUX_CAPABILITY_HTTP_MOCK=1` for CI without keys; production leaves it unset

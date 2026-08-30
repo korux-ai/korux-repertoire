@@ -24,4 +24,4 @@ Local dev: use Mailhog (`make up`) with `SMTP_HOST=localhost` and port `1025`.
 
 ## Workflow NL hint
 
-Recipient is **not** read from Vault — declare in NL, e.g. `发邮件到 legal@company.com`.
+Recipient is **not** read from Vault — declare it in NL, e.g. `email legal@company.com`.
