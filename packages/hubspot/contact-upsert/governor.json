@@ -1,0 +1,36 @@
+{
+  "spec_version": "korux_governor_v1",
+  "capability_id": "hubspot/contact-upsert",
+  "capability_version": "1.0.0",
+  "defaults": {
+    "intercept_on_invoke": true,
+    "editable_fields": [
+      "email",
+      "contact_id",
+      "firstname",
+      "lastname",
+      "phone",
+      "company",
+      "jobtitle",
+      "website",
+      "lifecyclestage",
+      "properties"
+    ]
+  },
+  "rules": [
+    {
+      "id": "block_denied_keywords_company",
+      "when": { "args.company": { "matches_any_owner": "blocked_keywords" } },
+      "action": "reject",
+      "code": "GOVERNOR_POLICY",
+      "message": "Company contains a blocked keyword"
+    },
+    {
+      "id": "require_human_by_default",
+      "when": { "writes_external": true },
+      "action": "intercept",
+      "gate": "require_human",
+      "message": "HubSpot contact upsert requires human approval"
+    }
+  ]
+}

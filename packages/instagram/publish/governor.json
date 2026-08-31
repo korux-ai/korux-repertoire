@@ -1,0 +1,60 @@
+{
+  "spec_version": "korux_governor_v1",
+  "capability_id": "instagram/publish",
+  "capability_version": "1.0.0",
+  "defaults": {
+    "intercept_on_invoke": true,
+    "editable_fields": ["caption", "image_file_id"]
+  },
+  "rules": [
+    {
+      "id": "block_empty_caption",
+      "when": { "args.caption": { "empty": true } },
+      "action": "reject",
+      "code": "VALIDATION",
+      "message": "Caption is empty; use upstream step output"
+    },
+    {
+      "id": "block_missing_image",
+      "when": { "args.image_file_id": { "empty": true } },
+      "action": "reject",
+      "code": "VALIDATION",
+      "message": "Instagram Feed posts require image_file_id"
+    },
+    {
+      "id": "block_denied_keywords",
+      "when": { "args.caption": { "matches_any_owner": "blocked_keywords" } },
+      "action": "reject",
+      "code": "GOVERNOR_POLICY",
+      "message": "Caption contains a blocked keyword"
+    },
+    {
+      "id": "block_denied_url_hosts",
+      "when": { "args.caption": { "url_host_in_owner": "blocked_url_hosts" } },
+      "action": "reject",
+      "code": "GOVERNOR_POLICY",
+      "message": "Caption contains a blocked URL host"
+    },
+    {
+      "id": "block_over_max_chars",
+      "when": { "args.caption": { "length_gt_owner": "max_chars" } },
+      "action": "reject",
+      "code": "GOVERNOR_POLICY",
+      "message": "Caption exceeds Owner max_chars"
+    },
+    {
+      "id": "block_over_max_mentions",
+      "when": { "args.caption": { "mentions_gt_owner": "max_mentions" } },
+      "action": "reject",
+      "code": "GOVERNOR_POLICY",
+      "message": "Caption @ mention count exceeds Owner limit"
+    },
+    {
+      "id": "require_human_by_default",
+      "when": { "writes_external": true },
+      "action": "intercept",
+      "gate": "require_human",
+      "message": "Instagram Feed posts require human approval"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "spec_version": "korux_governor_v1",
+  "capability_id": "google/search-console",
+  "capability_version": "1.0.0",
+  "defaults": {
+    "intercept_on_invoke": false,
+    "editable_fields": ["start_date", "end_date", "dimensions", "row_limit", "site_url", "search_type"]
+  },
+  "rules": []
+}

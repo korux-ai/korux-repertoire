@@ -1,0 +1,149 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "google/analytics-report",
+  "version": "1.0.0",
+  "kind": "connector",
+  "label": "Google Analytics 4 report",
+  "description": "Run a read-only GA4 Data API report (dimensions/metrics over a date range) after Vault binding",
+  "category": "analytics",
+  "reads_external": true,
+  "writes_external": false,
+  "boundary": "External",
+  "default_gate": "auto",
+  "risk": "low",
+  "produces_content": true,
+  "propose_guide": "Use before summarize when NL asks for traffic, conversions, or page performance. Prefer property_id from Vault; set date range and metrics on the step when stated in NL.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "start_date": {
+        "type": "string",
+        "description": "GA4 date or relative, e.g. 7daysAgo"
+      },
+      "end_date": {
+        "type": "string",
+        "description": "GA4 date or relative, e.g. yesterday"
+      },
+      "dimensions": {
+        "type": "array",
+        "items": { "type": "string" },
+        "maxItems": 9
+      },
+      "metrics": {
+        "type": "array",
+        "items": { "type": "string" },
+        "maxItems": 10
+      },
+      "limit": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 100
+      },
+      "property_id": {
+        "type": "string",
+        "description": "Override Vault property id (digits only or properties/{id})"
+      }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "required": ["content"],
+    "properties": {
+      "ok": { "type": "boolean" },
+      "content": { "type": "string" },
+      "summary": { "type": "string" },
+      "row_count": { "type": "integer" }
+    }
+  },
+  "params": [
+    {
+      "name": "start_date",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "default"],
+      "description": "Report start date (default 7daysAgo)",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "end_date",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "default"],
+      "description": "Report end date (default yesterday)",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "metrics",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "default"],
+      "description": "Metric names such as sessions, activeUsers, conversions",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "dimensions",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "default"],
+      "description": "Dimension names such as date, sessionDefaultChannelGroup",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "limit",
+      "required": false,
+      "sources": ["step_field", "default"],
+      "description": "Max rows (default 25, max 100)",
+      "confirm_if_missing": false
+    }
+  ],
+  "auth": {
+    "required": true,
+    "binding_tool": "google/analytics-report",
+    "secret_kind": "google-analytics",
+    "credential_doc": "docs/credential.md",
+    "fields": [
+      {
+        "name": "property_id",
+        "label": "GA4 property ID",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "client_id",
+        "label": "OAuth client ID",
+        "type": "text",
+        "required": false
+      },
+      {
+        "name": "client_secret",
+        "label": "OAuth client secret",
+        "type": "password",
+        "required": false,
+        "sensitive": true
+      },
+      {
+        "name": "refresh_token",
+        "label": "OAuth refresh token",
+        "type": "password",
+        "required": false,
+        "sensitive": true
+      },
+      {
+        "name": "access_token",
+        "label": "Short-lived access token (optional if refresh trio set)",
+        "type": "password",
+        "required": false,
+        "sensitive": true
+      }
+    ],
+    "example_json": "{\"property_id\":\"123456789\",\"client_id\":\"xxxxx.apps.googleusercontent.com\",\"client_secret\":\"GOCSPX-xxxxx\",\"refresh_token\":\"1//xxxxx\"}"
+  },
+  "runtime": {
+    "kind": "package",
+    "entry": "runtime.invoke",
+    "transport": "in_process",
+    "timeout_ms": 45000,
+    "idempotent": true
+  },
+  "invoke_tool": "google/analytics-report",
+  "binding_tool": "google/analytics-report",
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": ["ga4-report", "google-analytics"]
+}

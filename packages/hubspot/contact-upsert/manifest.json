@@ -1,0 +1,124 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "hubspot/contact-upsert",
+  "version": "1.0.0",
+  "kind": "connector",
+  "label": "HubSpot contact upsert",
+  "description": "Create or update a HubSpot CRM contact by email (or patch by contact_id) after Vault binding and Governor gate",
+  "category": "crm",
+  "reads_external": true,
+  "writes_external": true,
+  "boundary": "External",
+  "default_gate": "require_human",
+  "risk": "medium",
+  "produces_content": false,
+  "propose_guide": "Upsert CRM contacts from leads, forms, or campaign lists. Prefer email for find-or-create; use contact_id only when updating a known record. Does not create notes — use hubspot/crm-note for activity logging.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "email": { "type": "string", "maxLength": 320 },
+      "contact_id": { "type": "string" },
+      "firstname": { "type": "string", "maxLength": 100 },
+      "lastname": { "type": "string", "maxLength": 100 },
+      "phone": { "type": "string", "maxLength": 50 },
+      "company": { "type": "string", "maxLength": 200 },
+      "jobtitle": { "type": "string", "maxLength": 200 },
+      "website": { "type": "string", "maxLength": 500 },
+      "lifecyclestage": { "type": "string", "maxLength": 100 },
+      "properties": {
+        "type": "object",
+        "description": "Additional HubSpot contact property name → string value"
+      }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "ok": { "type": "boolean" },
+      "contact_id": { "type": "string" },
+      "action": { "type": "string" },
+      "email": { "type": "string" },
+      "content": { "type": "string" },
+      "summary": { "type": "string" }
+    }
+  },
+  "params": [
+    {
+      "name": "email",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "upstream"],
+      "description": "Contact email (required unless contact_id is set)",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "contact_id",
+      "required": false,
+      "sources": ["upstream", "step_field", "nl_fixed"],
+      "description": "Existing HubSpot contact id for update-only",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "firstname",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "upstream"],
+      "description": "First name",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "lastname",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "upstream"],
+      "description": "Last name",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "company",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "upstream"],
+      "description": "Company name",
+      "confirm_if_missing": false
+    }
+  ],
+  "editable_governor_config": {
+    "blocked_keywords": {
+      "type": "array",
+      "items": { "type": "string" },
+      "label": "Blocked keywords (checked against company/jobtitle)",
+      "default": []
+    },
+    "allowed_email_domains": {
+      "type": "array",
+      "items": { "type": "string" },
+      "label": "Allowed email domains (empty = any)",
+      "default": []
+    }
+  },
+  "auth": {
+    "required": true,
+    "binding_tool": "hubspot/contact-upsert",
+    "secret_kind": "hubspot",
+    "credential_doc": "docs/credential.md",
+    "fields": [
+      {
+        "name": "access_token",
+        "label": "Private app access token",
+        "type": "password",
+        "required": true,
+        "sensitive": true
+      }
+    ],
+    "example_json": "{\"access_token\":\"pat-na1-xxxxxxxx\"}"
+  },
+  "runtime": {
+    "kind": "package",
+    "entry": "runtime.invoke",
+    "transport": "in_process",
+    "timeout_ms": 45000,
+    "idempotent": false
+  },
+  "invoke_tool": "hubspot/contact-upsert",
+  "binding_tool": "hubspot/contact-upsert",
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": ["hubspot-contact"]
+}

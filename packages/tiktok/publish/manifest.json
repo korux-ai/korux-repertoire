@@ -1,0 +1,120 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "tiktok/publish",
+  "version": "1.0.0",
+  "kind": "connector",
+  "label": "TikTok video publish",
+  "description": "Upload a TikTok video via Content Posting API (inbox draft by default; optional direct post) after Vault binding and Governor gate",
+  "category": "social",
+  "reads_external": false,
+  "writes_external": true,
+  "boundary": "External",
+  "default_gate": "require_human",
+  "risk": "high",
+  "produces_content": false,
+  "propose_guide": "Push composed video to TikTok. Default mode=inbox (creator reviews in-app before going live). mode=direct only when NL explicitly asks to post immediately and Owner allows it. Prefer video_file_id + context.video.bytes; optional video_url for PULL_FROM_URL when the domain is verified with TikTok.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "mode": {
+        "type": "string",
+        "enum": ["inbox", "direct"]
+      },
+      "title": { "type": "string", "maxLength": 2200 },
+      "video_file_id": { "type": "string" },
+      "video_url": { "type": "string", "maxLength": 2000 },
+      "disable_comment": { "type": "boolean" },
+      "disable_duet": { "type": "boolean" },
+      "disable_stitch": { "type": "boolean" }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "ok": { "type": "boolean" },
+      "publish_id": { "type": "string" },
+      "mode": { "type": "string" },
+      "content": { "type": "string" },
+      "summary": { "type": "string" }
+    }
+  },
+  "params": [
+    {
+      "name": "mode",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "default"],
+      "description": "inbox (default) or direct",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "title",
+      "required": false,
+      "sources": ["upstream", "step_field", "nl_fixed"],
+      "description": "Caption/title (required for direct mode)",
+      "propose_hint": "Set from upstream compose for direct posts.",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "video_file_id",
+      "required": false,
+      "sources": ["step_field", "upstream"],
+      "description": "Workspace video file_id when uploading bytes",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "video_url",
+      "required": false,
+      "sources": ["step_field", "nl_fixed", "upstream"],
+      "description": "Public HTTPS URL for PULL_FROM_URL (verified domain)",
+      "confirm_if_missing": false
+    }
+  ],
+  "editable_governor_config": {
+    "blocked_keywords": {
+      "type": "array",
+      "items": { "type": "string" },
+      "label": "Blocked keywords (title)",
+      "default": []
+    },
+    "allow_direct": {
+      "type": "boolean",
+      "default": false,
+      "label": "Allow mode=direct"
+    },
+    "max_video_bytes": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 268435456,
+      "default": 134217728,
+      "label": "Max video bytes for FILE_UPLOAD"
+    }
+  },
+  "auth": {
+    "required": true,
+    "binding_tool": "tiktok/publish",
+    "secret_kind": "tiktok",
+    "credential_doc": "docs/credential.md",
+    "fields": [
+      {
+        "name": "access_token",
+        "label": "OAuth access token",
+        "type": "password",
+        "required": true,
+        "sensitive": true
+      }
+    ],
+    "example_json": "{\"access_token\":\"act.xxxxxxxx\"}"
+  },
+  "runtime": {
+    "kind": "package",
+    "entry": "runtime.invoke",
+    "transport": "in_process",
+    "timeout_ms": 300000,
+    "idempotent": false
+  },
+  "invoke_tool": "tiktok/publish",
+  "binding_tool": "tiktok/publish",
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": ["tiktok-upload"]
+}

@@ -32,12 +32,38 @@ Current packages:
 | `general/imap` | IMAP inbound monitor |
 | `tavily/web-search` | Tavily web research (`runtime.invoke`) |
 | `twitter/publish` | X API post |
-| `facebook/publish` | Graph API post |
+| `facebook/publish` | Graph API Page post |
+| `linkedin/publish` | LinkedIn Company Page post |
+| `instagram/publish` | Instagram professional Feed (image required) |
+| `google/analytics-report` | GA4 Data API report (read-only) |
+| `google/search-console` | Search Console search analytics (read-only) |
+| `meta/ads-insights` | Meta Ads insights (read-only) |
+| `meta/ads-mutate` | Meta Ads pause/activate + capped daily_budget (high risk) |
+| `google/ads-mutate` | Google Ads pause/enable + capped budget (high risk) |
+| `youtube/publish` | YouTube video upload (default unlisted) |
+| `tiktok/publish` | TikTok video inbox/direct publish |
+| `canva/design-export` | Canva export (+ optional Brand Template autofill) |
+| `google/meet` | Google Meet identity (OAuth userinfo) |
+| `microsoft/teams` | Microsoft Teams identity (Graph) |
+| `mailchimp/campaign` | Mailchimp campaign create / optional send |
+| `klaviyo/campaign` | Klaviyo email campaign create / optional send |
+| `hubspot/crm-note` | HubSpot contact note (email upsert) |
+| `hubspot/contact-upsert` | HubSpot contact create/update by email |
+| `wordpress/post` | WordPress REST create post (draft default) |
+| `webflow/cms-publish` | Webflow CMS item (staged default; optional live) |
+| `marketing/campaign-brief` | Skill (no runtime): campaign brief for Propose |
+| `marketing/channel-mix` | Skill (no runtime): channel mix → connectors |
+| `marketing/brand-voice` | Skill (no runtime): brand voice checklist |
+| `marketing/ab-copy` | Skill (no runtime): A/B copy variants |
+| `marketing/content-calendar` | Skill (no runtime): content calendar |
+| `marketing/performance-review` | Skill (no runtime): performance review |
+| `marketing/local-store` | Skill (no runtime): local / multi-location plan |
+| `marketing/hiring-campaign` | Skill (no runtime): hiring / employer-brand plan |
 | `alpaca/place-order` | Alpaca paper trade |
 | `notion/pages` | Notion page create |
 | `zoom/account` | Zoom OAuth + users/me |
 
-Google Meet / Microsoft Teams stay out until Korux has a non-mock live path. Platform kernel skills (`korux/*`) live in the Korux main repo, not here.
+`kind: skill` may omit `runtime/` (catalog / Propose only). Connectors must ship `runtime.invoke`. Framework-bound skills stay in Korux (`packages/korux/*`).
 
 ## Consumption
 

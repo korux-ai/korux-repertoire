@@ -1,0 +1,25 @@
+{
+  "spec_version": "korux_governor_v1",
+  "capability_id": "tiktok/publish",
+  "capability_version": "1.0.0",
+  "defaults": {
+    "intercept_on_invoke": true,
+    "editable_fields": ["mode", "title", "video_url", "disable_comment", "disable_duet", "disable_stitch"]
+  },
+  "rules": [
+    {
+      "id": "block_denied_keywords",
+      "when": { "args.title": { "matches_any_owner": "blocked_keywords" } },
+      "action": "reject",
+      "code": "GOVERNOR_POLICY",
+      "message": "Title contains a blocked keyword"
+    },
+    {
+      "id": "require_human_by_default",
+      "when": { "writes_external": true },
+      "action": "intercept",
+      "gate": "require_human",
+      "message": "TikTok publish requires human approval"
+    }
+  ]
+}

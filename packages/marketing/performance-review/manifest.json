@@ -1,0 +1,65 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "marketing/performance-review",
+  "version": "1.0.0",
+  "kind": "skill",
+  "label": "Marketing performance review",
+  "description": "Propose a performance review / learnings brief from analytics or ads report content (GA4, GSC, Meta insights)",
+  "category": "marketing",
+  "reads_external": false,
+  "writes_external": false,
+  "boundary": "Internal",
+  "default_gate": "auto",
+  "risk": "low",
+  "produces_content": true,
+  "propose_guide": "Use after google/analytics-report, google/search-console, or meta/ads-insights when NL asks what worked, what to change, or a weekly marketing review. Take upstream report `content` as `report`. Emit Internal sections: wins, lags, hypotheses, next experiments, recommended connector actions — do not change ads bids or send mail in this skill.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "report": { "type": "string", "maxLength": 100000 },
+      "goal": { "type": "string", "maxLength": 500 },
+      "period": { "type": "string", "maxLength": 64 },
+      "source": {
+        "type": "string",
+        "description": "ga4, gsc, meta-ads, mixed, …"
+      }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "required": ["content"],
+    "properties": {
+      "content": { "type": "string" },
+      "summary": { "type": "string" }
+    }
+  },
+  "params": [
+    {
+      "name": "report",
+      "required": false,
+      "sources": ["upstream", "step_field"],
+      "description": "Upstream analytics/ads table or summary",
+      "propose_hint": "Pass google/analytics-report, google/search-console, or meta/ads-insights content as `report`.",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "goal",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "upstream"],
+      "description": "Campaign goal for scoring the period",
+      "example_nl": "Review last week's GA4 and Search Console for the launch",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "source",
+      "required": false,
+      "sources": ["nl_fixed", "step_field"],
+      "description": "Report source hint",
+      "confirm_if_missing": false
+    }
+  ],
+  "auth": { "required": false },
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": ["performance-review", "marketing-review"]
+}

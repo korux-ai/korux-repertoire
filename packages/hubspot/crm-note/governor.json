@@ -1,0 +1,39 @@
+{
+  "spec_version": "korux_governor_v1",
+  "capability_id": "hubspot/crm-note",
+  "capability_version": "1.0.0",
+  "defaults": {
+    "intercept_on_invoke": true,
+    "editable_fields": ["body", "contact_id", "email", "firstname", "lastname"]
+  },
+  "rules": [
+    {
+      "id": "block_empty_body",
+      "when": { "args.body": { "empty": true } },
+      "action": "reject",
+      "code": "VALIDATION",
+      "message": "Note body is empty"
+    },
+    {
+      "id": "block_denied_keywords",
+      "when": { "args.body": { "matches_any_owner": "blocked_keywords" } },
+      "action": "reject",
+      "code": "GOVERNOR_POLICY",
+      "message": "Note contains a blocked keyword"
+    },
+    {
+      "id": "block_over_max_chars",
+      "when": { "args.body": { "length_gt_owner": "max_chars" } },
+      "action": "reject",
+      "code": "GOVERNOR_POLICY",
+      "message": "Note exceeds Owner max_chars"
+    },
+    {
+      "id": "require_human_by_default",
+      "when": { "writes_external": true },
+      "action": "intercept",
+      "gate": "require_human",
+      "message": "HubSpot CRM writes require human approval"
+    }
+  ]
+}

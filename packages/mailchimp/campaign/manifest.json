@@ -1,0 +1,154 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "mailchimp/campaign",
+  "version": "1.0.0",
+  "kind": "connector",
+  "label": "Mailchimp campaign",
+  "description": "Create a Mailchimp regular campaign with HTML/text content, optionally send after Vault binding and Governor gate",
+  "category": "email",
+  "reads_external": false,
+  "writes_external": true,
+  "boundary": "External",
+  "default_gate": "require_human",
+  "risk": "high",
+  "produces_content": false,
+  "propose_guide": "Use after compose for audience email. Default action creates a saved campaign only. Use action=send or create_and_send only when NL explicitly asks to send.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "action": {
+        "type": "string",
+        "enum": ["create", "send", "create_and_send"]
+      },
+      "subject": { "type": "string", "maxLength": 200 },
+      "html": { "type": "string", "maxLength": 200000 },
+      "text": { "type": "string", "maxLength": 200000 },
+      "from_name": { "type": "string", "maxLength": 100 },
+      "reply_to": { "type": "string", "maxLength": 200 },
+      "list_id": { "type": "string" },
+      "campaign_id": { "type": "string" },
+      "title": { "type": "string", "maxLength": 200 }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "ok": { "type": "boolean" },
+      "campaign_id": { "type": "string" },
+      "status": { "type": "string" },
+      "content": { "type": "string" },
+      "summary": { "type": "string" }
+    }
+  },
+  "params": [
+    {
+      "name": "action",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "default"],
+      "description": "create (default), send (existing campaign_id), or create_and_send",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "subject",
+      "required": false,
+      "sources": ["upstream", "step_field", "nl_fixed"],
+      "description": "Email subject line (required for create / create_and_send)",
+      "propose_hint": "Set subject from upstream compose; do not use raw task NL.",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "html",
+      "required": false,
+      "sources": ["upstream", "step_field"],
+      "description": "HTML body (required for create / create_and_send)",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "list_id",
+      "required": false,
+      "sources": ["vault", "step_field", "nl_fixed"],
+      "description": "Audience list id (defaults to Vault list_id)",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "campaign_id",
+      "required": false,
+      "sources": ["upstream", "step_field"],
+      "description": "Required when action=send",
+      "confirm_if_missing": false
+    }
+  ],
+  "editable_governor_config": {
+    "blocked_keywords": {
+      "type": "array",
+      "items": { "type": "string" },
+      "label": "Blocked keywords",
+      "default": []
+    },
+    "blocked_url_hosts": {
+      "type": "array",
+      "items": { "type": "string" },
+      "label": "Blocked URL hosts",
+      "default": []
+    },
+    "max_chars": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 200000,
+      "default": 200000,
+      "label": "Max HTML characters"
+    }
+  },
+  "auth": {
+    "required": true,
+    "binding_tool": "mailchimp/campaign",
+    "secret_kind": "mailchimp",
+    "credential_doc": "docs/credential.md",
+    "fields": [
+      {
+        "name": "api_key",
+        "label": "API key",
+        "type": "password",
+        "required": true,
+        "sensitive": true
+      },
+      {
+        "name": "list_id",
+        "label": "Default audience list ID",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "from_name",
+        "label": "Default from name",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "reply_to",
+        "label": "Default reply-to email",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "server_prefix",
+        "label": "Server prefix (optional; parsed from api_key)",
+        "type": "text",
+        "required": false
+      }
+    ],
+    "example_json": "{\"api_key\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-us21\",\"list_id\":\"a1b2c3d4e5\",\"from_name\":\"Acme Marketing\",\"reply_to\":\"hello@example.com\"}"
+  },
+  "runtime": {
+    "kind": "package",
+    "entry": "runtime.invoke",
+    "transport": "in_process",
+    "timeout_ms": 60000,
+    "idempotent": false
+  },
+  "invoke_tool": "mailchimp/campaign",
+  "binding_tool": "mailchimp/campaign",
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": []
+}

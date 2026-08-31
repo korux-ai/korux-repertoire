@@ -1,0 +1,18 @@
+{
+  "spec_version": "korux_governor_v1",
+  "capability_id": "canva/design-export",
+  "capability_version": "1.0.0",
+  "defaults": {
+    "intercept_on_invoke": true,
+    "editable_fields": ["action", "design_id", "brand_template_id", "title", "field_data", "format"]
+  },
+  "rules": [
+    {
+      "id": "require_human_by_default",
+      "when": { "writes_external": true },
+      "action": "intercept",
+      "gate": "require_human",
+      "message": "Canva design export / autofill requires human approval"
+    }
+  ]
+}

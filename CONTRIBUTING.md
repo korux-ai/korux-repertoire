@@ -53,9 +53,9 @@ Write-external packages require `writes_external=true`, a non-empty governor, an
 2. Confirm the capability does **not** need Korux framework (else contribute to Korux core).
 3. Fill `manifest.json`: `id`, `version`, I/O flags, schema, auth, `params`, `default_gate`.
 4. **Connector:** implement `runtime/invoke.py` (stdlib / third-party SDK only; `async def invoke(args, secret, context)`).
-5. **Skill (optional runtime):** omit `runtime/` if the platform handles the step via kernel `step_kind`.
+5. **Skill (optional runtime):** omit `runtime/` if the platform handles the step via kernel / Propose (`propose_guide` required). Example: `marketing/campaign-brief`.
 6. Write governor when `writes_external=true`; write `docs/credential.md` when `auth.required=true`.
-7. After local validation, open a PR with an invoke example and CHANGELOG.
+7. After local validation, open a PR with an invoke example (connectors) or propose example (skills) and CHANGELOG.
 
 Full flow: [adding a capability](https://github.com/korux-ai/korux/blob/main/docs/spec/capability-package/contributor-guide.md#2-新增能力流程).
 

@@ -124,6 +124,7 @@ def score_package(package_dir: Path) -> PackageReport:
     _score_docs(report, root, manifest)
     _score_auth_examples(report, root, manifest)
     _score_ids(report, root, manifest)
+    _score_skill_shape(report, root, manifest)
     _score_i18n(report, manifest)
     return report
 
@@ -163,18 +164,57 @@ def _score_copy(report: PackageReport, manifest: dict[str, Any]) -> None:
 
 
 def _score_propose(report: PackageReport, manifest: dict[str, Any]) -> None:
+    kind = _short_text(manifest.get("kind"))
+    min_len = 120 if kind == "skill" else MIN_PROPOSE_GUIDE_LEN
     guide = manifest.get("propose_guide")
     if guide is None or not _short_text(guide):
         report.findings.append(
-            Finding("warn", "propose_guide_missing", "propose_guide is missing or empty")
+            Finding(
+                "warn",
+                "propose_guide_missing",
+                "propose_guide is missing or empty"
+                + (" (required for kind=skill)" if kind == "skill" else ""),
+            )
         )
         return
-    if len(_short_text(guide)) < MIN_PROPOSE_GUIDE_LEN:
+    if len(_short_text(guide)) < min_len:
         report.findings.append(
             Finding(
                 "warn",
                 "propose_guide_short",
-                f"propose_guide too short (<{MIN_PROPOSE_GUIDE_LEN} chars)",
+                f"propose_guide too short (<{min_len} chars)"
+                + (" for catalog skill" if kind == "skill" else ""),
+            )
+        )
+
+
+def _score_skill_shape(report: PackageReport, root: Path, manifest: dict[str, Any]) -> None:
+    if _short_text(manifest.get("kind")) != "skill":
+        return
+    runtime = manifest.get("runtime")
+    invoke_py = root / "runtime" / "invoke.py"
+    if runtime is None and not invoke_py.is_file():
+        report.findings.append(
+            Finding(
+                "info",
+                "skill_catalog_only",
+                "kind=skill with no runtime — Propose/catalog only; platform kernel executes",
+            )
+        )
+    elif invoke_py.is_file():
+        report.findings.append(
+            Finding(
+                "info",
+                "skill_with_runtime",
+                "skill ships runtime/invoke.py — ensure Korux loads package invoke for this id",
+            )
+        )
+    if bool(manifest.get("writes_external")):
+        report.findings.append(
+            Finding(
+                "warn",
+                "skill_writes_external",
+                "catalog skills should rarely writes_external; prefer a connector for external writes",
             )
         )
 

@@ -1,0 +1,78 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "marketing/ab-copy",
+  "version": "1.0.0",
+  "kind": "skill",
+  "label": "Marketing A/B copy",
+  "description": "Propose A/B (or multi-variant) marketing copy from a brief or draft for later human-gated publish connectors",
+  "category": "marketing",
+  "reads_external": false,
+  "writes_external": false,
+  "boundary": "Internal",
+  "default_gate": "auto",
+  "risk": "low",
+  "produces_content": true,
+  "propose_guide": "Use after marketing/campaign-brief or brand-voice when NL asks for A/B tests, variants, or alternate headlines/CTAs. Emit Internal variants (A/B, optionally C) with hypothesis and primary metric — do not send or post. Next steps: human picks a variant, optional marketing/brand-voice check, then connectors (linkedin/publish, mailchimp/campaign, twitter/publish, wordpress/post). Respect channel length limits (e.g. short for social, longer for email/blog).",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "brief": { "type": "string", "maxLength": 8000 },
+      "draft": { "type": "string", "maxLength": 20000 },
+      "channel": { "type": "string", "maxLength": 64 },
+      "variant_count": {
+        "type": "integer",
+        "minimum": 2,
+        "maximum": 4
+      },
+      "cta": { "type": "string", "maxLength": 200 }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "required": ["content"],
+    "properties": {
+      "content": { "type": "string" },
+      "summary": { "type": "string" },
+      "variants": {
+        "type": "array",
+        "items": { "type": "string" }
+      }
+    }
+  },
+  "params": [
+    {
+      "name": "brief",
+      "required": false,
+      "sources": ["upstream", "step_field"],
+      "description": "Upstream campaign brief when available",
+      "propose_hint": "Prefer marketing/campaign-brief output as `brief`.",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "draft",
+      "required": false,
+      "sources": ["upstream", "step_field"],
+      "description": "Single draft to vary when brief is absent",
+      "example_nl": "Write A/B LinkedIn posts for the launch brief",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "channel",
+      "required": false,
+      "sources": ["nl_fixed", "step_field"],
+      "description": "linkedin, email, blog, twitter, …",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "variant_count",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "default"],
+      "description": "Number of variants (default 2, max 4)",
+      "confirm_if_missing": false
+    }
+  ],
+  "auth": { "required": false },
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": ["ab-copy", "marketing-ab"]
+}

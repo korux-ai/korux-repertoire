@@ -1,0 +1,90 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "microsoft/teams",
+  "version": "1.0.0",
+  "kind": "connector",
+  "label": "Microsoft Teams",
+  "description": "Verify Microsoft identity for Teams workflows via Graph /me or app-only organization lookup after Vault binding",
+  "category": "meeting",
+  "reads_external": true,
+  "writes_external": false,
+  "boundary": "External",
+  "default_gate": "auto",
+  "risk": "low",
+  "produces_content": false,
+  "propose_guide": "Use when a workflow needs Microsoft Teams identity binding. Pass optional meeting_id from monitor/trigger context. Does not create Teams meetings.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "meeting_id": { "type": "string" },
+      "summary": { "type": "string" }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "ok": { "type": "boolean" },
+      "provider": { "type": "string" },
+      "user_id": { "type": "string" },
+      "tenant_id": { "type": "string" },
+      "meeting_id": { "type": "string" },
+      "summary": { "type": "string" }
+    }
+  },
+  "params": [
+    {
+      "name": "meeting_id",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "trigger"],
+      "description": "Optional meeting id for monitor context",
+      "confirm_if_missing": false
+    }
+  ],
+  "auth": {
+    "required": true,
+    "binding_tool": "microsoft/teams",
+    "secret_kind": "microsoft-teams",
+    "credential_doc": "docs/credential.md",
+    "fields": [
+      {
+        "name": "access_token",
+        "label": "Delegated or app access token",
+        "type": "password",
+        "required": false,
+        "sensitive": true
+      },
+      {
+        "name": "tenant_id",
+        "label": "Azure AD tenant ID",
+        "type": "text",
+        "required": false
+      },
+      {
+        "name": "client_id",
+        "label": "App (client) ID",
+        "type": "text",
+        "required": false
+      },
+      {
+        "name": "client_secret",
+        "label": "Client secret",
+        "type": "password",
+        "required": false,
+        "sensitive": true
+      }
+    ],
+    "example_json": "{\"tenant_id\":\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\"client_id\":\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\"client_secret\":\"xxxxx\"}"
+  },
+  "runtime": {
+    "kind": "package",
+    "entry": "runtime.invoke",
+    "transport": "in_process",
+    "timeout_ms": 30000,
+    "idempotent": true
+  },
+  "invoke_tool": "microsoft/teams",
+  "binding_tool": "microsoft/teams",
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": ["microsoft-teams"]
+}

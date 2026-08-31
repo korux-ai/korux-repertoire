@@ -178,9 +178,16 @@ def validate_manifest(manifest: dict[str, Any], *, path: str = "manifest") -> li
     if not isinstance(manifest, dict):
         return [f"{path}: must be an object"]
 
+    kind = str(manifest.get("kind") or "").strip()
     for field in MANIFEST_REQUIRED_FIELDS:
+        # Catalog / Propose-only skills may omit runtime/ (platform kernel executes).
+        if field == "runtime" and kind == "skill":
+            continue
         if field not in manifest:
             errors.append(f"{path}: missing required field `{field}`")
+
+    if kind and kind not in {"connector", "skill"}:
+        errors.append(f"{path}: kind must be 'connector' or 'skill'")
 
     if manifest.get("spec_version") != CAPABILITY_SPEC_VERSION:
         errors.append(f"{path}: spec_version must be {CAPABILITY_SPEC_VERSION!r}")
@@ -217,6 +224,8 @@ def validate_manifest(manifest: dict[str, Any], *, path: str = "manifest") -> li
     guide = manifest.get("propose_guide")
     if guide is not None and not str(guide).strip():
         errors.append(f"{path}: propose_guide must be non-empty when set")
+    if kind == "skill" and not str(guide or "").strip():
+        errors.append(f"{path}: kind=skill requires non-empty propose_guide")
 
     runtime = manifest.get("runtime")
     if runtime is not None and not isinstance(runtime, dict):

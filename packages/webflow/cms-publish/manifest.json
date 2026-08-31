@@ -1,0 +1,129 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "webflow/cms-publish",
+  "version": "1.0.0",
+  "kind": "connector",
+  "label": "Webflow CMS item",
+  "description": "Create a Webflow CMS collection item (staged draft by default, optional live publish) after Vault binding and Governor gate",
+  "category": "cms",
+  "reads_external": false,
+  "writes_external": true,
+  "boundary": "External",
+  "default_gate": "require_human",
+  "risk": "medium",
+  "produces_content": false,
+  "propose_guide": "Publish blog/landing CMS copy after compose when the site is on Webflow. Default is staged (not live). Set publish=true only when NL explicitly asks to go live. Field keys in field_data must match the collection schema (slug always required with name).",
+  "input_schema": {
+    "type": "object",
+    "required": ["name", "slug"],
+    "properties": {
+      "name": { "type": "string", "maxLength": 500 },
+      "slug": { "type": "string", "maxLength": 200 },
+      "field_data": {
+        "type": "object",
+        "description": "Extra CMS fields matching the collection schema (Plain Text, Rich Text, etc.)"
+      },
+      "publish": {
+        "type": "boolean",
+        "description": "If true, create as live (POST .../items/live); default false stages only"
+      }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "ok": { "type": "boolean" },
+      "item_id": { "type": "string" },
+      "slug": { "type": "string" },
+      "published": { "type": "boolean" },
+      "content": { "type": "string" },
+      "summary": { "type": "string" }
+    }
+  },
+  "params": [
+    {
+      "name": "name",
+      "required": true,
+      "sources": ["upstream", "step_field", "nl_fixed"],
+      "description": "CMS item name (required Webflow field)",
+      "confirm_if_missing": true
+    },
+    {
+      "name": "slug",
+      "required": true,
+      "sources": ["upstream", "step_field", "nl_fixed"],
+      "description": "URL slug for the item",
+      "confirm_if_missing": true
+    },
+    {
+      "name": "field_data",
+      "required": false,
+      "sources": ["upstream", "step_field"],
+      "description": "Additional collection fields (e.g. post-body, summary)",
+      "propose_hint": "Map composed HTML/text into schema field slugs from the Webflow collection.",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "publish",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "default"],
+      "description": "false (default) stages; true creates live",
+      "confirm_if_missing": false
+    }
+  ],
+  "editable_governor_config": {
+    "blocked_keywords": {
+      "type": "array",
+      "items": { "type": "string" },
+      "label": "Blocked keywords",
+      "default": []
+    },
+    "blocked_url_hosts": {
+      "type": "array",
+      "items": { "type": "string" },
+      "label": "Blocked URL hosts",
+      "default": []
+    },
+    "max_chars": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 200000,
+      "default": 200000,
+      "label": "Max combined field_data characters"
+    }
+  },
+  "auth": {
+    "required": true,
+    "binding_tool": "webflow/cms-publish",
+    "secret_kind": "webflow",
+    "credential_doc": "docs/credential.md",
+    "fields": [
+      {
+        "name": "access_token",
+        "label": "Webflow site token",
+        "type": "password",
+        "required": true,
+        "sensitive": true
+      },
+      {
+        "name": "collection_id",
+        "label": "CMS collection ID",
+        "type": "text",
+        "required": true
+      }
+    ],
+    "example_json": "{\"access_token\":\"xxxxxxxx\",\"collection_id\":\"64abc...\"}"
+  },
+  "runtime": {
+    "kind": "package",
+    "entry": "runtime.invoke",
+    "transport": "in_process",
+    "timeout_ms": 45000,
+    "idempotent": false
+  },
+  "invoke_tool": "webflow/cms-publish",
+  "binding_tool": "webflow/cms-publish",
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": ["webflow-cms"]
+}

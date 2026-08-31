@@ -1,0 +1,135 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "meta/ads-mutate",
+  "version": "1.0.0",
+  "kind": "connector",
+  "label": "Meta Ads mutate",
+  "description": "Pause/activate Meta campaign, ad set, or ad; optional daily_budget change with Owner cap — no deletes, after Vault binding and Governor gate",
+  "category": "ads",
+  "reads_external": false,
+  "writes_external": true,
+  "boundary": "External",
+  "default_gate": "require_human",
+  "risk": "high",
+  "produces_content": false,
+  "propose_guide": "Spend-affecting write. Prefer action=set_status with status=PAUSED for incident response. status=ACTIVE and set_budget only when NL explicitly asks and Owner caps allow. Never DELETE/ARCHIVED. Confirm object_id from meta/ads-insights first. Always require_human.",
+  "input_schema": {
+    "type": "object",
+    "required": ["object_type", "object_id", "action"],
+    "properties": {
+      "action": {
+        "type": "string",
+        "enum": ["set_status", "set_budget"]
+      },
+      "object_type": {
+        "type": "string",
+        "enum": ["campaign", "adset", "ad"]
+      },
+      "object_id": { "type": "string" },
+      "status": {
+        "type": "string",
+        "enum": ["ACTIVE", "PAUSED"]
+      },
+      "daily_budget": {
+        "type": "integer",
+        "minimum": 100,
+        "description": "Account currency minor units (e.g. cents); campaign/adset only"
+      }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "ok": { "type": "boolean" },
+      "object_id": { "type": "string" },
+      "action": { "type": "string" },
+      "status": { "type": "string" },
+      "daily_budget": { "type": "integer" },
+      "content": { "type": "string" },
+      "summary": { "type": "string" }
+    }
+  },
+  "params": [
+    {
+      "name": "action",
+      "required": true,
+      "sources": ["nl_fixed", "step_field"],
+      "description": "set_status or set_budget",
+      "confirm_if_missing": true
+    },
+    {
+      "name": "object_type",
+      "required": true,
+      "sources": ["nl_fixed", "step_field", "upstream"],
+      "description": "campaign, adset, or ad",
+      "confirm_if_missing": true
+    },
+    {
+      "name": "object_id",
+      "required": true,
+      "sources": ["nl_fixed", "step_field", "upstream"],
+      "description": "Meta object id",
+      "confirm_if_missing": true
+    },
+    {
+      "name": "status",
+      "required": false,
+      "sources": ["nl_fixed", "step_field"],
+      "description": "ACTIVE or PAUSED for set_status",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "daily_budget",
+      "required": false,
+      "sources": ["nl_fixed", "step_field"],
+      "description": "Minor units for set_budget (capped by Owner max_daily_budget)",
+      "confirm_if_missing": false
+    }
+  ],
+  "editable_governor_config": {
+    "allow_activate": {
+      "type": "boolean",
+      "default": false,
+      "label": "Allow status=ACTIVE"
+    },
+    "allow_budget_change": {
+      "type": "boolean",
+      "default": false,
+      "label": "Allow action=set_budget"
+    },
+    "max_daily_budget": {
+      "type": "integer",
+      "minimum": 100,
+      "default": 50000,
+      "label": "Max daily_budget (minor units)"
+    }
+  },
+  "auth": {
+    "required": true,
+    "binding_tool": "meta/ads-mutate",
+    "secret_kind": "meta-ads",
+    "credential_doc": "docs/credential.md",
+    "fields": [
+      {
+        "name": "access_token",
+        "label": "Marketing API access token",
+        "type": "password",
+        "required": true,
+        "sensitive": true
+      }
+    ],
+    "example_json": "{\"access_token\":\"EAAG-placeholder\"}"
+  },
+  "runtime": {
+    "kind": "package",
+    "entry": "runtime.invoke",
+    "transport": "in_process",
+    "timeout_ms": 45000,
+    "idempotent": false
+  },
+  "invoke_tool": "meta/ads-mutate",
+  "binding_tool": "meta/ads-mutate",
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": ["meta-ads-mutate", "facebook-ads-mutate"]
+}

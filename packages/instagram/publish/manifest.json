@@ -1,0 +1,127 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "instagram/publish",
+  "version": "1.0.0",
+  "kind": "connector",
+  "label": "Instagram Feed post",
+  "description": "Publish one Feed image post to an Instagram professional account linked to a Facebook Page via Graph API after Vault binding and Governor gate",
+  "category": "social",
+  "reads_external": false,
+  "writes_external": true,
+  "boundary": "External",
+  "default_gate": "require_human",
+  "risk": "medium",
+  "produces_content": false,
+  "propose_guide": "External Instagram Feed post after Internal compose: caption from upstream output. An image is required (JPEG/PNG via image_file_id). Do not share Vault binding with facebook/publish.",
+  "input_schema": {
+    "type": "object",
+    "required": ["caption", "image_file_id"],
+    "properties": {
+      "caption": {
+        "type": "string",
+        "maxLength": 2200
+      },
+      "image_file_id": {
+        "type": "string"
+      }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "ok": { "type": "boolean" },
+      "media_id": { "type": "string" },
+      "content": { "type": "string" },
+      "summary": { "type": "string" }
+    }
+  },
+  "params": [
+    {
+      "name": "caption",
+      "required": true,
+      "sources": ["upstream", "step_field", "nl_fixed"],
+      "description": "Feed caption; must come from an upstream compose step",
+      "example_nl": "Post the campaign image to Instagram with the previous caption",
+      "propose_hint": "Set `caption` from upstream compose and `image_file_id` from a file step.",
+      "confirm_if_missing": true
+    },
+    {
+      "name": "image_file_id",
+      "required": true,
+      "sources": ["step_field", "upstream"],
+      "description": "Required workspace image file_id (one JPEG/PNG)",
+      "confirm_if_missing": true
+    }
+  ],
+  "editable_governor_config": {
+    "blocked_keywords": {
+      "type": "array",
+      "items": { "type": "string" },
+      "label": "Blocked keywords",
+      "default": []
+    },
+    "blocked_url_hosts": {
+      "type": "array",
+      "items": { "type": "string" },
+      "label": "Blocked URL hosts",
+      "default": []
+    },
+    "max_chars": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 2200,
+      "default": 2200,
+      "label": "Max caption characters"
+    },
+    "max_mentions": {
+      "type": "integer",
+      "minimum": 0,
+      "label": "Max @ mentions"
+    },
+    "require_image": {
+      "type": "boolean",
+      "default": true,
+      "label": "Require image"
+    }
+  },
+  "auth": {
+    "required": true,
+    "binding_tool": "instagram/publish",
+    "secret_kind": "instagram",
+    "credential_doc": "docs/credential.md",
+    "fields": [
+      {
+        "name": "ig_user_id",
+        "label": "Instagram professional user ID",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "page_access_token",
+        "label": "Facebook Page access token",
+        "type": "password",
+        "required": true,
+        "sensitive": true
+      },
+      {
+        "name": "page_id",
+        "label": "Linked Facebook Page ID (for byte upload)",
+        "type": "text",
+        "required": true
+      }
+    ],
+    "example_json": "{\"ig_user_id\":\"17841400000000000\",\"page_access_token\":\"EAAG-placeholder\",\"page_id\":\"000000000000000\"}"
+  },
+  "runtime": {
+    "kind": "package",
+    "entry": "runtime.invoke",
+    "transport": "in_process",
+    "timeout_ms": 120000,
+    "idempotent": false
+  },
+  "invoke_tool": "instagram/publish",
+  "binding_tool": "instagram/publish",
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": []
+}

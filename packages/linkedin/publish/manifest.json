@@ -1,0 +1,131 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "linkedin/publish",
+  "version": "1.0.0",
+  "kind": "connector",
+  "label": "LinkedIn Company Page post",
+  "description": "Post to a LinkedIn Company Page (text, optional JPEG/PNG) via the Posts API after Vault binding and Governor gate",
+  "category": "social",
+  "reads_external": false,
+  "writes_external": true,
+  "boundary": "External",
+  "default_gate": "require_human",
+  "risk": "medium",
+  "produces_content": false,
+  "propose_guide": "External Company Page post after Internal compose/summarize: commentary must be upstream structured output, not the task NL verbatim. Optional image_file_id from a prior file step. Personal profile posts are out of scope.",
+  "input_schema": {
+    "type": "object",
+    "required": ["commentary"],
+    "properties": {
+      "commentary": {
+        "type": "string",
+        "maxLength": 3000
+      },
+      "image_file_id": {
+        "type": "string"
+      }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "ok": { "type": "boolean" },
+      "post_id": { "type": "string" },
+      "content": { "type": "string" },
+      "summary": { "type": "string" }
+    }
+  },
+  "params": [
+    {
+      "name": "commentary",
+      "required": true,
+      "sources": ["upstream", "step_field", "nl_fixed"],
+      "description": "Company Page post copy; must come from an upstream compose step, not raw task NL",
+      "example_nl": "Post the previous summary to the company LinkedIn Page",
+      "propose_hint": "Set step field `commentary` from a prior compose/summarize step.",
+      "confirm_if_missing": true
+    },
+    {
+      "name": "image_file_id",
+      "required": false,
+      "sources": ["step_field", "upstream"],
+      "description": "Optional workspace image file_id (one JPEG/PNG)",
+      "confirm_if_missing": false
+    }
+  ],
+  "editable_governor_config": {
+    "blocked_keywords": {
+      "type": "array",
+      "items": { "type": "string" },
+      "label": "Blocked keywords",
+      "description": "Reject if commentary contains a substring (case-insensitive)",
+      "default": []
+    },
+    "blocked_url_hosts": {
+      "type": "array",
+      "items": { "type": "string" },
+      "label": "Blocked URL hosts",
+      "description": "Reject if an http(s) URL host in commentary is listed",
+      "default": []
+    },
+    "max_chars": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 3000,
+      "default": 3000,
+      "label": "Max commentary characters"
+    },
+    "max_mentions": {
+      "type": "integer",
+      "minimum": 0,
+      "label": "Max @ mentions",
+      "description": "Omit for unlimited"
+    },
+    "require_image": {
+      "type": "boolean",
+      "default": false,
+      "label": "Require image"
+    }
+  },
+  "auth": {
+    "required": true,
+    "binding_tool": "linkedin/publish",
+    "secret_kind": "linkedin",
+    "credential_doc": "docs/credential.md",
+    "fields": [
+      {
+        "name": "access_token",
+        "label": "OAuth access token",
+        "type": "password",
+        "required": true,
+        "sensitive": true
+      },
+      {
+        "name": "organization_id",
+        "label": "Organization (Company Page) ID",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "linkedin_version",
+        "label": "LinkedIn-Version header (YYYYMM)",
+        "type": "text",
+        "required": false,
+        "default_value": "202503"
+      }
+    ],
+    "example_json": "{\"access_token\":\"AQX-placeholder\",\"organization_id\":\"12345678\",\"linkedin_version\":\"202503\"}"
+  },
+  "runtime": {
+    "kind": "package",
+    "entry": "runtime.invoke",
+    "transport": "in_process",
+    "timeout_ms": 90000,
+    "idempotent": false
+  },
+  "invoke_tool": "linkedin/publish",
+  "binding_tool": "linkedin/publish",
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": []
+}

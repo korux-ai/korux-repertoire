@@ -1,0 +1,10 @@
+{
+  "spec_version": "korux_governor_v1",
+  "capability_id": "marketing/performance-review",
+  "capability_version": "1.0.0",
+  "defaults": {
+    "intercept_on_invoke": false,
+    "editable_fields": ["report", "goal", "period", "source"]
+  },
+  "rules": []
+}

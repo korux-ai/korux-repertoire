@@ -1,0 +1,39 @@
+{
+  "spec_version": "korux_governor_v1",
+  "capability_id": "webflow/cms-publish",
+  "capability_version": "1.0.0",
+  "defaults": {
+    "intercept_on_invoke": true,
+    "editable_fields": ["name", "slug", "field_data", "publish"]
+  },
+  "rules": [
+    {
+      "id": "block_empty_name",
+      "when": { "args.name": { "empty": true } },
+      "action": "reject",
+      "code": "VALIDATION",
+      "message": "CMS item name is empty"
+    },
+    {
+      "id": "block_empty_slug",
+      "when": { "args.slug": { "empty": true } },
+      "action": "reject",
+      "code": "VALIDATION",
+      "message": "CMS item slug is empty"
+    },
+    {
+      "id": "block_denied_keywords",
+      "when": { "args.name": { "matches_any_owner": "blocked_keywords" } },
+      "action": "reject",
+      "code": "GOVERNOR_POLICY",
+      "message": "CMS item name contains a blocked keyword"
+    },
+    {
+      "id": "require_human_by_default",
+      "when": { "writes_external": true },
+      "action": "intercept",
+      "gate": "require_human",
+      "message": "Webflow CMS create/publish requires human approval"
+    }
+  ]
+}

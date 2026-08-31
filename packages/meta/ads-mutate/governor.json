@@ -1,0 +1,25 @@
+{
+  "spec_version": "korux_governor_v1",
+  "capability_id": "meta/ads-mutate",
+  "capability_version": "1.0.0",
+  "defaults": {
+    "intercept_on_invoke": true,
+    "editable_fields": ["action", "object_type", "object_id", "status", "daily_budget"]
+  },
+  "rules": [
+    {
+      "id": "block_empty_object_id",
+      "when": { "args.object_id": { "empty": true } },
+      "action": "reject",
+      "code": "VALIDATION",
+      "message": "object_id is empty"
+    },
+    {
+      "id": "require_human_by_default",
+      "when": { "writes_external": true },
+      "action": "intercept",
+      "gate": "require_human",
+      "message": "Meta ads mutate (spend-affecting) requires human approval"
+    }
+  ]
+}

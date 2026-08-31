@@ -1,0 +1,104 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "hubspot/crm-note",
+  "version": "1.0.0",
+  "kind": "connector",
+  "label": "HubSpot CRM note",
+  "description": "Create a HubSpot CRM note on a contact (by contact_id or email upsert) after Vault binding and Governor gate",
+  "category": "crm",
+  "reads_external": true,
+  "writes_external": true,
+  "boundary": "External",
+  "default_gate": "require_human",
+  "risk": "medium",
+  "produces_content": false,
+  "propose_guide": "Log marketing/sales handoff notes after research or meetings. Prefer contact_id when known; otherwise email creates/finds the contact then attaches the note.",
+  "input_schema": {
+    "type": "object",
+    "required": ["body"],
+    "properties": {
+      "body": { "type": "string", "maxLength": 10000 },
+      "contact_id": { "type": "string" },
+      "email": { "type": "string", "maxLength": 320 },
+      "firstname": { "type": "string", "maxLength": 100 },
+      "lastname": { "type": "string", "maxLength": 100 }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "ok": { "type": "boolean" },
+      "note_id": { "type": "string" },
+      "contact_id": { "type": "string" },
+      "content": { "type": "string" },
+      "summary": { "type": "string" }
+    }
+  },
+  "params": [
+    {
+      "name": "body",
+      "required": true,
+      "sources": ["upstream", "step_field", "nl_fixed"],
+      "description": "Note body text",
+      "propose_hint": "Set body from upstream summary; do not paste raw task NL.",
+      "confirm_if_missing": true
+    },
+    {
+      "name": "contact_id",
+      "required": false,
+      "sources": ["upstream", "step_field", "nl_fixed"],
+      "description": "HubSpot contact id when known",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "email",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "upstream"],
+      "description": "Contact email used to find or create the contact when contact_id is absent",
+      "confirm_if_missing": false
+    }
+  ],
+  "editable_governor_config": {
+    "blocked_keywords": {
+      "type": "array",
+      "items": { "type": "string" },
+      "label": "Blocked keywords",
+      "default": []
+    },
+    "max_chars": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 10000,
+      "default": 10000,
+      "label": "Max note characters"
+    }
+  },
+  "auth": {
+    "required": true,
+    "binding_tool": "hubspot/crm-note",
+    "secret_kind": "hubspot",
+    "credential_doc": "docs/credential.md",
+    "fields": [
+      {
+        "name": "access_token",
+        "label": "Private app access token",
+        "type": "password",
+        "required": true,
+        "sensitive": true
+      }
+    ],
+    "example_json": "{\"access_token\":\"pat-na1-xxxxxxxx\"}"
+  },
+  "runtime": {
+    "kind": "package",
+    "entry": "runtime.invoke",
+    "transport": "in_process",
+    "timeout_ms": 45000,
+    "idempotent": false
+  },
+  "invoke_tool": "hubspot/crm-note",
+  "binding_tool": "hubspot/crm-note",
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": []
+}

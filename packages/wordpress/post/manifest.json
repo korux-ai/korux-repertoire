@@ -1,0 +1,126 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "wordpress/post",
+  "version": "1.0.0",
+  "kind": "connector",
+  "label": "WordPress post",
+  "description": "Create a WordPress post via REST API (draft by default, optional publish) after Vault binding and Governor gate",
+  "category": "cms",
+  "reads_external": false,
+  "writes_external": true,
+  "boundary": "External",
+  "default_gate": "require_human",
+  "risk": "medium",
+  "produces_content": false,
+  "propose_guide": "Publish blog/landing copy after compose. Default status is draft. Set status=publish only when NL explicitly asks to publish.",
+  "input_schema": {
+    "type": "object",
+    "required": ["title", "content"],
+    "properties": {
+      "title": { "type": "string", "maxLength": 500 },
+      "content": { "type": "string", "maxLength": 200000 },
+      "status": {
+        "type": "string",
+        "enum": ["draft", "publish", "pending", "private"]
+      },
+      "excerpt": { "type": "string", "maxLength": 5000 },
+      "slug": { "type": "string", "maxLength": 200 }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "ok": { "type": "boolean" },
+      "post_id": { "type": "string" },
+      "link": { "type": "string" },
+      "status": { "type": "string" },
+      "content": { "type": "string" },
+      "summary": { "type": "string" }
+    }
+  },
+  "params": [
+    {
+      "name": "title",
+      "required": true,
+      "sources": ["upstream", "step_field", "nl_fixed"],
+      "description": "Post title",
+      "confirm_if_missing": true
+    },
+    {
+      "name": "content",
+      "required": true,
+      "sources": ["upstream", "step_field"],
+      "description": "Post HTML/content body",
+      "propose_hint": "Set content from upstream compose/summarize.",
+      "confirm_if_missing": true
+    },
+    {
+      "name": "status",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "default"],
+      "description": "draft (default), publish, pending, or private",
+      "confirm_if_missing": false
+    }
+  ],
+  "editable_governor_config": {
+    "blocked_keywords": {
+      "type": "array",
+      "items": { "type": "string" },
+      "label": "Blocked keywords",
+      "default": []
+    },
+    "blocked_url_hosts": {
+      "type": "array",
+      "items": { "type": "string" },
+      "label": "Blocked URL hosts",
+      "default": []
+    },
+    "max_chars": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 200000,
+      "default": 200000,
+      "label": "Max content characters"
+    }
+  },
+  "auth": {
+    "required": true,
+    "binding_tool": "wordpress/post",
+    "secret_kind": "wordpress",
+    "credential_doc": "docs/credential.md",
+    "fields": [
+      {
+        "name": "site_url",
+        "label": "Site base URL (https)",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "username",
+        "label": "WordPress username",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "application_password",
+        "label": "Application password",
+        "type": "password",
+        "required": true,
+        "sensitive": true
+      }
+    ],
+    "example_json": "{\"site_url\":\"https://example.com\",\"username\":\"editor\",\"application_password\":\"xxxx xxxx xxxx xxxx xxxx xxxx\"}"
+  },
+  "runtime": {
+    "kind": "package",
+    "entry": "runtime.invoke",
+    "transport": "in_process",
+    "timeout_ms": 45000,
+    "idempotent": false
+  },
+  "invoke_tool": "wordpress/post",
+  "binding_tool": "wordpress/post",
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": ["wp-post"]
+}

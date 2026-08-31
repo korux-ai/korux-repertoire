@@ -1,0 +1,111 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "meta/ads-insights",
+  "version": "1.0.0",
+  "kind": "connector",
+  "label": "Meta Ads insights",
+  "description": "Read Meta Marketing API ad account insights (spend, impressions, clicks, CPA fields) — read-only, no bid changes",
+  "category": "analytics",
+  "reads_external": true,
+  "writes_external": false,
+  "boundary": "External",
+  "default_gate": "auto",
+  "risk": "low",
+  "produces_content": true,
+  "propose_guide": "Use when NL asks for Meta/Facebook/Instagram ads performance, spend, or CPA. Read-only — never change budgets or creatives. Prefer follow-up marketing/performance-review. Default date_preset=last_7d, level=campaign.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "date_preset": {
+        "type": "string",
+        "description": "e.g. last_7d, last_30d, yesterday"
+      },
+      "level": {
+        "type": "string",
+        "enum": ["account", "campaign", "adset", "ad"]
+      },
+      "fields": {
+        "type": "array",
+        "items": { "type": "string" },
+        "maxItems": 20
+      },
+      "limit": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 100
+      },
+      "ad_account_id": {
+        "type": "string",
+        "description": "Override Vault ad account id"
+      }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "required": ["content"],
+    "properties": {
+      "ok": { "type": "boolean" },
+      "content": { "type": "string" },
+      "summary": { "type": "string" },
+      "row_count": { "type": "integer" }
+    }
+  },
+  "params": [
+    {
+      "name": "date_preset",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "default"],
+      "description": "Meta date_preset (default last_7d)",
+      "example_nl": "Pull Meta ads spend and CPA for the last 7 days",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "level",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "default"],
+      "description": "account, campaign (default), adset, or ad",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "limit",
+      "required": false,
+      "sources": ["step_field", "default"],
+      "description": "Max rows (default 25)",
+      "confirm_if_missing": false
+    }
+  ],
+  "auth": {
+    "required": true,
+    "binding_tool": "meta/ads-insights",
+    "secret_kind": "meta-ads",
+    "credential_doc": "docs/credential.md",
+    "fields": [
+      {
+        "name": "access_token",
+        "label": "Marketing API access token",
+        "type": "password",
+        "required": true,
+        "sensitive": true
+      },
+      {
+        "name": "ad_account_id",
+        "label": "Ad account id (act_… or digits)",
+        "type": "text",
+        "required": true
+      }
+    ],
+    "example_json": "{\"access_token\":\"EAAG-placeholder\",\"ad_account_id\":\"act_1234567890\"}"
+  },
+  "runtime": {
+    "kind": "package",
+    "entry": "runtime.invoke",
+    "transport": "in_process",
+    "timeout_ms": 45000,
+    "idempotent": true
+  },
+  "invoke_tool": "meta/ads-insights",
+  "binding_tool": "meta/ads-insights",
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": ["facebook-ads-insights", "meta-ads"]
+}

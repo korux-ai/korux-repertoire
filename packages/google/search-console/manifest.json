@@ -1,0 +1,145 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "google/search-console",
+  "version": "1.0.0",
+  "kind": "connector",
+  "label": "Google Search Console",
+  "description": "Query Search Console search analytics (clicks, impressions, CTR, position) read-only after Vault binding",
+  "category": "analytics",
+  "reads_external": true,
+  "writes_external": false,
+  "boundary": "External",
+  "default_gate": "auto",
+  "risk": "low",
+  "produces_content": true,
+  "propose_guide": "Use when NL asks for SEO performance, top queries, or Search Console data. Prefer site_url from Vault. Default dimensions=query. Follow with summarize or marketing/performance-review-style analysis on the platform. Does not submit sitemaps or change property settings.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "start_date": {
+        "type": "string",
+        "description": "YYYY-MM-DD or relative e.g. 28daysAgo"
+      },
+      "end_date": {
+        "type": "string",
+        "description": "YYYY-MM-DD or relative e.g. 3daysAgo"
+      },
+      "dimensions": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": ["query", "page", "country", "device", "searchAppearance", "date"]
+        },
+        "maxItems": 4
+      },
+      "row_limit": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 1000
+      },
+      "site_url": {
+        "type": "string",
+        "description": "Override Vault site_url (https://…/ or sc-domain:…)"
+      },
+      "search_type": {
+        "type": "string",
+        "enum": ["web", "image", "video", "news"]
+      }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "required": ["content"],
+    "properties": {
+      "ok": { "type": "boolean" },
+      "content": { "type": "string" },
+      "summary": { "type": "string" },
+      "row_count": { "type": "integer" }
+    }
+  },
+  "params": [
+    {
+      "name": "start_date",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "default"],
+      "description": "Start date (default 28daysAgo)",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "end_date",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "default"],
+      "description": "End date (default 3daysAgo; GSC data lags)",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "dimensions",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "default"],
+      "description": "Group by query, page, country, device, date, …",
+      "example_nl": "Show top Search Console queries for the last month",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "row_limit",
+      "required": false,
+      "sources": ["step_field", "default"],
+      "description": "Max rows (default 25, max 1000)",
+      "confirm_if_missing": false
+    }
+  ],
+  "auth": {
+    "required": true,
+    "binding_tool": "google/search-console",
+    "secret_kind": "google-search-console",
+    "credential_doc": "docs/credential.md",
+    "fields": [
+      {
+        "name": "site_url",
+        "label": "Search Console property URL",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "client_id",
+        "label": "OAuth client ID",
+        "type": "text",
+        "required": false
+      },
+      {
+        "name": "client_secret",
+        "label": "OAuth client secret",
+        "type": "password",
+        "required": false,
+        "sensitive": true
+      },
+      {
+        "name": "refresh_token",
+        "label": "OAuth refresh token",
+        "type": "password",
+        "required": false,
+        "sensitive": true
+      },
+      {
+        "name": "access_token",
+        "label": "Short-lived access token (optional)",
+        "type": "password",
+        "required": false,
+        "sensitive": true
+      }
+    ],
+    "example_json": "{\"site_url\":\"sc-domain:example.com\",\"client_id\":\"xxxxx.apps.googleusercontent.com\",\"client_secret\":\"GOCSPX-xxxxx\",\"refresh_token\":\"1//xxxxx\"}"
+  },
+  "runtime": {
+    "kind": "package",
+    "entry": "runtime.invoke",
+    "transport": "in_process",
+    "timeout_ms": 45000,
+    "idempotent": true
+  },
+  "invoke_tool": "google/search-console",
+  "binding_tool": "google/search-console",
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": ["gsc", "search-console"]
+}

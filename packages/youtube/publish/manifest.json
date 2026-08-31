@@ -1,0 +1,124 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "youtube/publish",
+  "version": "1.0.0",
+  "kind": "connector",
+  "label": "YouTube video upload",
+  "description": "Upload a video to YouTube via Data API v3 resumable upload after Vault binding and Governor gate (default privacy=unlisted)",
+  "category": "social",
+  "reads_external": false,
+  "writes_external": true,
+  "boundary": "External",
+  "default_gate": "require_human",
+  "risk": "high",
+  "produces_content": false,
+  "propose_guide": "Upload composed video assets to a channel. Requires video_file_id with Korux-injected context.video.bytes. Default privacy_status=unlisted — set public only when NL explicitly asks. Unverified Google Cloud projects may force private. Out of scope: live streams, playlists, Shorts-only heuristics, comments.",
+  "input_schema": {
+    "type": "object",
+    "required": ["title", "video_file_id"],
+    "properties": {
+      "title": { "type": "string", "maxLength": 100 },
+      "description": { "type": "string", "maxLength": 5000 },
+      "video_file_id": { "type": "string" },
+      "privacy_status": {
+        "type": "string",
+        "enum": ["private", "unlisted", "public"]
+      },
+      "category_id": { "type": "string", "maxLength": 10 },
+      "tags": {
+        "type": "array",
+        "items": { "type": "string" },
+        "maxItems": 30
+      }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "ok": { "type": "boolean" },
+      "video_id": { "type": "string" },
+      "privacy_status": { "type": "string" },
+      "content": { "type": "string" },
+      "summary": { "type": "string" }
+    }
+  },
+  "params": [
+    {
+      "name": "title",
+      "required": true,
+      "sources": ["upstream", "step_field", "nl_fixed"],
+      "description": "Video title",
+      "confirm_if_missing": true
+    },
+    {
+      "name": "video_file_id",
+      "required": true,
+      "sources": ["step_field", "upstream"],
+      "description": "Workspace video file_id (mp4/mov/webm)",
+      "confirm_if_missing": true
+    },
+    {
+      "name": "privacy_status",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "default"],
+      "description": "unlisted (default), private, or public",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "description",
+      "required": false,
+      "sources": ["upstream", "step_field"],
+      "description": "Video description",
+      "propose_hint": "Prefer upstream compose output.",
+      "confirm_if_missing": false
+    }
+  ],
+  "editable_governor_config": {
+    "blocked_keywords": {
+      "type": "array",
+      "items": { "type": "string" },
+      "label": "Blocked keywords (title/description)",
+      "default": []
+    },
+    "allow_public": {
+      "type": "boolean",
+      "default": false,
+      "label": "Allow privacy_status=public"
+    },
+    "max_video_bytes": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 268435456,
+      "default": 134217728,
+      "label": "Max video bytes (default 128MiB)"
+    }
+  },
+  "auth": {
+    "required": true,
+    "binding_tool": "youtube/publish",
+    "secret_kind": "youtube",
+    "credential_doc": "docs/credential.md",
+    "fields": [
+      {
+        "name": "access_token",
+        "label": "OAuth access token (youtube.upload)",
+        "type": "password",
+        "required": true,
+        "sensitive": true
+      }
+    ],
+    "example_json": "{\"access_token\":\"ya29.xxxxxxxx\"}"
+  },
+  "runtime": {
+    "kind": "package",
+    "entry": "runtime.invoke",
+    "transport": "in_process",
+    "timeout_ms": 300000,
+    "idempotent": false
+  },
+  "invoke_tool": "youtube/publish",
+  "binding_tool": "youtube/publish",
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": ["youtube-upload"]
+}

@@ -1,0 +1,78 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "marketing/local-store",
+  "version": "1.0.0",
+  "kind": "skill",
+  "label": "Local store campaign",
+  "description": "Propose a local / multi-location retail or hospitality marketing plan (geo, offers, channels, compliance)",
+  "category": "marketing",
+  "reads_external": false,
+  "writes_external": false,
+  "boundary": "Internal",
+  "default_gate": "auto",
+  "risk": "low",
+  "produces_content": true,
+  "propose_guide": "Use when NL asks for a local store, restaurant, clinic, salon, franchise, or geo-targeted promo plan. Emit Internal structure: location(s), offer, radius/audience, channel mix (Maps/GBP hints, Instagram Feed, Facebook Page, SMS/email if owned, CMS landing), week cadence, KPIs (foot traffic, bookings, coupon redemptions), and legal constraints (hours, alcohol, health claims). Prefer marketing/campaign-brief first when the goal is vague. Downstream: marketing/channel-mix → content-calendar / ab-copy → connectors (instagram/publish, facebook/publish, wordpress/post or webflow/cms-publish, mailchimp/campaign) under human gates. Do not invent store addresses or claim Google Business Profile write access unless a connector exists.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "business_type": { "type": "string", "maxLength": 200 },
+      "locations": { "type": "string", "maxLength": 2000 },
+      "offer": { "type": "string", "maxLength": 1000 },
+      "radius_or_geo": { "type": "string", "maxLength": 500 },
+      "constraints": { "type": "string", "maxLength": 1000 },
+      "timeline": { "type": "string", "maxLength": 200 }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "required": ["content"],
+    "properties": {
+      "content": { "type": "string" },
+      "summary": { "type": "string" },
+      "primary_channels": {
+        "type": "array",
+        "items": { "type": "string" }
+      },
+      "kpis": {
+        "type": "array",
+        "items": { "type": "string" }
+      }
+    }
+  },
+  "params": [
+    {
+      "name": "business_type",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "upstream"],
+      "description": "Retail, restaurant, clinic, etc.",
+      "example_nl": "Plan a weekend promo for our two downtown coffee shops",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "locations",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "upstream"],
+      "description": "Store names / cities when stated",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "offer",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "upstream"],
+      "description": "Promo offer or seasonal theme",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "constraints",
+      "required": false,
+      "sources": ["nl_fixed", "step_field"],
+      "description": "Budget, brand, legal, or hours constraints",
+      "confirm_if_missing": false
+    }
+  ],
+  "auth": { "required": false },
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": ["local-store", "local-business"]
+}

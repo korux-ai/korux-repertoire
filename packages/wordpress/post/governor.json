@@ -1,0 +1,53 @@
+{
+  "spec_version": "korux_governor_v1",
+  "capability_id": "wordpress/post",
+  "capability_version": "1.0.0",
+  "defaults": {
+    "intercept_on_invoke": true,
+    "editable_fields": ["title", "content", "status", "excerpt", "slug"]
+  },
+  "rules": [
+    {
+      "id": "block_empty_title",
+      "when": { "args.title": { "empty": true } },
+      "action": "reject",
+      "code": "VALIDATION",
+      "message": "Post title is empty"
+    },
+    {
+      "id": "block_empty_content",
+      "when": { "args.content": { "empty": true } },
+      "action": "reject",
+      "code": "VALIDATION",
+      "message": "Post content is empty"
+    },
+    {
+      "id": "block_denied_keywords",
+      "when": { "args.content": { "matches_any_owner": "blocked_keywords" } },
+      "action": "reject",
+      "code": "GOVERNOR_POLICY",
+      "message": "Post content contains a blocked keyword"
+    },
+    {
+      "id": "block_denied_url_hosts",
+      "when": { "args.content": { "url_host_in_owner": "blocked_url_hosts" } },
+      "action": "reject",
+      "code": "GOVERNOR_POLICY",
+      "message": "Post content contains a blocked URL host"
+    },
+    {
+      "id": "block_over_max_chars",
+      "when": { "args.content": { "length_gt_owner": "max_chars" } },
+      "action": "reject",
+      "code": "GOVERNOR_POLICY",
+      "message": "Post content exceeds Owner max_chars"
+    },
+    {
+      "id": "require_human_by_default",
+      "when": { "writes_external": true },
+      "action": "intercept",
+      "gate": "require_human",
+      "message": "WordPress post create/publish requires human approval"
+    }
+  ]
+}

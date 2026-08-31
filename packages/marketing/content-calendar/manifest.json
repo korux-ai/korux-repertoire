@@ -1,0 +1,69 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "marketing/content-calendar",
+  "version": "1.0.0",
+  "kind": "skill",
+  "label": "Marketing content calendar",
+  "description": "Propose a week/month content calendar (themes, channels, cadence) from a campaign brief",
+  "category": "marketing",
+  "reads_external": false,
+  "writes_external": false,
+  "boundary": "Internal",
+  "default_gate": "auto",
+  "risk": "low",
+  "produces_content": true,
+  "propose_guide": "Use after marketing/campaign-brief or channel-mix when NL asks for a content calendar, editorial schedule, or posting cadence. Emit an Internal calendar (dates/slots, theme, channel, asset type, owner/status). Do not publish — later steps use marketing/ab-copy then connectors under human gates. Keep 1–4 weeks unless NL asks for a full month.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "brief": { "type": "string", "maxLength": 8000 },
+      "horizon": {
+        "type": "string",
+        "enum": ["week", "two_weeks", "month"]
+      },
+      "channels": {
+        "type": "array",
+        "items": { "type": "string" },
+        "maxItems": 8
+      },
+      "start_date": { "type": "string", "maxLength": 32 }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "required": ["content"],
+    "properties": {
+      "content": { "type": "string" },
+      "summary": { "type": "string" }
+    }
+  },
+  "params": [
+    {
+      "name": "brief",
+      "required": false,
+      "sources": ["upstream", "step_field"],
+      "description": "Upstream campaign brief",
+      "propose_hint": "Prefer marketing/campaign-brief output as `brief`.",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "horizon",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "default"],
+      "description": "week (default), two_weeks, or month",
+      "example_nl": "Build a two-week content calendar for the launch",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "channels",
+      "required": false,
+      "sources": ["upstream", "nl_fixed", "step_field"],
+      "description": "Channels from channel-mix when available",
+      "confirm_if_missing": false
+    }
+  ],
+  "auth": { "required": false },
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": ["content-calendar"]
+}

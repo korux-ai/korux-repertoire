@@ -1,0 +1,78 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "marketing/hiring-campaign",
+  "version": "1.0.0",
+  "kind": "skill",
+  "label": "Hiring campaign",
+  "description": "Propose an employer-brand / recruiting marketing plan (roles, audience, channels, compliance)",
+  "category": "marketing",
+  "reads_external": false,
+  "writes_external": false,
+  "boundary": "Internal",
+  "default_gate": "auto",
+  "risk": "low",
+  "produces_content": true,
+  "propose_guide": "Use when NL asks for a hiring push, employer brand campaign, campus recruit, or open-role promo. Emit Internal structure: roles/levels, candidate persona, EVP/message pillars, channel mix (LinkedIn Company Page, career site CMS, email nurture, optional Meta reach — ads write is out of catalog), calendar, KPIs (applicants, qualified, offer accept), and compliance (EEO, no discriminatory language, accurate compensation claims). Downstream: marketing/brand-voice → ab-copy → linkedin/publish, wordpress/post or webflow/cms-publish, mailchimp/campaign or klaviyo/campaign, hubspot/contact-upsert for CRM leads — all write-external under human gates. Never invent salary bands or legal disclaimers; flag when Owner must supply them.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "roles": { "type": "string", "maxLength": 2000 },
+      "locations": { "type": "string", "maxLength": 1000 },
+      "audience": { "type": "string", "maxLength": 500 },
+      "evp": { "type": "string", "maxLength": 2000 },
+      "constraints": { "type": "string", "maxLength": 1000 },
+      "timeline": { "type": "string", "maxLength": 200 }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "required": ["content"],
+    "properties": {
+      "content": { "type": "string" },
+      "summary": { "type": "string" },
+      "primary_channels": {
+        "type": "array",
+        "items": { "type": "string" }
+      },
+      "kpis": {
+        "type": "array",
+        "items": { "type": "string" }
+      }
+    }
+  },
+  "params": [
+    {
+      "name": "roles",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "upstream"],
+      "description": "Open roles or hiring themes",
+      "example_nl": "Plan a LinkedIn + careers-page campaign for senior backend engineers",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "audience",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "upstream"],
+      "description": "Candidate persona when stated",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "evp",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "upstream"],
+      "description": "Employer value proposition hints",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "constraints",
+      "required": false,
+      "sources": ["nl_fixed", "step_field"],
+      "description": "Budget, brand, EEO, or channel constraints",
+      "confirm_if_missing": false
+    }
+  ],
+  "auth": { "required": false },
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": ["hiring-campaign", "recruiting-campaign"]
+}

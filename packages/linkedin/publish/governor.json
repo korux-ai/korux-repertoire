@@ -1,0 +1,60 @@
+{
+  "spec_version": "korux_governor_v1",
+  "capability_id": "linkedin/publish",
+  "capability_version": "1.0.0",
+  "defaults": {
+    "intercept_on_invoke": true,
+    "editable_fields": ["commentary", "image_file_id"]
+  },
+  "rules": [
+    {
+      "id": "block_empty_commentary",
+      "when": { "args.commentary": { "empty": true } },
+      "action": "reject",
+      "code": "VALIDATION",
+      "message": "Commentary is empty; use upstream step output"
+    },
+    {
+      "id": "block_denied_keywords",
+      "when": { "args.commentary": { "matches_any_owner": "blocked_keywords" } },
+      "action": "reject",
+      "code": "GOVERNOR_POLICY",
+      "message": "Commentary contains a blocked keyword"
+    },
+    {
+      "id": "block_denied_url_hosts",
+      "when": { "args.commentary": { "url_host_in_owner": "blocked_url_hosts" } },
+      "action": "reject",
+      "code": "GOVERNOR_POLICY",
+      "message": "Commentary contains a blocked URL host"
+    },
+    {
+      "id": "block_over_max_chars",
+      "when": { "args.commentary": { "length_gt_owner": "max_chars" } },
+      "action": "reject",
+      "code": "GOVERNOR_POLICY",
+      "message": "Commentary exceeds Owner max_chars"
+    },
+    {
+      "id": "block_over_max_mentions",
+      "when": { "args.commentary": { "mentions_gt_owner": "max_mentions" } },
+      "action": "reject",
+      "code": "GOVERNOR_POLICY",
+      "message": "Commentary @ mention count exceeds Owner limit"
+    },
+    {
+      "id": "require_image_when_configured",
+      "when": { "args.image_file_id": { "empty_when_owner_true": "require_image" } },
+      "action": "reject",
+      "code": "GOVERNOR_POLICY",
+      "message": "Owner requires an image on LinkedIn posts"
+    },
+    {
+      "id": "require_human_by_default",
+      "when": { "writes_external": true },
+      "action": "intercept",
+      "gate": "require_human",
+      "message": "LinkedIn Company Page posts require human approval"
+    }
+  ]
+}

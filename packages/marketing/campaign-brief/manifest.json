@@ -1,0 +1,91 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "marketing/campaign-brief",
+  "version": "1.0.0",
+  "kind": "skill",
+  "label": "Marketing campaign brief",
+  "description": "Propose a structured marketing campaign brief (goal, audience, offer, channels, KPIs, timeline) for downstream compose and connector steps",
+  "category": "marketing",
+  "reads_external": false,
+  "writes_external": false,
+  "boundary": "Internal",
+  "default_gate": "auto",
+  "risk": "low",
+  "produces_content": true,
+  "propose_guide": "Use early when NL asks to plan a campaign, launch, promo, or go-to-market brief. Emit structured fields (goal, audience, offer, primary_channels, kpis, timeline, constraints) as Internal content — do not post or email yet. Follow with marketing/channel-mix if channels are unclear, then compose/ab copy, then external connectors (linkedin/publish, mailchimp/campaign, wordpress/post, etc.) under human gates. Never invent Vault credentials or skip approval on write-external steps.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "objective": {
+        "type": "string",
+        "maxLength": 500,
+        "description": "Business objective stated in NL when fixed"
+      },
+      "audience": {
+        "type": "string",
+        "maxLength": 500
+      },
+      "offer": {
+        "type": "string",
+        "maxLength": 1000
+      },
+      "timeline": {
+        "type": "string",
+        "maxLength": 200
+      },
+      "constraints": {
+        "type": "string",
+        "maxLength": 1000
+      }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "required": ["content"],
+    "properties": {
+      "content": { "type": "string" },
+      "summary": { "type": "string" },
+      "goal": { "type": "string" },
+      "audience": { "type": "string" },
+      "primary_channels": {
+        "type": "array",
+        "items": { "type": "string" }
+      },
+      "kpis": {
+        "type": "array",
+        "items": { "type": "string" }
+      }
+    }
+  },
+  "params": [
+    {
+      "name": "objective",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "upstream"],
+      "description": "Campaign objective when stated in NL",
+      "example_nl": "Plan a Q4 product launch campaign for SMB IT buyers",
+      "propose_hint": "Capture objective from NL; leave empty if the brief should infer from the task.",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "audience",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "upstream"],
+      "description": "Target audience when stated",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "constraints",
+      "required": false,
+      "sources": ["nl_fixed", "step_field"],
+      "description": "Budget, brand, legal, or channel constraints",
+      "confirm_if_missing": false
+    }
+  ],
+  "auth": {
+    "required": false
+  },
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": ["campaign-brief"]
+}

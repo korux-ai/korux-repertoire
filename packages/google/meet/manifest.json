@@ -1,0 +1,91 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "google/meet",
+  "version": "1.0.0",
+  "kind": "connector",
+  "label": "Google Meet",
+  "description": "Verify Google identity for Meet workflows via OAuth userinfo (or refresh token) after Vault binding",
+  "category": "meeting",
+  "reads_external": true,
+  "writes_external": false,
+  "boundary": "External",
+  "default_gate": "auto",
+  "risk": "low",
+  "produces_content": false,
+  "propose_guide": "Use when a workflow needs Google Meet identity binding. Pass optional meeting_id from monitor/trigger context. Does not create Meet conferences.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "meeting_id": { "type": "string" },
+      "summary": { "type": "string" }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "ok": { "type": "boolean" },
+      "provider": { "type": "string" },
+      "user_id": { "type": "string" },
+      "email": { "type": "string" },
+      "meeting_id": { "type": "string" },
+      "summary": { "type": "string" }
+    }
+  },
+  "params": [
+    {
+      "name": "meeting_id",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "trigger"],
+      "description": "Optional meeting id for monitor context",
+      "confirm_if_missing": false
+    }
+  ],
+  "auth": {
+    "required": true,
+    "binding_tool": "google/meet",
+    "secret_kind": "google-meet",
+    "credential_doc": "docs/credential.md",
+    "fields": [
+      {
+        "name": "access_token",
+        "label": "OAuth access token",
+        "type": "password",
+        "required": false,
+        "sensitive": true
+      },
+      {
+        "name": "client_id",
+        "label": "OAuth client ID",
+        "type": "text",
+        "required": false
+      },
+      {
+        "name": "client_secret",
+        "label": "OAuth client secret",
+        "type": "password",
+        "required": false,
+        "sensitive": true
+      },
+      {
+        "name": "refresh_token",
+        "label": "OAuth refresh token",
+        "type": "password",
+        "required": false,
+        "sensitive": true
+      }
+    ],
+    "example_json": "{\"client_id\":\"xxxxx.apps.googleusercontent.com\",\"client_secret\":\"GOCSPX-xxxxx\",\"refresh_token\":\"1//xxxxx\"}"
+  },
+  "runtime": {
+    "kind": "package",
+    "entry": "runtime.invoke",
+    "transport": "in_process",
+    "timeout_ms": 30000,
+    "idempotent": true
+  },
+  "invoke_tool": "google/meet",
+  "binding_tool": "google/meet",
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": ["google-meet"]
+}

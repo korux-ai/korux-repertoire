@@ -1,0 +1,97 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "marketing/channel-mix",
+  "version": "1.0.0",
+  "kind": "skill",
+  "label": "Marketing channel mix",
+  "description": "Propose which owned/paid/earned channels to use for a brief (and which repertoire connectors to attach next)",
+  "category": "marketing",
+  "reads_external": false,
+  "writes_external": false,
+  "boundary": "Internal",
+  "default_gate": "auto",
+  "risk": "low",
+  "produces_content": true,
+  "propose_guide": "Use after marketing/campaign-brief (or vertical skills marketing/local-store / marketing/hiring-campaign) when NL asks which channels to use. Map goal+audience to a small channel mix and name concrete repertoire connectors when available: linkedin/publish (B2B Page), instagram/publish (visual Feed), twitter/publish / facebook/publish, mailchimp/campaign or klaviyo/campaign (email), wordpress/post or webflow/cms-publish (SEO/CMS), hubspot/contact-upsert or hubspot/crm-note (CRM), google/analytics-report (measure). Prefer 2–4 channels. Do not invoke write-external connectors in this skill — only recommend next steps for Propose. Call out when a channel needs human approval.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "goal": {
+        "type": "string",
+        "maxLength": 500
+      },
+      "audience": {
+        "type": "string",
+        "maxLength": 500
+      },
+      "budget_band": {
+        "type": "string",
+        "enum": ["none", "low", "medium", "high"]
+      },
+      "preferred_channels": {
+        "type": "array",
+        "items": { "type": "string" },
+        "maxItems": 8
+      },
+      "brief": {
+        "type": "string",
+        "maxLength": 8000,
+        "description": "Upstream campaign brief content when available"
+      }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "required": ["content"],
+    "properties": {
+      "content": { "type": "string" },
+      "summary": { "type": "string" },
+      "channels": {
+        "type": "array",
+        "items": { "type": "string" }
+      },
+      "connectors": {
+        "type": "array",
+        "items": { "type": "string" }
+      }
+    }
+  },
+  "params": [
+    {
+      "name": "brief",
+      "required": false,
+      "sources": ["upstream", "step_field"],
+      "description": "Upstream campaign brief text when present",
+      "propose_hint": "Prefer upstream marketing/campaign-brief content as `brief`.",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "goal",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "upstream"],
+      "description": "Campaign goal if not in brief",
+      "example_nl": "Which channels for a B2B SaaS webinar push?",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "audience",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "upstream"],
+      "description": "Audience hint",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "budget_band",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "default"],
+      "description": "none/low/medium/high — default none (organic-first)",
+      "confirm_if_missing": false
+    }
+  ],
+  "auth": {
+    "required": false
+  },
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": ["channel-mix"]
+}

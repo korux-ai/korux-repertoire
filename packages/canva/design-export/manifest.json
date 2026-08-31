@@ -1,0 +1,129 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "canva/design-export",
+  "version": "1.0.0",
+  "kind": "connector",
+  "label": "Canva design export",
+  "description": "Export a Canva design (PNG/JPG/PDF), optionally autofill a Brand Template first, via Connect API after Vault binding and Governor gate",
+  "category": "design",
+  "reads_external": true,
+  "writes_external": true,
+  "boundary": "External",
+  "default_gate": "require_human",
+  "risk": "medium",
+  "produces_content": true,
+  "propose_guide": "Generate/export creative from Canva. Prefer action=export with an existing design_id. Use autofill_and_export only when a Brand Template id and text field map are known (Enterprise). Returns export URL(s) — do not claim permanent CDN hosting. Downstream social connectors may need a Korux file step to re-host the asset.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "action": {
+        "type": "string",
+        "enum": ["export", "autofill_and_export"]
+      },
+      "design_id": { "type": "string" },
+      "brand_template_id": { "type": "string" },
+      "title": { "type": "string", "maxLength": 200 },
+      "field_data": {
+        "type": "object",
+        "description": "Brand template text field name → string value"
+      },
+      "format": {
+        "type": "string",
+        "enum": ["png", "jpg", "pdf"]
+      }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "ok": { "type": "boolean" },
+      "design_id": { "type": "string" },
+      "export_urls": {
+        "type": "array",
+        "items": { "type": "string" }
+      },
+      "content": { "type": "string" },
+      "summary": { "type": "string" }
+    }
+  },
+  "params": [
+    {
+      "name": "action",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "default"],
+      "description": "export (default) or autofill_and_export",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "design_id",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "upstream"],
+      "description": "Existing Canva design id (required for export)",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "brand_template_id",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "default"],
+      "description": "Brand template id for autofill_and_export",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "field_data",
+      "required": false,
+      "sources": ["upstream", "step_field"],
+      "description": "Text fields for Brand Template autofill",
+      "propose_hint": "Map composed strings to template field names.",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "format",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "default"],
+      "description": "png (default), jpg, or pdf",
+      "confirm_if_missing": false
+    }
+  ],
+  "editable_governor_config": {
+    "blocked_keywords": {
+      "type": "array",
+      "items": { "type": "string" },
+      "label": "Blocked keywords (title / field values)",
+      "default": []
+    },
+    "allowed_formats": {
+      "type": "array",
+      "items": { "type": "string" },
+      "label": "Allowed export formats",
+      "default": ["png", "jpg", "pdf"]
+    }
+  },
+  "auth": {
+    "required": true,
+    "binding_tool": "canva/design-export",
+    "secret_kind": "canva",
+    "credential_doc": "docs/credential.md",
+    "fields": [
+      {
+        "name": "access_token",
+        "label": "OAuth access token",
+        "type": "password",
+        "required": true,
+        "sensitive": true
+      }
+    ],
+    "example_json": "{\"access_token\":\"xxxxxxxx\"}"
+  },
+  "runtime": {
+    "kind": "package",
+    "entry": "runtime.invoke",
+    "transport": "in_process",
+    "timeout_ms": 120000,
+    "idempotent": false
+  },
+  "invoke_tool": "canva/design-export",
+  "binding_tool": "canva/design-export",
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": ["canva-export"]
+}

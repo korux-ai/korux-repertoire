@@ -1,0 +1,77 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "marketing/brand-voice",
+  "version": "1.0.0",
+  "kind": "skill",
+  "label": "Marketing brand voice",
+  "description": "Propose or apply a brand-voice checklist (tone, do/don't, banned phrases) before external compose or publish steps",
+  "category": "marketing",
+  "reads_external": false,
+  "writes_external": false,
+  "boundary": "Internal",
+  "default_gate": "auto",
+  "risk": "low",
+  "produces_content": true,
+  "propose_guide": "Use when NL mentions brand voice, tone of voice, messaging guidelines, or before publishing when brand constraints matter. Produce an Internal checklist: voice attributes, do/don't, banned phrases, required disclaimers, locale. Prefer feeding banned phrases into Owner governor blocked_keywords on write-external connectors (linkedin/publish, mailchimp/campaign, etc.). Optionally take upstream draft copy and return a voice-compliance critique — do not post externally in this skill.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "brand_name": { "type": "string", "maxLength": 200 },
+      "draft": {
+        "type": "string",
+        "maxLength": 20000,
+        "description": "Optional draft copy to review against voice"
+      },
+      "locale": { "type": "string", "maxLength": 32 },
+      "channel": {
+        "type": "string",
+        "description": "Target channel hint, e.g. linkedin, email, blog"
+      }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "required": ["content"],
+    "properties": {
+      "content": { "type": "string" },
+      "summary": { "type": "string" },
+      "banned_phrases": {
+        "type": "array",
+        "items": { "type": "string" }
+      },
+      "tone": {
+        "type": "array",
+        "items": { "type": "string" }
+      }
+    }
+  },
+  "params": [
+    {
+      "name": "draft",
+      "required": false,
+      "sources": ["upstream", "step_field"],
+      "description": "Upstream draft to critique when reviewing voice",
+      "propose_hint": "Pass compose output as `draft` when doing a voice check before publish.",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "brand_name",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "default"],
+      "description": "Brand name when stated in NL",
+      "example_nl": "Check this LinkedIn draft against our brand voice",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "channel",
+      "required": false,
+      "sources": ["nl_fixed", "step_field"],
+      "description": "Channel context for tone (linkedin, email, blog, …)",
+      "confirm_if_missing": false
+    }
+  ],
+  "auth": { "required": false },
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": ["brand-voice"]
+}
