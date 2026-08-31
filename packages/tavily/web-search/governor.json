@@ -1,7 +1,7 @@
 {
   "spec_version": "korux_governor_v1",
   "capability_id": "tavily/web-search",
-  "capability_version": "1.0.0",
+  "capability_version": "1.1.0",
   "defaults": {
     "intercept_on_invoke": false,
     "editable_fields": [

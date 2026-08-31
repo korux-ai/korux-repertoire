@@ -1,6 +1,6 @@
-# web-research — Vault credential
+# tavily/web-search — Vault credential
 
-Bind tool name `web-research` on the agent that runs search steps.
+Bind tool name `tavily/web-search` on the agent that runs search steps.
 
 ## Tavily API key (recommended)
 
@@ -13,15 +13,13 @@ JSON:
 }
 ```
 
-Or paste the bare API key as the secret value.
-
 ## Optional fields
 
 | Field | Description |
 |-------|-------------|
 | `base_url` | Override Tavily API base (default `https://api.tavily.com`) |
-| `provider` | Must be `tavily` (only provider in v1.0.0) |
+| `provider` | Must be `tavily` (only provider in v1.1.0) |
 
 ## Local / CI
 
-Set `WEB_RESEARCH_MOCK=true` (default) to skip live HTTP and return deterministic mock snippets.
+Set `KORUX_CAPABILITY_HTTP_MOCK=1` or `WEB_RESEARCH_MOCK=true` to skip live HTTP and return deterministic mock snippets.
