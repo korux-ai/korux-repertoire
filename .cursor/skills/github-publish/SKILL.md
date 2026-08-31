@@ -46,13 +46,14 @@ Do not use floating `latest`. Do not reuse `v0.3.0` for LinkedIn/Instagram if th
 
 ## Workflow
 
-1. Validate:
+1. Validate structure, then run the authoring scorecard:
 
 ```bash
 ./scripts/validate_all.sh
+./scripts/scorecard_all.sh
 ```
 
-Stop on failure; do not tag.
+Stop if `validate_all.sh` fails; do not tag. Scorecard **hard** findings already fail via validate. Soft **warn** findings are printed for the release notes / report; do **not** pass `--fail-on-warn` unless the user explicitly asked to block the release on soft warnings.
 
 2. Annotated tag (HEREDOC message: why this release, 1–2 sentences, English):
 

@@ -28,9 +28,10 @@ Current packages:
 
 | id | notes |
 |----|--------|
-| `general/mail` | SMTP send (may keep `korux.modules.*` entry) |
-| `tavily/web-search` | Tavily web research |
-| `twitter/publish` | X API post (`runtime.invoke`) |
+| `general/mail` | SMTP send (`runtime.invoke`) |
+| `general/imap` | IMAP inbound monitor |
+| `tavily/web-search` | Tavily web research (`runtime.invoke`) |
+| `twitter/publish` | X API post |
 | `facebook/publish` | Graph API post |
 | `alpaca/place-order` | Alpaca paper trade |
 | `notion/pages` | Notion page create |
@@ -50,7 +51,8 @@ A package on disk is not enough to invoke: catalog **enabled**, staff Vault bind
 
 ```bash
 ./scripts/validate_all.sh
-./scripts/package_release.sh v0.4.0
+./scripts/scorecard_all.sh --html scorecard.html
+./scripts/package_release.sh v0.5.1
 ```
 
 Pushing tag `vX.Y.Z` uploads the zip to [Releases](https://github.com/korux-ai/korux-repertoire/releases) via Actions.

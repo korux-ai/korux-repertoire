@@ -39,9 +39,6 @@ GOVERNOR_REQUIRED_FIELDS: tuple[str, ...] = (
 
 TRUST_LEVELS: frozenset[str] = frozenset({"first-party", "verified", "community"})
 
-# Transitional: migrate to runtime.invoke in a follow-up release.
-_LEGACY_KERNEL_ENTRY_IDS: frozenset[str] = frozenset({"tavily/web-search"})
-
 PARAM_SOURCE_VALUES: frozenset[str] = frozenset(
     {
         "upstream",
@@ -348,12 +345,10 @@ def _validate_repertoire_manifest_runtime(root: Path, manifest: dict[str, Any]) 
         errors.append(
             f"{root}: repertoire packages must not use runtime.entry {entry!r}; use runtime.invoke"
         )
-    cap_id = str(manifest.get("id") or "").strip()
-    if entry.startswith("korux.") and cap_id not in _LEGACY_KERNEL_ENTRY_IDS:
+    if entry.startswith("korux."):
         errors.append(
             f"{root}: repertoire packages must not use runtime.entry {entry!r}; migrate to runtime.invoke"
         )
-    if cap_id in _LEGACY_KERNEL_ENTRY_IDS and entry.startswith("korux."):
         return errors
     if kind == "connector":
         invoke_py = root / "runtime" / "invoke.py"

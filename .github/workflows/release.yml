@@ -18,6 +18,15 @@ jobs:
           python-version: "3.12"
       - name: Validate packages
         run: ./scripts/validate_all.sh
+      - name: Package scorecard
+        run: ./scripts/scorecard_all.sh --html scorecard.html
+      - name: Upload scorecard HTML
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: package-scorecard-${{ github.ref_name }}
+          path: scorecard.html
+          if-no-files-found: ignore
       - name: Build zip
         run: ./scripts/package_release.sh "${GITHUB_REF_NAME}"
       - name: Publish GitHub Release

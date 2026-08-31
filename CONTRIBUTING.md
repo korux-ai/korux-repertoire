@@ -22,9 +22,14 @@ This repository accepts **capability packages**: manifest, governor, docs, and (
 ./scripts/validate_all.sh
 # or a single package:
 python3 scripts/validate_capability_package.py packages/<namespace>/<name>
+
+# Authoring scorecard (docs completeness, example JSON, setup guidance, …):
+./scripts/scorecard_all.sh
+./scripts/scorecard_all.sh --html scorecard.html   # optional static report
+./scripts/scorecard_all.sh --fail-on-warn          # treat soft warnings as errors
 ```
 
-`packages/_template` is not in the catalog / Release and is not validated as a production package. When `runtime.entry` is `runtime.invoke`, `runtime/invoke.py` must exist and define `invoke`. CI also rejects any `korux` import under package trees.
+`packages/_template` is not in the catalog / Release and is not validated as a production package. When `runtime.entry` is `runtime.invoke`, `runtime/invoke.py` must exist and define `invoke`. CI also rejects any `korux` import under package trees. Scorecard **hard** findings mirror structural validation; **warn** findings are authoring quality (do not fail CI / Release unless `--fail-on-warn`). `publish next version` and the Release workflow both run the scorecard after `validate_all.sh`.
 
 Package locally (do not commit `dist/`):
 
