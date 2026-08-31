@@ -1,0 +1,155 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "general/imap",
+  "version": "1.0.0",
+  "kind": "connector",
+  "label": "IMAP inbox",
+  "description": "Poll an IMAP inbox (e.g. Gmail) for monitor triggers; requires Vault imap binding",
+  "category": "email",
+  "reads_external": true,
+  "writes_external": false,
+  "boundary": "External",
+  "default_gate": "auto",
+  "risk": "low",
+  "aliases": [
+    "inbound-email-monitor",
+    "inbound_email",
+    "inbound-email",
+    "inbound"
+  ],
+  "produces_content": true,
+  "propose_guide": "Use as monitor trigger connector for inbox polling. Pair with korux/llm-summarize / general/mail for triage flows.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "action": {
+        "type": "string",
+        "description": "poll (default) or mark_seen"
+      },
+      "from_filter": {
+        "type": "string",
+        "description": "Optional sender filter"
+      },
+      "subject_contains": {
+        "type": "string"
+      },
+      "seen_ids": {
+        "type": "array",
+        "items": { "type": "string" }
+      },
+      "uids": {
+        "type": "array",
+        "items": { "type": "string" }
+      }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "messages": { "type": "array" },
+      "count": { "type": "integer" },
+      "subject": { "type": "string" },
+      "from": { "type": "string" },
+      "body": { "type": "string" }
+    }
+  },
+  "params": [],
+  "auth": {
+    "required": true,
+    "binding_tool": "inbound-email-monitor",
+    "secret_kind": "imap",
+    "fields": [
+      {
+        "name": "host",
+        "label": "Host",
+        "type": "text",
+        "required": true,
+        "placeholder": "imap.gmail.com"
+      },
+      {
+        "name": "port",
+        "label": "Port",
+        "type": "number",
+        "required": true,
+        "default_value": "993"
+      },
+      {
+        "name": "username",
+        "label": "Username",
+        "type": "text",
+        "required": true,
+        "placeholder": "you@example.com"
+      },
+      {
+        "name": "password",
+        "label": "Password / app password",
+        "type": "password",
+        "required": true,
+        "sensitive": true
+      },
+      {
+        "name": "folder",
+        "label": "Folder",
+        "type": "text",
+        "required": false,
+        "default_value": "INBOX",
+        "placeholder": "INBOX"
+      },
+      {
+        "name": "use_ssl",
+        "label": "Use SSL",
+        "type": "checkbox",
+        "default_value": "true"
+      },
+      {
+        "name": "mark_read_on_process",
+        "label": "Mark read after processing",
+        "type": "checkbox",
+        "default_value": "true"
+      }
+    ],
+    "sub_presets": [
+      {
+        "id": "gmail",
+        "label": "Gmail",
+        "defaults": {
+          "host": "imap.gmail.com",
+          "port": "993",
+          "use_ssl": "true",
+          "folder": "INBOX"
+        },
+        "note": "Password must be an app password; enable IMAP in Gmail settings."
+      },
+      {
+        "id": "163",
+        "label": "163",
+        "defaults": {
+          "host": "imap.163.com",
+          "port": "993",
+          "use_ssl": "true",
+          "folder": "INBOX"
+        },
+        "note": "Password must be an authorization code."
+      },
+      {
+        "id": "custom",
+        "label": "Custom",
+        "defaults": { "folder": "INBOX" },
+        "note": "Fill host / port yourself."
+      }
+    ],
+    "example_json": "{\"host\":\"imap.gmail.com\",\"port\":993,\"username\":\"you@gmail.com\",\"password\":\"xxxx xxxx xxxx xxxx\",\"folder\":\"INBOX\",\"use_ssl\":true,\"mark_read_on_process\":true}"
+  },
+  "runtime": {
+    "kind": "package",
+    "entry": "runtime.invoke",
+    "transport": "in_process",
+    "timeout_ms": 60000,
+    "idempotent": true
+  },
+  "invoke_tool": "inbound-email-monitor",
+  "binding_tool": "inbound-email-monitor",
+  "step_kind": "monitor",
+  "status": "stable",
+  "trust": "first-party"
+}

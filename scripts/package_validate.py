@@ -39,6 +39,9 @@ GOVERNOR_REQUIRED_FIELDS: tuple[str, ...] = (
 
 TRUST_LEVELS: frozenset[str] = frozenset({"first-party", "verified", "community"})
 
+# Transitional: migrate to runtime.invoke in a follow-up release.
+_LEGACY_KERNEL_ENTRY_IDS: frozenset[str] = frozenset({"tavily/web-search"})
+
 PARAM_SOURCE_VALUES: frozenset[str] = frozenset(
     {
         "upstream",
@@ -310,7 +313,54 @@ def validate_package_dir(package_dir: Path) -> list[str]:
             errors.append(f"{root}: auth.required=true requires docs/credential.md")
 
     errors.extend(validate_params(manifest.get("params"), path="params", manifest=manifest))
+    errors.extend(_validate_repertoire_manifest_runtime(root, manifest))
     errors.extend(_validate_package_runtime(root, manifest))
+    errors.extend(_validate_no_korux_imports(root))
+    return errors
+
+
+def _validate_no_korux_imports(root: Path) -> list[str]:
+    errors: list[str] = []
+    for path in root.rglob("*.py"):
+        if path.name.startswith("_") and path.name != "__init__.py":
+            continue
+        try:
+            text = path.read_text(encoding="utf-8")
+        except OSError as exc:
+            errors.append(f"{path}: {exc}")
+            continue
+        if re.search(r"(^|\n)\s*(import\s+korux|from\s+korux)", text):
+            errors.append(f"{path}: must not import korux (repertoire packages are Korux-free)")
+    return errors
+
+
+def _validate_repertoire_manifest_runtime(root: Path, manifest: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    runtime = manifest.get("runtime")
+    if not isinstance(runtime, dict):
+        return errors
+    entry = str(runtime.get("entry") or "").strip()
+    kind = str(manifest.get("kind") or "").strip()
+    cap_kind = str(runtime.get("kind") or "").strip()
+    if not cap_kind:
+        cap_kind = "kernel" if entry.startswith("korux.") else "package"
+    if entry.startswith("korux.") and cap_kind == "package":
+        errors.append(
+            f"{root}: repertoire packages must not use runtime.entry {entry!r}; use runtime.invoke"
+        )
+    cap_id = str(manifest.get("id") or "").strip()
+    if entry.startswith("korux.") and cap_id not in _LEGACY_KERNEL_ENTRY_IDS:
+        errors.append(
+            f"{root}: repertoire packages must not use runtime.entry {entry!r}; migrate to runtime.invoke"
+        )
+    if cap_id in _LEGACY_KERNEL_ENTRY_IDS and entry.startswith("korux."):
+        return errors
+    if kind == "connector":
+        invoke_py = root / "runtime" / "invoke.py"
+        if not invoke_py.is_file():
+            errors.append(f"{root}: kind=connector requires runtime/invoke.py")
+        elif entry and entry != "runtime.invoke" and not entry.startswith("runtime."):
+            errors.append(f"{root}: connector runtime.entry must be runtime.invoke")
     return errors
 
 

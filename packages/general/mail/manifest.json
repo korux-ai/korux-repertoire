@@ -1,7 +1,7 @@
 {
   "spec_version": "korux_capability_v1",
   "id": "general/mail",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "kind": "connector",
   "label": "Send email",
   "description": "Send email via SMTP after Vault binding and Governor gate",
@@ -67,6 +67,7 @@
           "monitor"
         ],
         "connectors": [
+          "general/imap",
           "inbound-email-monitor",
           "inbound_email",
           "inbound-email",
@@ -91,6 +92,7 @@
           "file_arrival"
         ],
         "connectors": [
+          "general/imap",
           "inbound-email-monitor",
           "inbound_email",
           "inbound-email",
@@ -158,7 +160,8 @@
     ]
   },
   "runtime": {
-    "entry": "korux.modules.connectors.proxy._send_email",
+    "kind": "package",
+    "entry": "runtime.invoke",
     "transport": "in_process",
     "timeout_ms": 30000,
     "idempotent": false
