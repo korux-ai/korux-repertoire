@@ -1,10 +1,32 @@
 # korux-repertoire
 
-Official Korux capability catalog. This repository publishes **catalog snapshots** (manifests, governor rules, credential docs, and first-party in-package `runtime/`). Korux consumes **locked GitHub Release zips** only — never a floating `latest`.
+Open-source **capability catalog** for governed AI agents — each package ships governance rules *with* the connector, not bolted on later.
+
+## What is this?
+
+Think: n8n / Zapier-style nodes, but every package includes:
+
+| File | Role |
+|------|------|
+| `manifest.json` | What it does, risk level, I/O boundary (`writes_external`, gates) |
+| `governor.json` | Runtime rules — human approval, validation, block |
+| `runtime/` + `docs/` | Executable connector + credential / setup guide |
+
+**Start here (no Korux install needed):**
+
+- [general/mail/governor.json](packages/general/mail/governor.json) — human must approve before send email
+- [linkedin/publish/governor.json](packages/linkedin/publish/governor.json) — Company Page post gate
+- [meta/ads-mutate/governor.json](packages/meta/ads-mutate/governor.json) — high-risk ads pause / budget caps
+
+Website: [korux.ai](https://korux.ai) · Building in public on LinkedIn / X: [@korux_ai](https://x.com/korux_ai)
+
+---
+
+Official Korux catalog snapshots (manifests, governor rules, credential docs, and first-party in-package `runtime/`). Korux consumes **locked GitHub Release zips** only — never a floating `latest`.
 
 SPDX-License-Identifier: Apache-2.0
 
-Trust levels, PR review, and safety rails follow the Korux [contributor-guide](https://github.com/korux-ai/korux/blob/main/docs/spec/capability-package/contributor-guide.md). Package fields: [package-manifest](https://github.com/korux-ai/korux/blob/main/docs/spec/capability-package/package-manifest.md).
+Package authoring rules: [CONTRIBUTING.md](./CONTRIBUTING.md). Full Korux runtime / capability-package specs live in the main Korux repo (not all docs may be public yet); this catalog is readable on its own.
 
 ## Layout
 
@@ -86,6 +108,20 @@ Pushing tag `vX.Y.Z` uploads the zip to [Releases](https://github.com/korux-ai/k
 ## Contributing
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md).
+
+## GitHub Topics (repo settings)
+
+Set these under **About → Topics** so people can find the catalog:
+
+`ai-agents` · `agentic-ai` · `governance` · `human-in-the-loop` · `workflow-automation` · `llm` · `capability-catalog` · `n8n` · `zapier`
+
+**Suggested About description (one line):**
+
+```
+Governed AI agent capability catalog — manifest + governor rules + runtime connectors
+```
+
+**Website:** `https://korux.ai`
 
 ## License
 

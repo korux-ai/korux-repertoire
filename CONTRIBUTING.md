@@ -1,6 +1,6 @@
 # Contributing to korux-repertoire
 
-This repository accepts **capability packages**: manifest, governor, docs, and (for connectors) executable `runtime/`. Korux consumes locked Release zips. Authoritative rules live in the [Korux capability-package spec](https://github.com/korux-ai/korux/blob/main/docs/spec/capability-package/README.md); this file is the entry point.
+This repository accepts **capability packages**: manifest, governor, docs, and (for connectors) executable `runtime/`. Korux consumes locked Release zips. Authoritative capability-package specs live in the main Korux repo (may not be fully public yet); **this CONTRIBUTING file is the public entry point** for repertoire packages.
 
 ## Placement rule
 
