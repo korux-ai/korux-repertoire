@@ -65,6 +65,10 @@ Current packages:
 | `youtube/publish` | YouTube video upload (default unlisted) |
 | `tiktok/publish` | TikTok video inbox/direct publish |
 | `canva/design-export` | Canva export (+ optional Brand Template autofill) |
+| `alibaba/wanx-edit` | Alibaba Wanxiang prompt image edit (DashScope) |
+| `meitu/product-image` | Meitu product cutout (MTlab sync) |
+| `design/template-compose` | Product card compose (photo+logo+headline → social_post) |
+| `xiaohongshu/publish` | Xiaohongshu image note (Owner-configured OpenAPI) |
 | `google/meet` | Google Meet identity (OAuth userinfo) |
 | `microsoft/teams` | Microsoft Teams identity (Graph) |
 | `mailchimp/campaign` | Mailchimp campaign create / optional send |
@@ -81,6 +85,7 @@ Current packages:
 | `marketing/performance-review` | Skill (no runtime): performance review |
 | `marketing/local-store` | Skill (no runtime): local / multi-location plan |
 | `marketing/hiring-campaign` | Skill (no runtime): hiring / employer-brand plan |
+| `marketing/product-promo` | Skill (no runtime): one-product promo → compose/XHS |
 | `alpaca/place-order` | Alpaca paper trade |
 | `notion/pages` | Notion page create |
 | `zoom/account` | Zoom OAuth + users/me |

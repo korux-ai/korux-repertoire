@@ -1,0 +1,128 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "meitu/product-image",
+  "version": "1.0.0",
+  "kind": "connector",
+  "label": "Meitu product image",
+  "description": "Cut out product subjects (and optional enhance path) via Meitu AI Open Platform MTlab sync API after Vault binding and Governor gate",
+  "category": "design",
+  "reads_external": true,
+  "writes_external": true,
+  "boundary": "External",
+  "default_gate": "require_human",
+  "risk": "medium",
+  "produces_content": true,
+  "propose_guide": "Use when a mainland SMB uploads a phone product photo and needs clean cutout before social posts. Default action=cutout (智能抠图). Prefer image_file_id with context.image bytes/URL. Pair with alibaba/wanx-edit for prompt-based restyle, then facebook/publish / xiaohongshu. Requires Meitu open-platform api_key+api_secret — Owner must apply at ai.meitu.com.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "action": {
+        "type": "string",
+        "enum": ["cutout"]
+      },
+      "image_file_id": { "type": "string" },
+      "image_url": { "type": "string", "maxLength": 2000 },
+      "model_type": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 10,
+        "description": "Meitu cutout model_type (provider-specific; default 0)"
+      },
+      "return_mask": { "type": "boolean" }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "ok": { "type": "boolean" },
+      "image_urls": {
+        "type": "array",
+        "items": { "type": "string" }
+      },
+      "action": { "type": "string" },
+      "content": { "type": "string" },
+      "summary": { "type": "string" }
+    }
+  },
+  "params": [
+    {
+      "name": "action",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "default"],
+      "description": "cutout (default)",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "image_file_id",
+      "required": false,
+      "sources": ["step_field", "upstream"],
+      "description": "Workspace image file_id",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "image_url",
+      "required": false,
+      "sources": ["step_field", "nl_fixed", "upstream"],
+      "description": "Public https image URL alternative",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "model_type",
+      "required": false,
+      "sources": ["step_field", "default"],
+      "description": "Cutout model_type (default 0)",
+      "confirm_if_missing": false
+    }
+  ],
+  "editable_governor_config": {
+    "max_image_bytes": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 10485760,
+      "default": 8388608,
+      "label": "Max input image bytes"
+    }
+  },
+  "auth": {
+    "required": true,
+    "binding_tool": "meitu/product-image",
+    "secret_kind": "meitu",
+    "credential_doc": "docs/credential.md",
+    "fields": [
+      {
+        "name": "api_key",
+        "label": "Meitu api_key (access key)",
+        "type": "password",
+        "required": true,
+        "sensitive": true
+      },
+      {
+        "name": "api_secret",
+        "label": "Meitu api_secret",
+        "type": "password",
+        "required": true,
+        "sensitive": true
+      },
+      {
+        "name": "base_url",
+        "label": "MTlab base URL (optional)",
+        "type": "text",
+        "required": false,
+        "default_value": "https://openapi.mtlab.meitu.com"
+      }
+    ],
+    "example_json": "{\"api_key\":\"YOUR_APPKEY\",\"api_secret\":\"YOUR_SECRET\",\"base_url\":\"https://openapi.mtlab.meitu.com\"}"
+  },
+  "runtime": {
+    "kind": "package",
+    "entry": "runtime.invoke",
+    "transport": "in_process",
+    "timeout_ms": 120000,
+    "idempotent": false
+  },
+  "invoke_tool": "meitu/product-image",
+  "binding_tool": "meitu/product-image",
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": ["meitu-cutout", "meitu-product"]
+}

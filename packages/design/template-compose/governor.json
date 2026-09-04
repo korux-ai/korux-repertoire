@@ -1,0 +1,34 @@
+{
+  "spec_version": "korux_governor_v1",
+  "capability_id": "design/template-compose",
+  "capability_version": "1.0.0",
+  "defaults": {
+    "intercept_on_invoke": false,
+    "editable_fields": [
+      "product_image_file_id",
+      "logo_file_id",
+      "headline",
+      "caption",
+      "company_name",
+      "layout",
+      "accent_color",
+      "style"
+    ]
+  },
+  "rules": [
+    {
+      "id": "block_empty_product",
+      "when": { "args.product_image_file_id": { "empty": true } },
+      "action": "reject",
+      "code": "VALIDATION",
+      "message": "product_image_file_id is empty"
+    },
+    {
+      "id": "block_denied_keywords_caption",
+      "when": { "args.caption": { "matches_any_owner": "blocked_keywords" } },
+      "action": "reject",
+      "code": "GOVERNOR_POLICY",
+      "message": "Caption contains a blocked keyword"
+    }
+  ]
+}

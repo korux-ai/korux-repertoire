@@ -1,0 +1,75 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "marketing/product-promo",
+  "version": "1.0.0",
+  "kind": "skill",
+  "label": "Product promo card",
+  "description": "Propose short product promo copy and layout hints from company style + product context for template compose and Xiaohongshu publish",
+  "category": "marketing",
+  "reads_external": false,
+  "writes_external": false,
+  "boundary": "Internal",
+  "default_gate": "auto",
+  "risk": "low",
+  "produces_content": true,
+  "propose_guide": "Use when NL uploads a new product photo and workspace has store name, logo, or preferred style. Emit Internal social_post planning fields: title (≤20 Chinese chars ideal), caption (short XHS body with 1–3 hashtags), headline for on-image text, layout=xhs_portrait, accent/style notes. Do not publish. Next: design/template-compose (product_image_file_id + logo_file_id + headline/caption) → xiaohongshu/publish under human gate. Reuse brand voice; never invent fake discounts or medical claims.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "product_name": { "type": "string", "maxLength": 200 },
+      "company_name": { "type": "string", "maxLength": 120 },
+      "style": { "type": "string", "maxLength": 500 },
+      "offer": { "type": "string", "maxLength": 500 },
+      "audience": { "type": "string", "maxLength": 300 },
+      "constraints": { "type": "string", "maxLength": 1000 }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "required": ["content"],
+    "properties": {
+      "content": { "type": "string" },
+      "summary": { "type": "string" },
+      "title": { "type": "string" },
+      "caption": { "type": "string" },
+      "headline": { "type": "string" },
+      "layout": { "type": "string" },
+      "kind": { "type": "string" }
+    }
+  },
+  "params": [
+    {
+      "name": "product_name",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "upstream"],
+      "description": "Product name when stated",
+      "example_nl": "用店铺风格给这张新花束图写小红书文案并做主图",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "company_name",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "upstream"],
+      "description": "Store/brand name from workspace profile",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "style",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "upstream"],
+      "description": "Preferred visual/copy style notes",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "offer",
+      "required": false,
+      "sources": ["nl_fixed", "step_field"],
+      "description": "Price or promo when explicitly allowed",
+      "confirm_if_missing": false
+    }
+  ],
+  "auth": { "required": false },
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": ["product-promo", "product-card-copy"]
+}

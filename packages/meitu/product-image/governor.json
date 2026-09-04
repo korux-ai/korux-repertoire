@@ -1,0 +1,18 @@
+{
+  "spec_version": "korux_governor_v1",
+  "capability_id": "meitu/product-image",
+  "capability_version": "1.0.0",
+  "defaults": {
+    "intercept_on_invoke": true,
+    "editable_fields": ["action", "image_url", "model_type", "return_mask"]
+  },
+  "rules": [
+    {
+      "id": "require_human_by_default",
+      "when": { "writes_external": true },
+      "action": "intercept",
+      "gate": "require_human",
+      "message": "Meitu product image processing requires human approval"
+    }
+  ]
+}

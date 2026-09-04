@@ -1,0 +1,143 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "xiaohongshu/publish",
+  "version": "1.0.0",
+  "kind": "connector",
+  "label": "Xiaohongshu note publish",
+  "description": "Publish an image note to Xiaohongshu (RED) via Owner-configured OpenAPI gateway after Vault binding and Governor gate",
+  "category": "social",
+  "reads_external": false,
+  "writes_external": true,
+  "boundary": "External",
+  "default_gate": "require_human",
+  "risk": "high",
+  "produces_content": false,
+  "propose_guide": "External Xiaohongshu image note after design/template-compose or compose. Prefer upstream social_post fields: title, caption, and image (file_id or URL). Do not scrape creator.xiaohongshu.com. Requires enterprise/partner OpenAPI credentials in Vault. Always require_human.",
+  "input_schema": {
+    "type": "object",
+    "required": ["caption"],
+    "properties": {
+      "title": { "type": "string", "maxLength": 40 },
+      "caption": { "type": "string", "maxLength": 1000 },
+      "image_file_id": { "type": "string" },
+      "image_url": { "type": "string", "maxLength": 2000 },
+      "topics": {
+        "type": "array",
+        "items": { "type": "string" },
+        "maxItems": 10
+      }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "ok": { "type": "boolean" },
+      "note_id": { "type": "string" },
+      "content": { "type": "string" },
+      "summary": { "type": "string" }
+    }
+  },
+  "params": [
+    {
+      "name": "title",
+      "required": false,
+      "sources": ["upstream", "step_field", "nl_fixed"],
+      "description": "Note title (keep short for XHS)",
+      "propose_hint": "Prefer design/template-compose or product-promo title.",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "caption",
+      "required": true,
+      "sources": ["upstream", "step_field"],
+      "description": "Note body / caption",
+      "propose_hint": "Map from upstream social_post.caption.",
+      "confirm_if_missing": true
+    },
+    {
+      "name": "image_file_id",
+      "required": false,
+      "sources": ["upstream", "step_field"],
+      "description": "Composed or product image file_id",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "image_url",
+      "required": false,
+      "sources": ["upstream", "step_field", "nl_fixed"],
+      "description": "Public https image URL when file bytes unavailable",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "topics",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "upstream"],
+      "description": "Optional topic/hashtag names",
+      "confirm_if_missing": false
+    }
+  ],
+  "editable_governor_config": {
+    "blocked_keywords": {
+      "type": "array",
+      "items": { "type": "string" },
+      "label": "Blocked keywords",
+      "default": []
+    },
+    "max_chars": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1000,
+      "default": 1000,
+      "label": "Max caption characters"
+    }
+  },
+  "auth": {
+    "required": true,
+    "binding_tool": "xiaohongshu/publish",
+    "secret_kind": "xiaohongshu",
+    "credential_doc": "docs/credential.md",
+    "fields": [
+      {
+        "name": "access_token",
+        "label": "OAuth access token",
+        "type": "password",
+        "required": true,
+        "sensitive": true
+      },
+      {
+        "name": "api_base",
+        "label": "OpenAPI base URL",
+        "type": "text",
+        "required": false,
+        "default_value": "https://open.xiaohongshu.com"
+      },
+      {
+        "name": "upload_path",
+        "label": "Image upload path",
+        "type": "text",
+        "required": false,
+        "default_value": "/api/sns/v1/note/image/upload"
+      },
+      {
+        "name": "post_path",
+        "label": "Note publish path",
+        "type": "text",
+        "required": false,
+        "default_value": "/api/sns/v1/note/post"
+      }
+    ],
+    "example_json": "{\"access_token\":\"xxxxxxxx\",\"api_base\":\"https://open.xiaohongshu.com\",\"upload_path\":\"/api/sns/v1/note/image/upload\",\"post_path\":\"/api/sns/v1/note/post\"}"
+  },
+  "runtime": {
+    "kind": "package",
+    "entry": "runtime.invoke",
+    "transport": "in_process",
+    "timeout_ms": 120000,
+    "idempotent": false
+  },
+  "invoke_tool": "xiaohongshu/publish",
+  "binding_tool": "xiaohongshu/publish",
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": ["xhs-publish", "red-publish"]
+}

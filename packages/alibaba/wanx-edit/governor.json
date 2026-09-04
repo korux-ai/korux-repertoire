@@ -1,0 +1,32 @@
+{
+  "spec_version": "korux_governor_v1",
+  "capability_id": "alibaba/wanx-edit",
+  "capability_version": "1.0.0",
+  "defaults": {
+    "intercept_on_invoke": true,
+    "editable_fields": ["prompt", "image_url", "model", "size", "n", "negative_prompt", "watermark"]
+  },
+  "rules": [
+    {
+      "id": "block_empty_prompt",
+      "when": { "args.prompt": { "empty": true } },
+      "action": "reject",
+      "code": "VALIDATION",
+      "message": "Edit prompt is empty"
+    },
+    {
+      "id": "block_denied_keywords",
+      "when": { "args.prompt": { "matches_any_owner": "blocked_keywords" } },
+      "action": "reject",
+      "code": "GOVERNOR_POLICY",
+      "message": "Prompt contains a blocked keyword"
+    },
+    {
+      "id": "require_human_by_default",
+      "when": { "writes_external": true },
+      "action": "intercept",
+      "gate": "require_human",
+      "message": "Alibaba Wanxiang image edit requires human approval"
+    }
+  ]
+}

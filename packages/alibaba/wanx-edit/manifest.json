@@ -1,0 +1,149 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "alibaba/wanx-edit",
+  "version": "1.0.0",
+  "kind": "connector",
+  "label": "Alibaba Wanxiang image edit",
+  "description": "Edit a product/marketing image with a text prompt via Alibaba DashScope Wanxiang (万相) multimodal generation after Vault binding and Governor gate",
+  "category": "design",
+  "reads_external": true,
+  "writes_external": true,
+  "boundary": "External",
+  "default_gate": "require_human",
+  "risk": "medium",
+  "produces_content": true,
+  "propose_guide": "After the owner uploads a product photo, use this to rewrite background, lighting, or style with a Chinese/English prompt before social publish. Prefer image_file_id (Korux injects context.image) or a public https image_url. Default model wan2.6-image (sync). Output image URLs expire (~24h) — re-host before facebook/publish / instagram/publish. Do not invent API keys.",
+  "input_schema": {
+    "type": "object",
+    "required": ["prompt"],
+    "properties": {
+      "prompt": { "type": "string", "maxLength": 2000 },
+      "image_file_id": { "type": "string" },
+      "image_url": { "type": "string", "maxLength": 2000 },
+      "model": {
+        "type": "string",
+        "description": "DashScope model id (default wan2.6-image)"
+      },
+      "size": {
+        "type": "string",
+        "enum": ["1K", "2K"]
+      },
+      "n": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 4
+      },
+      "negative_prompt": { "type": "string", "maxLength": 500 },
+      "watermark": { "type": "boolean" }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "ok": { "type": "boolean" },
+      "image_urls": {
+        "type": "array",
+        "items": { "type": "string" }
+      },
+      "model": { "type": "string" },
+      "content": { "type": "string" },
+      "summary": { "type": "string" }
+    }
+  },
+  "params": [
+    {
+      "name": "prompt",
+      "required": true,
+      "sources": ["upstream", "step_field", "nl_fixed"],
+      "description": "Edit instruction (e.g. white studio background, soft light)",
+      "example_nl": "把商品放到干净白底，保留原商品细节",
+      "propose_hint": "Write a concrete edit instruction; do not paste raw Vault secrets.",
+      "confirm_if_missing": true
+    },
+    {
+      "name": "image_file_id",
+      "required": false,
+      "sources": ["step_field", "upstream"],
+      "description": "Workspace image file_id (JPEG/PNG)",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "image_url",
+      "required": false,
+      "sources": ["step_field", "nl_fixed", "upstream"],
+      "description": "Public https image URL when file bytes are unavailable",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "size",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "default"],
+      "description": "1K (default) or 2K",
+      "confirm_if_missing": false
+    }
+  ],
+  "editable_governor_config": {
+    "blocked_keywords": {
+      "type": "array",
+      "items": { "type": "string" },
+      "label": "Blocked keywords in prompt",
+      "default": []
+    },
+    "max_prompt_chars": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 2000,
+      "default": 2000,
+      "label": "Max prompt characters"
+    },
+    "max_n": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4,
+      "default": 1,
+      "label": "Max output images (cost control)"
+    }
+  },
+  "auth": {
+    "required": true,
+    "binding_tool": "alibaba/wanx-edit",
+    "secret_kind": "alibaba-dashscope",
+    "credential_doc": "docs/credential.md",
+    "fields": [
+      {
+        "name": "api_key",
+        "label": "DashScope / Model Studio API Key",
+        "type": "password",
+        "required": true,
+        "sensitive": true
+      },
+      {
+        "name": "base_url",
+        "label": "API base (optional)",
+        "type": "text",
+        "required": false,
+        "default_value": "https://dashscope.aliyuncs.com/api/v1"
+      },
+      {
+        "name": "model",
+        "label": "Default model id",
+        "type": "text",
+        "required": false,
+        "default_value": "wan2.6-image"
+      }
+    ],
+    "example_json": "{\"api_key\":\"sk-xxxxxxxx\",\"base_url\":\"https://dashscope.aliyuncs.com/api/v1\",\"model\":\"wan2.6-image\"}"
+  },
+  "runtime": {
+    "kind": "package",
+    "entry": "runtime.invoke",
+    "transport": "in_process",
+    "timeout_ms": 180000,
+    "idempotent": false
+  },
+  "invoke_tool": "alibaba/wanx-edit",
+  "binding_tool": "alibaba/wanx-edit",
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": ["wanx-edit", "tongyi-wanxiang-edit"]
+}
