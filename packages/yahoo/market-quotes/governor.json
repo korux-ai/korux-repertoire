@@ -1,0 +1,26 @@
+{
+  "spec_version": "korux_governor_v1",
+  "capability_id": "yahoo/market-quotes",
+  "capability_version": "1.0.0",
+  "defaults": {
+    "intercept_on_invoke": false,
+    "editable_fields": []
+  },
+  "rules": [
+    {
+      "id": "reject_empty_symbols",
+      "when": {
+        "args.symbols": {
+          "empty": true
+        }
+      },
+      "action": "reject",
+      "code": "VALIDATION",
+      "message": {
+        "en": "symbols is empty; provide at least one ticker.",
+        "zh_CN": "symbols 为空；请至少提供一个代码。",
+        "zh_HK": "symbols 為空；請至少提供一個代碼。"
+      }
+    }
+  ]
+}

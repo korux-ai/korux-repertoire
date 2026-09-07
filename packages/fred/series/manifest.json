@@ -1,0 +1,67 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "fred/series",
+  "version": "1.0.0",
+  "kind": "connector",
+  "label": "FRED series",
+  "description": "Fetch a FRED macro time series (observations) via St. Louis Fed API for downstream compose",
+  "category": "research",
+  "reads_external": true,
+  "writes_external": false,
+  "boundary": "External",
+  "default_gate": "auto",
+  "risk": "low",
+  "produces_content": true,
+  "propose_guide": "Use when NL asks for FRED macro series (rates, CPI, DGS10, DXY proxies, etc.). Requires Vault fred/series API key. Set series_id from NL.",
+  "input_schema": {
+    "type": "object",
+    "required": ["series_id"],
+    "properties": {
+      "series_id": { "type": "string", "maxLength": 64 },
+      "limit": { "type": "integer", "minimum": 1, "maximum": 100 }
+    }
+  },
+  "params": [
+    {
+      "name": "series_id",
+      "required": true,
+      "sources": ["nl_fixed", "step_field"],
+      "description": "FRED series id, e.g. DGS10, CPIAUCSL",
+      "confirm_if_missing": true
+    },
+    {
+      "name": "limit",
+      "required": false,
+      "sources": ["default", "step_field"],
+      "default_value": 10,
+      "description": "Max recent observations to return",
+      "confirm_if_missing": false
+    }
+  ],
+  "auth": {
+    "required": true,
+    "binding_tool": "fred/series",
+    "secret_kind": "fred/series",
+    "fields": [
+      {
+        "name": "api_key",
+        "label": "FRED API key",
+        "type": "password",
+        "required": true,
+        "sensitive": true
+      }
+    ],
+    "example_json": "{\"api_key\":\"abcdefghijklmnopqrstuvwxyz012345\"}"
+  },
+  "runtime": {
+    "kind": "package",
+    "entry": "runtime.invoke",
+    "transport": "in_process",
+    "timeout_ms": 45000,
+    "idempotent": true
+  },
+  "invoke_tool": "fred/series",
+  "binding_tool": "fred/series",
+  "status": "beta",
+  "trust": "first-party"
+}

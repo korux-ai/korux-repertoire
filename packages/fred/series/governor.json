@@ -1,0 +1,26 @@
+{
+  "spec_version": "korux_governor_v1",
+  "capability_id": "fred/series",
+  "capability_version": "1.0.0",
+  "defaults": {
+    "intercept_on_invoke": false,
+    "editable_fields": []
+  },
+  "rules": [
+    {
+      "id": "reject_empty_series",
+      "when": {
+        "args.series_id": {
+          "empty": true
+        }
+      },
+      "action": "reject",
+      "code": "VALIDATION",
+      "message": {
+        "en": "series_id is empty; provide a FRED series id.",
+        "zh_CN": "series_id 为空；请提供 FRED 序列 ID。",
+        "zh_HK": "series_id 為空；請提供 FRED 序列 ID。"
+      }
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "yahoo/market-quotes",
+  "version": "1.0.0",
+  "kind": "connector",
+  "label": "Yahoo market quotes",
+  "description": "Fetch structured equity/index quotes from Yahoo Finance public endpoints for downstream compose",
+  "category": "research",
+  "reads_external": true,
+  "writes_external": false,
+  "boundary": "External",
+  "default_gate": "auto",
+  "risk": "low",
+  "produces_content": true,
+  "propose_guide": "Use when NL asks for stock/index prices, OHLCV-style quotes, or structured market levels. Prefer this over tavily/web-search for numeric quotes. Set symbols from NL (e.g. ^GSPC, AAPL).",
+  "input_schema": {
+    "type": "object",
+    "required": ["symbols"],
+    "properties": {
+      "symbols": {
+        "type": "array",
+        "items": { "type": "string" },
+        "minItems": 1,
+        "maxItems": 20
+      }
+    }
+  },
+  "params": [
+    {
+      "name": "symbols",
+      "required": true,
+      "sources": ["nl_fixed", "step_field", "upstream"],
+      "description": "Ticker symbols (Yahoo style), e.g. AAPL, ^GSPC, 0700.HK",
+      "confirm_if_missing": true
+    }
+  ],
+  "auth": {
+    "required": false,
+    "binding_tool": "yahoo/market-quotes"
+  },
+  "runtime": {
+    "kind": "package",
+    "entry": "runtime.invoke",
+    "transport": "in_process",
+    "timeout_ms": 45000,
+    "idempotent": true
+  },
+  "invoke_tool": "yahoo/market-quotes",
+  "binding_tool": "yahoo/market-quotes",
+  "status": "beta",
+  "trust": "first-party"
+}
