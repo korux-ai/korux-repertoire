@@ -31,5 +31,7 @@
       "gate": "require_human",
       "message": "下单前须人工确认"
     }
-  ]
+  ],
+  "implementation": "declarative",
+  "notes": "Evaluated by Korux platform declarative engine; optional runtime/governor.py overrides."
 }

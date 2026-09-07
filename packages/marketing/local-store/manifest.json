@@ -16,27 +16,55 @@
   "input_schema": {
     "type": "object",
     "properties": {
-      "business_type": { "type": "string", "maxLength": 200 },
-      "locations": { "type": "string", "maxLength": 2000 },
-      "offer": { "type": "string", "maxLength": 1000 },
-      "radius_or_geo": { "type": "string", "maxLength": 500 },
-      "constraints": { "type": "string", "maxLength": 1000 },
-      "timeline": { "type": "string", "maxLength": 200 }
+      "business_type": {
+        "type": "string",
+        "maxLength": 200
+      },
+      "locations": {
+        "type": "string",
+        "maxLength": 2000
+      },
+      "offer": {
+        "type": "string",
+        "maxLength": 1000
+      },
+      "radius_or_geo": {
+        "type": "string",
+        "maxLength": 500
+      },
+      "constraints": {
+        "type": "string",
+        "maxLength": 1000
+      },
+      "timeline": {
+        "type": "string",
+        "maxLength": 200
+      }
     }
   },
   "output_schema": {
     "type": "object",
-    "required": ["content"],
+    "required": [
+      "content"
+    ],
     "properties": {
-      "content": { "type": "string" },
-      "summary": { "type": "string" },
+      "content": {
+        "type": "string"
+      },
+      "summary": {
+        "type": "string"
+      },
       "primary_channels": {
         "type": "array",
-        "items": { "type": "string" }
+        "items": {
+          "type": "string"
+        }
       },
       "kpis": {
         "type": "array",
-        "items": { "type": "string" }
+        "items": {
+          "type": "string"
+        }
       }
     }
   },
@@ -44,7 +72,11 @@
     {
       "name": "business_type",
       "required": false,
-      "sources": ["nl_fixed", "step_field", "upstream"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "upstream"
+      ],
       "description": "Retail, restaurant, clinic, etc.",
       "example_nl": "Plan a weekend promo for our two downtown coffee shops",
       "confirm_if_missing": false
@@ -52,27 +84,44 @@
     {
       "name": "locations",
       "required": false,
-      "sources": ["nl_fixed", "step_field", "upstream"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "upstream"
+      ],
       "description": "Store names / cities when stated",
       "confirm_if_missing": false
     },
     {
       "name": "offer",
       "required": false,
-      "sources": ["nl_fixed", "step_field", "upstream"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "upstream"
+      ],
       "description": "Promo offer or seasonal theme",
       "confirm_if_missing": false
     },
     {
       "name": "constraints",
       "required": false,
-      "sources": ["nl_fixed", "step_field"],
+      "sources": [
+        "nl_fixed",
+        "step_field"
+      ],
       "description": "Budget, brand, legal, or hours constraints",
       "confirm_if_missing": false
     }
   ],
-  "auth": { "required": false },
+  "auth": {
+    "required": false
+  },
   "status": "beta",
   "trust": "first-party",
-  "aliases": ["local-store", "local-business"]
+  "aliases": [
+    "local-store",
+    "local-business"
+  ],
+  "editable_governor_config": {}
 }

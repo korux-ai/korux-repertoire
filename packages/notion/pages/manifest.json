@@ -124,5 +124,19 @@
   "binding_tool": "notion/pages",
   "status": "stable",
   "trust": "first-party",
-  "aliases": []
+  "aliases": [],
+  "editable_governor_config": {
+    "min_body_length": {
+      "type": "integer",
+      "minimum": 1,
+      "label": "Minimum body length",
+      "description": "Reject when trimmed body is shorter than this length."
+    },
+    "require_title": {
+      "type": "boolean",
+      "default": false,
+      "label": "Require title",
+      "description": "Reject when title is empty."
+    }
+  }
 }

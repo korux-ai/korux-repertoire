@@ -4,7 +4,16 @@
   "capability_version": "1.0.0",
   "defaults": {
     "intercept_on_invoke": false,
-    "editable_fields": ["product_name", "company_name", "style", "offer", "audience", "constraints"]
+    "editable_fields": [
+      "product_name",
+      "company_name",
+      "style",
+      "offer",
+      "audience",
+      "constraints"
+    ]
   },
-  "rules": []
+  "rules": [],
+  "implementation": "declarative",
+  "notes": "Evaluated by Korux platform declarative engine; optional runtime/governor.py overrides."
 }

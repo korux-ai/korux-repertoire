@@ -22,6 +22,28 @@
       "message": "Notion 正文为空；须使用上游步骤产出"
     },
     {
+      "id": "block_short_body",
+      "when": {
+        "args.body": {
+          "length_lt_owner": "min_body_length"
+        }
+      },
+      "action": "reject",
+      "code": "VALIDATION",
+      "message": "Notion body shorter than owner min_body_length."
+    },
+    {
+      "id": "block_empty_title",
+      "when": {
+        "args.title": {
+          "empty_when_owner_true": "require_title"
+        }
+      },
+      "action": "reject",
+      "code": "VALIDATION",
+      "message": "Notion title is empty."
+    },
+    {
       "id": "require_human_by_default",
       "when": {
         "writes_external": true
@@ -30,5 +52,7 @@
       "gate": "require_human",
       "message": "写入 Notion 前须人工确认"
     }
-  ]
+  ],
+  "implementation": "declarative",
+  "notes": "Evaluated by Korux platform declarative engine; optional runtime/governor.py overrides."
 }

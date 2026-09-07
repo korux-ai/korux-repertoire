@@ -85,5 +85,7 @@
       "gate": "require_human",
       "message": "发布推文前须人工确认"
     }
-  ]
+  ],
+  "implementation": "declarative",
+  "notes": "Evaluated by Korux platform declarative engine; optional runtime/governor.py overrides."
 }

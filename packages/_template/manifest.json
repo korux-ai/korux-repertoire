@@ -16,10 +16,25 @@
     "binding_tool": "example-connector"
   },
   "runtime": {
+    "kind": "package",
     "entry": "runtime.invoke",
     "transport": "in_process",
     "timeout_ms": 30000,
     "idempotent": false
+  },
+  "editable_governor_config": {
+    "blocked_keywords": {
+      "type": "array",
+      "items": { "type": "string" },
+      "label": "Blocked keywords",
+      "description": "Reject when body contains any listed substring.",
+      "default": []
+    },
+    "min_body_length": {
+      "type": "integer",
+      "minimum": 1,
+      "label": "Minimum body length"
+    }
   },
   "status": "beta",
   "trust": "community"

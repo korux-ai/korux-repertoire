@@ -16,13 +16,19 @@
   "input_schema": {
     "type": "object",
     "properties": {
-      "brand_name": { "type": "string", "maxLength": 200 },
+      "brand_name": {
+        "type": "string",
+        "maxLength": 200
+      },
       "draft": {
         "type": "string",
         "maxLength": 20000,
         "description": "Optional draft copy to review against voice"
       },
-      "locale": { "type": "string", "maxLength": 32 },
+      "locale": {
+        "type": "string",
+        "maxLength": 32
+      },
       "channel": {
         "type": "string",
         "description": "Target channel hint, e.g. linkedin, email, blog"
@@ -31,17 +37,27 @@
   },
   "output_schema": {
     "type": "object",
-    "required": ["content"],
+    "required": [
+      "content"
+    ],
     "properties": {
-      "content": { "type": "string" },
-      "summary": { "type": "string" },
+      "content": {
+        "type": "string"
+      },
+      "summary": {
+        "type": "string"
+      },
       "banned_phrases": {
         "type": "array",
-        "items": { "type": "string" }
+        "items": {
+          "type": "string"
+        }
       },
       "tone": {
         "type": "array",
-        "items": { "type": "string" }
+        "items": {
+          "type": "string"
+        }
       }
     }
   },
@@ -49,7 +65,10 @@
     {
       "name": "draft",
       "required": false,
-      "sources": ["upstream", "step_field"],
+      "sources": [
+        "upstream",
+        "step_field"
+      ],
       "description": "Upstream draft to critique when reviewing voice",
       "propose_hint": "Pass compose output as `draft` when doing a voice check before publish.",
       "confirm_if_missing": false
@@ -57,7 +76,11 @@
     {
       "name": "brand_name",
       "required": false,
-      "sources": ["nl_fixed", "step_field", "default"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "default"
+      ],
       "description": "Brand name when stated in NL",
       "example_nl": "Check this LinkedIn draft against our brand voice",
       "confirm_if_missing": false
@@ -65,13 +88,21 @@
     {
       "name": "channel",
       "required": false,
-      "sources": ["nl_fixed", "step_field"],
+      "sources": [
+        "nl_fixed",
+        "step_field"
+      ],
       "description": "Channel context for tone (linkedin, email, blog, …)",
       "confirm_if_missing": false
     }
   ],
-  "auth": { "required": false },
+  "auth": {
+    "required": false
+  },
   "status": "beta",
   "trust": "first-party",
-  "aliases": ["brand-voice"]
+  "aliases": [
+    "brand-voice"
+  ],
+  "editable_governor_config": {}
 }

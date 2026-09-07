@@ -20,17 +20,25 @@
   "rules": [
     {
       "id": "block_denied_keywords_company",
-      "when": { "args.company": { "matches_any_owner": "blocked_keywords" } },
+      "when": {
+        "args.company": {
+          "matches_any_owner": "blocked_keywords"
+        }
+      },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
       "message": "Company contains a blocked keyword"
     },
     {
       "id": "require_human_by_default",
-      "when": { "writes_external": true },
+      "when": {
+        "writes_external": true
+      },
       "action": "intercept",
       "gate": "require_human",
       "message": "HubSpot contact upsert requires human approval"
     }
-  ]
+  ],
+  "implementation": "declarative",
+  "notes": "Evaluated by Korux platform declarative engine; optional runtime/governor.py overrides."
 }

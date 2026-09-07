@@ -169,5 +169,22 @@
   "invoke_tool": "general/mail",
   "binding_tool": "general/mail",
   "status": "stable",
-  "trust": "first-party"
+  "trust": "first-party",
+  "editable_governor_config": {
+    "blocked_keywords": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "label": "Blocked keywords",
+      "description": "Reject when content matches any listed substring (case-insensitive).",
+      "default": []
+    },
+    "min_body_length": {
+      "type": "integer",
+      "minimum": 1,
+      "label": "Minimum body length",
+      "description": "Reject when trimmed body is shorter than this length."
+    }
+  }
 }

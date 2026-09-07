@@ -4,15 +4,24 @@
   "capability_version": "1.0.0",
   "defaults": {
     "intercept_on_invoke": true,
-    "editable_fields": ["action", "image_url", "model_type", "return_mask"]
+    "editable_fields": [
+      "action",
+      "image_url",
+      "model_type",
+      "return_mask"
+    ]
   },
   "rules": [
     {
       "id": "require_human_by_default",
-      "when": { "writes_external": true },
+      "when": {
+        "writes_external": true
+      },
       "action": "intercept",
       "gate": "require_human",
       "message": "Meitu product image processing requires human approval"
     }
-  ]
+  ],
+  "implementation": "declarative",
+  "notes": "Evaluated by Korux platform declarative engine; optional runtime/governor.py overrides."
 }

@@ -37,25 +37,44 @@ Package locally (do not commit `dist/`):
 ./scripts/package_release.sh v0.5.0
 ```
 
-## Write-external and Governor
+## Write-external and Governor (dual-track)
 
 PRs must pass the Korux review checklist (this repo does not keep a second copy):
 
 - [PR review checklist](https://github.com/korux-ai/korux/blob/main/docs/spec/capability-package/contributor-guide.md#4-pr-评审清单)
 - [Repository placement §2.5](https://github.com/korux-ai/korux/blob/main/docs/spec/capability-package/contributor-guide.md#25-仓库归属core-vs-repertoire)
 - [Safety rails](https://github.com/korux-ai/korux/blob/main/docs/spec/capability-package/contributor-guide.md#5-安全红线)
+- [Capability governor rules](https://github.com/korux-ai/korux/blob/main/docs/spec/capability-package/governor-rules.md) — **how to implement** Track A / Track B
 
-Write-external packages require `writes_external=true`, a non-empty governor, and `default_gate=require_human` (written exceptions only). Secrets, tokens, and real PII must not enter this repository.
+Write-external packages require `writes_external=true`, a non-empty `governor.json`, and `default_gate=require_human` (written exceptions only). Secrets, tokens, and real PII must not enter this repository.
+
+### Track A — declarative (default, preferred for collaboration)
+
+1. Ship `governor.json` (`korux_governor_v1`) with ordered `rules` (`when` → `action`).
+2. Declare Owner-tunable fields in manifest `editable_governor_config` for every key referenced by rules (`matches_any_owner`, `length_lt_owner`, …).
+3. Korux platform evaluates via `evaluate_capability_governor` → declarative engine. **Do not** implement `evaluate_capability_governor` inside the package.
+
+### Track B — Python `evaluate_governor` (optional)
+
+1. Add `runtime/governor.py` with **zero** `import korux`.
+2. Export `evaluate_governor(ctx, args, context, owner_config) -> dict` (`action`: `pass`|`reject`|`intercept`).
+3. Optional `pack() -> dict` for Governance UI rule summaries.
+4. When this file exists, Korux **prefers** it over `governor.json` for evaluate / pack.
+
+See `packages/_template/governor.json` + `packages/_template/runtime/governor.py`.
+
+Owner config is stored on the **agent tool binding** and edited in Governance UI; values are passed as `owner_config` at invoke time.
 
 ## New packages
 
 1. Copy `packages/_template/` to `packages/<namespace>/<name>/`.
 2. Confirm the capability does **not** need Korux framework (else contribute to Korux core).
-3. Fill `manifest.json`: `id`, `version`, I/O flags, schema, auth, `params`, `default_gate`.
+3. Fill `manifest.json`: `id`, `version`, I/O flags, schema, auth, `params`, `default_gate`, and `editable_governor_config` when Owner should tune policy.
 4. **Connector:** implement `runtime/invoke.py` (stdlib / third-party SDK only; `async def invoke(args, secret, context)`).
 5. **Skill (optional runtime):** omit `runtime/` if the platform handles the step via kernel / Propose (`propose_guide` required). Example: `marketing/campaign-brief`.
-6. Write governor when `writes_external=true`; write `docs/credential.md` when `auth.required=true`.
-7. After local validation, open a PR with an invoke example (connectors) or propose example (skills) and CHANGELOG.
+6. Write `governor.json` (required when `writes_external=true`; skills may ship an empty `rules: []` pack). Optionally add Track B `runtime/governor.py`.
+7. Write `docs/credential.md` when `auth.required=true`.
+8. After local validation, open a PR with an invoke example (connectors) or propose example (skills) and CHANGELOG.
 
 Full flow: [adding a capability](https://github.com/korux-ai/korux/blob/main/docs/spec/capability-package/contributor-guide.md#2-新增能力流程).
 

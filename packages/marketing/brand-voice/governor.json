@@ -4,7 +4,14 @@
   "capability_version": "1.0.0",
   "defaults": {
     "intercept_on_invoke": false,
-    "editable_fields": ["brand_name", "draft", "locale", "channel"]
+    "editable_fields": [
+      "brand_name",
+      "draft",
+      "locale",
+      "channel"
+    ]
   },
-  "rules": []
+  "rules": [],
+  "implementation": "declarative",
+  "notes": "Evaluated by Korux platform declarative engine; optional runtime/governor.py overrides."
 }

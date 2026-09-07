@@ -97,5 +97,6 @@
   "binding_tool": "zoom/account",
   "status": "beta",
   "trust": "first-party",
-  "aliases": []
+  "aliases": [],
+  "editable_governor_config": {}
 }

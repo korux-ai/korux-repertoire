@@ -18,17 +18,27 @@
   "rules": [
     {
       "id": "block_empty_product",
-      "when": { "args.product_image_file_id": { "empty": true } },
+      "when": {
+        "args.product_image_file_id": {
+          "empty": true
+        }
+      },
       "action": "reject",
       "code": "VALIDATION",
       "message": "product_image_file_id is empty"
     },
     {
       "id": "block_denied_keywords_caption",
-      "when": { "args.caption": { "matches_any_owner": "blocked_keywords" } },
+      "when": {
+        "args.caption": {
+          "matches_any_owner": "blocked_keywords"
+        }
+      },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
       "message": "Caption contains a blocked keyword"
     }
-  ]
+  ],
+  "implementation": "declarative",
+  "notes": "Evaluated by Korux platform declarative engine; optional runtime/governor.py overrides."
 }

@@ -18,60 +18,99 @@
     "properties": {
       "action": {
         "type": "string",
-        "enum": ["export", "autofill_and_export"]
+        "enum": [
+          "export",
+          "autofill_and_export"
+        ]
       },
-      "design_id": { "type": "string" },
-      "brand_template_id": { "type": "string" },
-      "title": { "type": "string", "maxLength": 200 },
+      "design_id": {
+        "type": "string"
+      },
+      "brand_template_id": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string",
+        "maxLength": 200
+      },
       "field_data": {
         "type": "object",
         "description": "Brand template text field name → string value"
       },
       "format": {
         "type": "string",
-        "enum": ["png", "jpg", "pdf"]
+        "enum": [
+          "png",
+          "jpg",
+          "pdf"
+        ]
       }
     }
   },
   "output_schema": {
     "type": "object",
     "properties": {
-      "ok": { "type": "boolean" },
-      "design_id": { "type": "string" },
+      "ok": {
+        "type": "boolean"
+      },
+      "design_id": {
+        "type": "string"
+      },
       "export_urls": {
         "type": "array",
-        "items": { "type": "string" }
+        "items": {
+          "type": "string"
+        }
       },
-      "content": { "type": "string" },
-      "summary": { "type": "string" }
+      "content": {
+        "type": "string"
+      },
+      "summary": {
+        "type": "string"
+      }
     }
   },
   "params": [
     {
       "name": "action",
       "required": false,
-      "sources": ["nl_fixed", "step_field", "default"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "default"
+      ],
       "description": "export (default) or autofill_and_export",
       "confirm_if_missing": false
     },
     {
       "name": "design_id",
       "required": false,
-      "sources": ["nl_fixed", "step_field", "upstream"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "upstream"
+      ],
       "description": "Existing Canva design id (required for export)",
       "confirm_if_missing": false
     },
     {
       "name": "brand_template_id",
       "required": false,
-      "sources": ["nl_fixed", "step_field", "default"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "default"
+      ],
       "description": "Brand template id for autofill_and_export",
       "confirm_if_missing": false
     },
     {
       "name": "field_data",
       "required": false,
-      "sources": ["upstream", "step_field"],
+      "sources": [
+        "upstream",
+        "step_field"
+      ],
       "description": "Text fields for Brand Template autofill",
       "propose_hint": "Map composed strings to template field names.",
       "confirm_if_missing": false
@@ -79,7 +118,11 @@
     {
       "name": "format",
       "required": false,
-      "sources": ["nl_fixed", "step_field", "default"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "default"
+      ],
       "description": "png (default), jpg, or pdf",
       "confirm_if_missing": false
     }
@@ -87,15 +130,23 @@
   "editable_governor_config": {
     "blocked_keywords": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "label": "Blocked keywords (title / field values)",
       "default": []
     },
     "allowed_formats": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "label": "Allowed export formats",
-      "default": ["png", "jpg", "pdf"]
+      "default": [
+        "png",
+        "jpg",
+        "pdf"
+      ]
     }
   },
   "auth": {
@@ -125,5 +176,7 @@
   "binding_tool": "canva/design-export",
   "status": "beta",
   "trust": "first-party",
-  "aliases": ["canva-export"]
+  "aliases": [
+    "canva-export"
+  ]
 }

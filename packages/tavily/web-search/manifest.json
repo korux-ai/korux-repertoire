@@ -15,7 +15,9 @@
   "propose_guide": "Separate step before llm-summarize when NL asks to search the web. Set `query` on the step when NL states a fixed search theme.",
   "input_schema": {
     "type": "object",
-    "required": ["query"],
+    "required": [
+      "query"
+    ],
     "properties": {
       "query": {
         "type": "string",
@@ -30,7 +32,9 @@
   },
   "output_schema": {
     "type": "object",
-    "required": ["content"],
+    "required": [
+      "content"
+    ],
     "properties": {
       "content": {
         "type": "string"
@@ -47,7 +51,11 @@
     {
       "name": "query",
       "required": true,
-      "sources": ["upstream", "nl_fixed", "step_field"],
+      "sources": [
+        "upstream",
+        "nl_fixed",
+        "step_field"
+      ],
       "description": "搜索关键词；通常来自上一步邮件/任务正文，或在 NL 中写明固定主题",
       "example_nl": "根据邮件主题与正文关键词搜索公开资料",
       "propose_hint": "Set step field `query` when NL names a fixed search theme; otherwise place after email/read step for upstream keywords.",
@@ -56,7 +64,11 @@
     {
       "name": "max_results",
       "required": false,
-      "sources": ["default", "nl_fixed", "step_field"],
+      "sources": [
+        "default",
+        "nl_fixed",
+        "step_field"
+      ],
       "description": "返回结果条数上限",
       "default_value": 5,
       "confirm_if_missing": false
@@ -94,5 +106,23 @@
   "binding_tool": "tavily/web-search",
   "status": "beta",
   "trust": "first-party",
-  "aliases": []
+  "aliases": [],
+  "editable_governor_config": {
+    "blocked_keywords": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "label": "Blocked keywords",
+      "description": "Reject when content matches any listed substring (case-insensitive).",
+      "default": []
+    },
+    "max_results": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 20,
+      "default": 5,
+      "label": "Max results per search"
+    }
+  }
 }

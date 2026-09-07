@@ -17,5 +17,7 @@
       "gate": "auto",
       "message": "IMAP poll is External read; default gate auto"
     }
-  ]
+  ],
+  "implementation": "declarative",
+  "notes": "Evaluated by Korux platform declarative engine; optional runtime/governor.py overrides."
 }

@@ -16,32 +16,53 @@
   "input_schema": {
     "type": "object",
     "properties": {
-      "brief": { "type": "string", "maxLength": 8000 },
+      "brief": {
+        "type": "string",
+        "maxLength": 8000
+      },
       "horizon": {
         "type": "string",
-        "enum": ["week", "two_weeks", "month"]
+        "enum": [
+          "week",
+          "two_weeks",
+          "month"
+        ]
       },
       "channels": {
         "type": "array",
-        "items": { "type": "string" },
+        "items": {
+          "type": "string"
+        },
         "maxItems": 8
       },
-      "start_date": { "type": "string", "maxLength": 32 }
+      "start_date": {
+        "type": "string",
+        "maxLength": 32
+      }
     }
   },
   "output_schema": {
     "type": "object",
-    "required": ["content"],
+    "required": [
+      "content"
+    ],
     "properties": {
-      "content": { "type": "string" },
-      "summary": { "type": "string" }
+      "content": {
+        "type": "string"
+      },
+      "summary": {
+        "type": "string"
+      }
     }
   },
   "params": [
     {
       "name": "brief",
       "required": false,
-      "sources": ["upstream", "step_field"],
+      "sources": [
+        "upstream",
+        "step_field"
+      ],
       "description": "Upstream campaign brief",
       "propose_hint": "Prefer marketing/campaign-brief output as `brief`.",
       "confirm_if_missing": false
@@ -49,7 +70,11 @@
     {
       "name": "horizon",
       "required": false,
-      "sources": ["nl_fixed", "step_field", "default"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "default"
+      ],
       "description": "week (default), two_weeks, or month",
       "example_nl": "Build a two-week content calendar for the launch",
       "confirm_if_missing": false
@@ -57,13 +82,22 @@
     {
       "name": "channels",
       "required": false,
-      "sources": ["upstream", "nl_fixed", "step_field"],
+      "sources": [
+        "upstream",
+        "nl_fixed",
+        "step_field"
+      ],
       "description": "Channels from channel-mix when available",
       "confirm_if_missing": false
     }
   ],
-  "auth": { "required": false },
+  "auth": {
+    "required": false
+  },
   "status": "beta",
   "trust": "first-party",
-  "aliases": ["content-calendar"]
+  "aliases": [
+    "content-calendar"
+  ],
+  "editable_governor_config": {}
 }

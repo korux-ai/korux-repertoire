@@ -2,6 +2,8 @@
   "spec_version": "korux_governor_v1",
   "capability_id": "example-connector",
   "capability_version": "0.1.0",
+  "implementation": "declarative",
+  "notes": "Track A (default): platform evaluates these when rules. Optional Track B: add runtime/governor.py with evaluate_governor.",
   "defaults": {
     "intercept_on_invoke": true,
     "editable_fields": ["body"]
@@ -12,14 +14,28 @@
       "when": { "args.body": { "empty": true } },
       "action": "reject",
       "code": "VALIDATION",
-      "message": "正文为空；须使用上游步骤产出"
+      "message": "Body is empty; use upstream step output."
+    },
+    {
+      "id": "block_banned_words",
+      "when": { "args.body": { "matches_any_owner": "blocked_keywords" } },
+      "action": "reject",
+      "code": "GOVERNOR_POLICY",
+      "message": "Body matches an owner blocked keyword."
+    },
+    {
+      "id": "block_short_body",
+      "when": { "args.body": { "length_lt_owner": "min_body_length" } },
+      "action": "reject",
+      "code": "VALIDATION",
+      "message": "Body shorter than owner min_body_length."
     },
     {
       "id": "require_human_by_default",
       "when": { "writes_external": true },
       "action": "intercept",
       "gate": "require_human",
-      "message": "写外联前须人工确认"
+      "message": "Human confirmation required before external write."
     }
   ]
 }

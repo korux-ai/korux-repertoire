@@ -15,18 +15,31 @@
   "propose_guide": "Spend-affecting write via Google Ads API REST. Prefer action=set_status with status=PAUSED. status=ENABLED and set_budget only when NL explicitly asks and Owner caps allow. Never REMOVED. Always require_human. Needs developer_token + OAuth + customer_id.",
   "input_schema": {
     "type": "object",
-    "required": ["action", "campaign_id"],
+    "required": [
+      "action",
+      "campaign_id"
+    ],
     "properties": {
       "action": {
         "type": "string",
-        "enum": ["set_status", "set_budget"]
+        "enum": [
+          "set_status",
+          "set_budget"
+        ]
       },
-      "campaign_id": { "type": "string" },
+      "campaign_id": {
+        "type": "string"
+      },
       "status": {
         "type": "string",
-        "enum": ["ENABLED", "PAUSED"]
+        "enum": [
+          "ENABLED",
+          "PAUSED"
+        ]
       },
-      "budget_id": { "type": "string" },
+      "budget_id": {
+        "type": "string"
+      },
       "amount_micros": {
         "type": "integer",
         "minimum": 10000,
@@ -41,48 +54,79 @@
   "output_schema": {
     "type": "object",
     "properties": {
-      "ok": { "type": "boolean" },
-      "campaign_id": { "type": "string" },
-      "action": { "type": "string" },
-      "status": { "type": "string" },
-      "amount_micros": { "type": "integer" },
-      "content": { "type": "string" },
-      "summary": { "type": "string" }
+      "ok": {
+        "type": "boolean"
+      },
+      "campaign_id": {
+        "type": "string"
+      },
+      "action": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string"
+      },
+      "amount_micros": {
+        "type": "integer"
+      },
+      "content": {
+        "type": "string"
+      },
+      "summary": {
+        "type": "string"
+      }
     }
   },
   "params": [
     {
       "name": "action",
       "required": true,
-      "sources": ["nl_fixed", "step_field"],
+      "sources": [
+        "nl_fixed",
+        "step_field"
+      ],
       "description": "set_status or set_budget",
       "confirm_if_missing": true
     },
     {
       "name": "campaign_id",
       "required": true,
-      "sources": ["nl_fixed", "step_field", "upstream"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "upstream"
+      ],
       "description": "Google Ads campaign id",
       "confirm_if_missing": true
     },
     {
       "name": "status",
       "required": false,
-      "sources": ["nl_fixed", "step_field"],
+      "sources": [
+        "nl_fixed",
+        "step_field"
+      ],
       "description": "ENABLED or PAUSED for set_status",
       "confirm_if_missing": false
     },
     {
       "name": "budget_id",
       "required": false,
-      "sources": ["nl_fixed", "step_field", "upstream"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "upstream"
+      ],
       "description": "Campaign budget id for set_budget",
       "confirm_if_missing": false
     },
     {
       "name": "amount_micros",
       "required": false,
-      "sources": ["nl_fixed", "step_field"],
+      "sources": [
+        "nl_fixed",
+        "step_field"
+      ],
       "description": "New budget amount_micros (Owner-capped)",
       "confirm_if_missing": false
     }
@@ -151,5 +195,7 @@
   "binding_tool": "google/ads-mutate",
   "status": "beta",
   "trust": "first-party",
-  "aliases": ["google-ads-mutate"]
+  "aliases": [
+    "google-ads-mutate"
+  ]
 }

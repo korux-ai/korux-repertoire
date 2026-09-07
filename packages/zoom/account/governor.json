@@ -8,5 +8,7 @@
       "meeting_id"
     ]
   },
-  "rules": []
+  "rules": [],
+  "implementation": "declarative",
+  "notes": "Evaluated by Korux platform declarative engine; optional runtime/governor.py overrides."
 }

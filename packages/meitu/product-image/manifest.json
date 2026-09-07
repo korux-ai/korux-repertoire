@@ -18,58 +18,91 @@
     "properties": {
       "action": {
         "type": "string",
-        "enum": ["cutout"]
+        "enum": [
+          "cutout"
+        ]
       },
-      "image_file_id": { "type": "string" },
-      "image_url": { "type": "string", "maxLength": 2000 },
+      "image_file_id": {
+        "type": "string"
+      },
+      "image_url": {
+        "type": "string",
+        "maxLength": 2000
+      },
       "model_type": {
         "type": "integer",
         "minimum": 0,
         "maximum": 10,
         "description": "Meitu cutout model_type (provider-specific; default 0)"
       },
-      "return_mask": { "type": "boolean" }
+      "return_mask": {
+        "type": "boolean"
+      }
     }
   },
   "output_schema": {
     "type": "object",
     "properties": {
-      "ok": { "type": "boolean" },
+      "ok": {
+        "type": "boolean"
+      },
       "image_urls": {
         "type": "array",
-        "items": { "type": "string" }
+        "items": {
+          "type": "string"
+        }
       },
-      "action": { "type": "string" },
-      "content": { "type": "string" },
-      "summary": { "type": "string" }
+      "action": {
+        "type": "string"
+      },
+      "content": {
+        "type": "string"
+      },
+      "summary": {
+        "type": "string"
+      }
     }
   },
   "params": [
     {
       "name": "action",
       "required": false,
-      "sources": ["nl_fixed", "step_field", "default"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "default"
+      ],
       "description": "cutout (default)",
       "confirm_if_missing": false
     },
     {
       "name": "image_file_id",
       "required": false,
-      "sources": ["step_field", "upstream"],
+      "sources": [
+        "step_field",
+        "upstream"
+      ],
       "description": "Workspace image file_id",
       "confirm_if_missing": false
     },
     {
       "name": "image_url",
       "required": false,
-      "sources": ["step_field", "nl_fixed", "upstream"],
+      "sources": [
+        "step_field",
+        "nl_fixed",
+        "upstream"
+      ],
       "description": "Public https image URL alternative",
       "confirm_if_missing": false
     },
     {
       "name": "model_type",
       "required": false,
-      "sources": ["step_field", "default"],
+      "sources": [
+        "step_field",
+        "default"
+      ],
       "description": "Cutout model_type (default 0)",
       "confirm_if_missing": false
     }
@@ -124,5 +157,8 @@
   "binding_tool": "meitu/product-image",
   "status": "beta",
   "trust": "first-party",
-  "aliases": ["meitu-cutout", "meitu-product"]
+  "aliases": [
+    "meitu-cutout",
+    "meitu-product"
+  ]
 }

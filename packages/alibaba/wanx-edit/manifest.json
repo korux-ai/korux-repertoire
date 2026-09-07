@@ -15,46 +15,78 @@
   "propose_guide": "After the owner uploads a product photo, use this to rewrite background, lighting, or style with a Chinese/English prompt before social publish. Prefer image_file_id (Korux injects context.image) or a public https image_url. Default model wan2.6-image (sync). Output image URLs expire (~24h) — re-host before facebook/publish / instagram/publish. Do not invent API keys.",
   "input_schema": {
     "type": "object",
-    "required": ["prompt"],
+    "required": [
+      "prompt"
+    ],
     "properties": {
-      "prompt": { "type": "string", "maxLength": 2000 },
-      "image_file_id": { "type": "string" },
-      "image_url": { "type": "string", "maxLength": 2000 },
+      "prompt": {
+        "type": "string",
+        "maxLength": 2000
+      },
+      "image_file_id": {
+        "type": "string"
+      },
+      "image_url": {
+        "type": "string",
+        "maxLength": 2000
+      },
       "model": {
         "type": "string",
         "description": "DashScope model id (default wan2.6-image)"
       },
       "size": {
         "type": "string",
-        "enum": ["1K", "2K"]
+        "enum": [
+          "1K",
+          "2K"
+        ]
       },
       "n": {
         "type": "integer",
         "minimum": 1,
         "maximum": 4
       },
-      "negative_prompt": { "type": "string", "maxLength": 500 },
-      "watermark": { "type": "boolean" }
+      "negative_prompt": {
+        "type": "string",
+        "maxLength": 500
+      },
+      "watermark": {
+        "type": "boolean"
+      }
     }
   },
   "output_schema": {
     "type": "object",
     "properties": {
-      "ok": { "type": "boolean" },
+      "ok": {
+        "type": "boolean"
+      },
       "image_urls": {
         "type": "array",
-        "items": { "type": "string" }
+        "items": {
+          "type": "string"
+        }
       },
-      "model": { "type": "string" },
-      "content": { "type": "string" },
-      "summary": { "type": "string" }
+      "model": {
+        "type": "string"
+      },
+      "content": {
+        "type": "string"
+      },
+      "summary": {
+        "type": "string"
+      }
     }
   },
   "params": [
     {
       "name": "prompt",
       "required": true,
-      "sources": ["upstream", "step_field", "nl_fixed"],
+      "sources": [
+        "upstream",
+        "step_field",
+        "nl_fixed"
+      ],
       "description": "Edit instruction (e.g. white studio background, soft light)",
       "example_nl": "把商品放到干净白底，保留原商品细节",
       "propose_hint": "Write a concrete edit instruction; do not paste raw Vault secrets.",
@@ -63,21 +95,32 @@
     {
       "name": "image_file_id",
       "required": false,
-      "sources": ["step_field", "upstream"],
+      "sources": [
+        "step_field",
+        "upstream"
+      ],
       "description": "Workspace image file_id (JPEG/PNG)",
       "confirm_if_missing": false
     },
     {
       "name": "image_url",
       "required": false,
-      "sources": ["step_field", "nl_fixed", "upstream"],
+      "sources": [
+        "step_field",
+        "nl_fixed",
+        "upstream"
+      ],
       "description": "Public https image URL when file bytes are unavailable",
       "confirm_if_missing": false
     },
     {
       "name": "size",
       "required": false,
-      "sources": ["nl_fixed", "step_field", "default"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "default"
+      ],
       "description": "1K (default) or 2K",
       "confirm_if_missing": false
     }
@@ -85,7 +128,9 @@
   "editable_governor_config": {
     "blocked_keywords": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "label": "Blocked keywords in prompt",
       "default": []
     },
@@ -145,5 +190,8 @@
   "binding_tool": "alibaba/wanx-edit",
   "status": "beta",
   "trust": "first-party",
-  "aliases": ["wanx-edit", "tongyi-wanxiang-edit"]
+  "aliases": [
+    "wanx-edit",
+    "tongyi-wanxiang-edit"
+  ]
 }

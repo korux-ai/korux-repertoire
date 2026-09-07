@@ -4,7 +4,15 @@
   "capability_version": "1.0.0",
   "defaults": {
     "intercept_on_invoke": false,
-    "editable_fields": ["start_date", "end_date", "metrics", "dimensions", "limit"]
+    "editable_fields": [
+      "start_date",
+      "end_date",
+      "metrics",
+      "dimensions",
+      "limit"
+    ]
   },
-  "rules": []
+  "rules": [],
+  "implementation": "declarative",
+  "notes": "Evaluated by Korux platform declarative engine; optional runtime/governor.py overrides."
 }

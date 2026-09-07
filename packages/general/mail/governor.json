@@ -26,6 +26,39 @@
       "message": "邮件正文为空；须使用上游步骤产出"
     },
     {
+      "id": "block_banned_words",
+      "when": {
+        "args.body": {
+          "matches_any_owner": "blocked_keywords"
+        }
+      },
+      "action": "reject",
+      "code": "GOVERNOR_POLICY",
+      "message": "Email body matches an owner blocked keyword."
+    },
+    {
+      "id": "block_banned_words_subject",
+      "when": {
+        "args.subject": {
+          "matches_any_owner": "blocked_keywords"
+        }
+      },
+      "action": "reject",
+      "code": "GOVERNOR_POLICY",
+      "message": "Email subject matches an owner blocked keyword."
+    },
+    {
+      "id": "block_short_body",
+      "when": {
+        "args.body": {
+          "length_lt_owner": "min_body_length"
+        }
+      },
+      "action": "reject",
+      "code": "VALIDATION",
+      "message": "Email body shorter than owner min_body_length."
+    },
+    {
       "id": "require_human_by_default",
       "when": {
         "writes_external": true
@@ -34,5 +67,7 @@
       "gate": "require_human",
       "message": "发送邮件前须人工确认"
     }
-  ]
+  ],
+  "implementation": "declarative",
+  "notes": "Evaluated by Korux platform declarative engine; optional runtime/governor.py overrides."
 }

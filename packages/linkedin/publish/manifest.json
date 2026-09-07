@@ -15,7 +15,9 @@
   "propose_guide": "External Company Page post after Internal compose/summarize: commentary must be upstream structured output, not the task NL verbatim. Optional image_file_id from a prior file step. Personal profile posts are out of scope.",
   "input_schema": {
     "type": "object",
-    "required": ["commentary"],
+    "required": [
+      "commentary"
+    ],
     "properties": {
       "commentary": {
         "type": "string",
@@ -29,17 +31,29 @@
   "output_schema": {
     "type": "object",
     "properties": {
-      "ok": { "type": "boolean" },
-      "post_id": { "type": "string" },
-      "content": { "type": "string" },
-      "summary": { "type": "string" }
+      "ok": {
+        "type": "boolean"
+      },
+      "post_id": {
+        "type": "string"
+      },
+      "content": {
+        "type": "string"
+      },
+      "summary": {
+        "type": "string"
+      }
     }
   },
   "params": [
     {
       "name": "commentary",
       "required": true,
-      "sources": ["upstream", "step_field", "nl_fixed"],
+      "sources": [
+        "upstream",
+        "step_field",
+        "nl_fixed"
+      ],
       "description": "Company Page post copy; must come from an upstream compose step, not raw task NL",
       "example_nl": "Post the previous summary to the company LinkedIn Page",
       "propose_hint": "Set step field `commentary` from a prior compose/summarize step.",
@@ -48,7 +62,10 @@
     {
       "name": "image_file_id",
       "required": false,
-      "sources": ["step_field", "upstream"],
+      "sources": [
+        "step_field",
+        "upstream"
+      ],
       "description": "Optional workspace image file_id (one JPEG/PNG)",
       "confirm_if_missing": false
     }
@@ -56,14 +73,18 @@
   "editable_governor_config": {
     "blocked_keywords": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "label": "Blocked keywords",
       "description": "Reject if commentary contains a substring (case-insensitive)",
       "default": []
     },
     "blocked_url_hosts": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "label": "Blocked URL hosts",
       "description": "Reject if an http(s) URL host in commentary is listed",
       "default": []

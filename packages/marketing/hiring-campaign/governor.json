@@ -4,7 +4,16 @@
   "capability_version": "1.0.0",
   "defaults": {
     "intercept_on_invoke": false,
-    "editable_fields": ["roles", "locations", "audience", "evp", "constraints", "timeline"]
+    "editable_fields": [
+      "roles",
+      "locations",
+      "audience",
+      "evp",
+      "constraints",
+      "timeline"
+    ]
   },
-  "rules": []
+  "rules": [],
+  "implementation": "declarative",
+  "notes": "Evaluated by Korux platform declarative engine; optional runtime/governor.py overrides."
 }

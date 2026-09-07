@@ -15,30 +15,60 @@
   "propose_guide": "Log marketing/sales handoff notes after research or meetings. Prefer contact_id when known; otherwise email creates/finds the contact then attaches the note.",
   "input_schema": {
     "type": "object",
-    "required": ["body"],
+    "required": [
+      "body"
+    ],
     "properties": {
-      "body": { "type": "string", "maxLength": 10000 },
-      "contact_id": { "type": "string" },
-      "email": { "type": "string", "maxLength": 320 },
-      "firstname": { "type": "string", "maxLength": 100 },
-      "lastname": { "type": "string", "maxLength": 100 }
+      "body": {
+        "type": "string",
+        "maxLength": 10000
+      },
+      "contact_id": {
+        "type": "string"
+      },
+      "email": {
+        "type": "string",
+        "maxLength": 320
+      },
+      "firstname": {
+        "type": "string",
+        "maxLength": 100
+      },
+      "lastname": {
+        "type": "string",
+        "maxLength": 100
+      }
     }
   },
   "output_schema": {
     "type": "object",
     "properties": {
-      "ok": { "type": "boolean" },
-      "note_id": { "type": "string" },
-      "contact_id": { "type": "string" },
-      "content": { "type": "string" },
-      "summary": { "type": "string" }
+      "ok": {
+        "type": "boolean"
+      },
+      "note_id": {
+        "type": "string"
+      },
+      "contact_id": {
+        "type": "string"
+      },
+      "content": {
+        "type": "string"
+      },
+      "summary": {
+        "type": "string"
+      }
     }
   },
   "params": [
     {
       "name": "body",
       "required": true,
-      "sources": ["upstream", "step_field", "nl_fixed"],
+      "sources": [
+        "upstream",
+        "step_field",
+        "nl_fixed"
+      ],
       "description": "Note body text",
       "propose_hint": "Set body from upstream summary; do not paste raw task NL.",
       "confirm_if_missing": true
@@ -46,14 +76,22 @@
     {
       "name": "contact_id",
       "required": false,
-      "sources": ["upstream", "step_field", "nl_fixed"],
+      "sources": [
+        "upstream",
+        "step_field",
+        "nl_fixed"
+      ],
       "description": "HubSpot contact id when known",
       "confirm_if_missing": false
     },
     {
       "name": "email",
       "required": false,
-      "sources": ["nl_fixed", "step_field", "upstream"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "upstream"
+      ],
       "description": "Contact email used to find or create the contact when contact_id is absent",
       "confirm_if_missing": false
     }
@@ -61,7 +99,9 @@
   "editable_governor_config": {
     "blocked_keywords": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "label": "Blocked keywords",
       "default": []
     },

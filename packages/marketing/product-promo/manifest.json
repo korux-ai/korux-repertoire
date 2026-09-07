@@ -16,32 +16,70 @@
   "input_schema": {
     "type": "object",
     "properties": {
-      "product_name": { "type": "string", "maxLength": 200 },
-      "company_name": { "type": "string", "maxLength": 120 },
-      "style": { "type": "string", "maxLength": 500 },
-      "offer": { "type": "string", "maxLength": 500 },
-      "audience": { "type": "string", "maxLength": 300 },
-      "constraints": { "type": "string", "maxLength": 1000 }
+      "product_name": {
+        "type": "string",
+        "maxLength": 200
+      },
+      "company_name": {
+        "type": "string",
+        "maxLength": 120
+      },
+      "style": {
+        "type": "string",
+        "maxLength": 500
+      },
+      "offer": {
+        "type": "string",
+        "maxLength": 500
+      },
+      "audience": {
+        "type": "string",
+        "maxLength": 300
+      },
+      "constraints": {
+        "type": "string",
+        "maxLength": 1000
+      }
     }
   },
   "output_schema": {
     "type": "object",
-    "required": ["content"],
+    "required": [
+      "content"
+    ],
     "properties": {
-      "content": { "type": "string" },
-      "summary": { "type": "string" },
-      "title": { "type": "string" },
-      "caption": { "type": "string" },
-      "headline": { "type": "string" },
-      "layout": { "type": "string" },
-      "kind": { "type": "string" }
+      "content": {
+        "type": "string"
+      },
+      "summary": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "caption": {
+        "type": "string"
+      },
+      "headline": {
+        "type": "string"
+      },
+      "layout": {
+        "type": "string"
+      },
+      "kind": {
+        "type": "string"
+      }
     }
   },
   "params": [
     {
       "name": "product_name",
       "required": false,
-      "sources": ["nl_fixed", "step_field", "upstream"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "upstream"
+      ],
       "description": "Product name when stated",
       "example_nl": "用店铺风格给这张新花束图写小红书文案并做主图",
       "confirm_if_missing": false
@@ -49,27 +87,44 @@
     {
       "name": "company_name",
       "required": false,
-      "sources": ["nl_fixed", "step_field", "upstream"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "upstream"
+      ],
       "description": "Store/brand name from workspace profile",
       "confirm_if_missing": false
     },
     {
       "name": "style",
       "required": false,
-      "sources": ["nl_fixed", "step_field", "upstream"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "upstream"
+      ],
       "description": "Preferred visual/copy style notes",
       "confirm_if_missing": false
     },
     {
       "name": "offer",
       "required": false,
-      "sources": ["nl_fixed", "step_field"],
+      "sources": [
+        "nl_fixed",
+        "step_field"
+      ],
       "description": "Price or promo when explicitly allowed",
       "confirm_if_missing": false
     }
   ],
-  "auth": { "required": false },
+  "auth": {
+    "required": false
+  },
   "status": "beta",
   "trust": "first-party",
-  "aliases": ["product-promo", "product-card-copy"]
+  "aliases": [
+    "product-promo",
+    "product-card-copy"
+  ],
+  "editable_governor_config": {}
 }

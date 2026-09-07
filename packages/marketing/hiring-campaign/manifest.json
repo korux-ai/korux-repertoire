@@ -16,27 +16,55 @@
   "input_schema": {
     "type": "object",
     "properties": {
-      "roles": { "type": "string", "maxLength": 2000 },
-      "locations": { "type": "string", "maxLength": 1000 },
-      "audience": { "type": "string", "maxLength": 500 },
-      "evp": { "type": "string", "maxLength": 2000 },
-      "constraints": { "type": "string", "maxLength": 1000 },
-      "timeline": { "type": "string", "maxLength": 200 }
+      "roles": {
+        "type": "string",
+        "maxLength": 2000
+      },
+      "locations": {
+        "type": "string",
+        "maxLength": 1000
+      },
+      "audience": {
+        "type": "string",
+        "maxLength": 500
+      },
+      "evp": {
+        "type": "string",
+        "maxLength": 2000
+      },
+      "constraints": {
+        "type": "string",
+        "maxLength": 1000
+      },
+      "timeline": {
+        "type": "string",
+        "maxLength": 200
+      }
     }
   },
   "output_schema": {
     "type": "object",
-    "required": ["content"],
+    "required": [
+      "content"
+    ],
     "properties": {
-      "content": { "type": "string" },
-      "summary": { "type": "string" },
+      "content": {
+        "type": "string"
+      },
+      "summary": {
+        "type": "string"
+      },
       "primary_channels": {
         "type": "array",
-        "items": { "type": "string" }
+        "items": {
+          "type": "string"
+        }
       },
       "kpis": {
         "type": "array",
-        "items": { "type": "string" }
+        "items": {
+          "type": "string"
+        }
       }
     }
   },
@@ -44,7 +72,11 @@
     {
       "name": "roles",
       "required": false,
-      "sources": ["nl_fixed", "step_field", "upstream"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "upstream"
+      ],
       "description": "Open roles or hiring themes",
       "example_nl": "Plan a LinkedIn + careers-page campaign for senior backend engineers",
       "confirm_if_missing": false
@@ -52,27 +84,44 @@
     {
       "name": "audience",
       "required": false,
-      "sources": ["nl_fixed", "step_field", "upstream"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "upstream"
+      ],
       "description": "Candidate persona when stated",
       "confirm_if_missing": false
     },
     {
       "name": "evp",
       "required": false,
-      "sources": ["nl_fixed", "step_field", "upstream"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "upstream"
+      ],
       "description": "Employer value proposition hints",
       "confirm_if_missing": false
     },
     {
       "name": "constraints",
       "required": false,
-      "sources": ["nl_fixed", "step_field"],
+      "sources": [
+        "nl_fixed",
+        "step_field"
+      ],
       "description": "Budget, brand, EEO, or channel constraints",
       "confirm_if_missing": false
     }
   ],
-  "auth": { "required": false },
+  "auth": {
+    "required": false
+  },
   "status": "beta",
   "trust": "first-party",
-  "aliases": ["hiring-campaign", "recruiting-campaign"]
+  "aliases": [
+    "hiring-campaign",
+    "recruiting-campaign"
+  ],
+  "editable_governor_config": {}
 }

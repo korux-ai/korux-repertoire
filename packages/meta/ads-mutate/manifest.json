@@ -15,20 +15,36 @@
   "propose_guide": "Spend-affecting write. Prefer action=set_status with status=PAUSED for incident response. status=ACTIVE and set_budget only when NL explicitly asks and Owner caps allow. Never DELETE/ARCHIVED. Confirm object_id from meta/ads-insights first. Always require_human.",
   "input_schema": {
     "type": "object",
-    "required": ["object_type", "object_id", "action"],
+    "required": [
+      "object_type",
+      "object_id",
+      "action"
+    ],
     "properties": {
       "action": {
         "type": "string",
-        "enum": ["set_status", "set_budget"]
+        "enum": [
+          "set_status",
+          "set_budget"
+        ]
       },
       "object_type": {
         "type": "string",
-        "enum": ["campaign", "adset", "ad"]
+        "enum": [
+          "campaign",
+          "adset",
+          "ad"
+        ]
       },
-      "object_id": { "type": "string" },
+      "object_id": {
+        "type": "string"
+      },
       "status": {
         "type": "string",
-        "enum": ["ACTIVE", "PAUSED"]
+        "enum": [
+          "ACTIVE",
+          "PAUSED"
+        ]
       },
       "daily_budget": {
         "type": "integer",
@@ -40,48 +56,79 @@
   "output_schema": {
     "type": "object",
     "properties": {
-      "ok": { "type": "boolean" },
-      "object_id": { "type": "string" },
-      "action": { "type": "string" },
-      "status": { "type": "string" },
-      "daily_budget": { "type": "integer" },
-      "content": { "type": "string" },
-      "summary": { "type": "string" }
+      "ok": {
+        "type": "boolean"
+      },
+      "object_id": {
+        "type": "string"
+      },
+      "action": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string"
+      },
+      "daily_budget": {
+        "type": "integer"
+      },
+      "content": {
+        "type": "string"
+      },
+      "summary": {
+        "type": "string"
+      }
     }
   },
   "params": [
     {
       "name": "action",
       "required": true,
-      "sources": ["nl_fixed", "step_field"],
+      "sources": [
+        "nl_fixed",
+        "step_field"
+      ],
       "description": "set_status or set_budget",
       "confirm_if_missing": true
     },
     {
       "name": "object_type",
       "required": true,
-      "sources": ["nl_fixed", "step_field", "upstream"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "upstream"
+      ],
       "description": "campaign, adset, or ad",
       "confirm_if_missing": true
     },
     {
       "name": "object_id",
       "required": true,
-      "sources": ["nl_fixed", "step_field", "upstream"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "upstream"
+      ],
       "description": "Meta object id",
       "confirm_if_missing": true
     },
     {
       "name": "status",
       "required": false,
-      "sources": ["nl_fixed", "step_field"],
+      "sources": [
+        "nl_fixed",
+        "step_field"
+      ],
       "description": "ACTIVE or PAUSED for set_status",
       "confirm_if_missing": false
     },
     {
       "name": "daily_budget",
       "required": false,
-      "sources": ["nl_fixed", "step_field"],
+      "sources": [
+        "nl_fixed",
+        "step_field"
+      ],
       "description": "Minor units for set_budget (capped by Owner max_daily_budget)",
       "confirm_if_missing": false
     }
@@ -131,5 +178,8 @@
   "binding_tool": "meta/ads-mutate",
   "status": "beta",
   "trust": "first-party",
-  "aliases": ["meta-ads-mutate", "facebook-ads-mutate"]
+  "aliases": [
+    "meta-ads-mutate",
+    "facebook-ads-mutate"
+  ]
 }

@@ -22,11 +22,18 @@
       },
       "level": {
         "type": "string",
-        "enum": ["account", "campaign", "adset", "ad"]
+        "enum": [
+          "account",
+          "campaign",
+          "adset",
+          "ad"
+        ]
       },
       "fields": {
         "type": "array",
-        "items": { "type": "string" },
+        "items": {
+          "type": "string"
+        },
         "maxItems": 20
       },
       "limit": {
@@ -42,19 +49,33 @@
   },
   "output_schema": {
     "type": "object",
-    "required": ["content"],
+    "required": [
+      "content"
+    ],
     "properties": {
-      "ok": { "type": "boolean" },
-      "content": { "type": "string" },
-      "summary": { "type": "string" },
-      "row_count": { "type": "integer" }
+      "ok": {
+        "type": "boolean"
+      },
+      "content": {
+        "type": "string"
+      },
+      "summary": {
+        "type": "string"
+      },
+      "row_count": {
+        "type": "integer"
+      }
     }
   },
   "params": [
     {
       "name": "date_preset",
       "required": false,
-      "sources": ["nl_fixed", "step_field", "default"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "default"
+      ],
       "description": "Meta date_preset (default last_7d)",
       "example_nl": "Pull Meta ads spend and CPA for the last 7 days",
       "confirm_if_missing": false
@@ -62,14 +83,21 @@
     {
       "name": "level",
       "required": false,
-      "sources": ["nl_fixed", "step_field", "default"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "default"
+      ],
       "description": "account, campaign (default), adset, or ad",
       "confirm_if_missing": false
     },
     {
       "name": "limit",
       "required": false,
-      "sources": ["step_field", "default"],
+      "sources": [
+        "step_field",
+        "default"
+      ],
       "description": "Max rows (default 25)",
       "confirm_if_missing": false
     }
@@ -107,5 +135,9 @@
   "binding_tool": "meta/ads-insights",
   "status": "beta",
   "trust": "first-party",
-  "aliases": ["facebook-ads-insights", "meta-ads"]
+  "aliases": [
+    "facebook-ads-insights",
+    "meta-ads"
+  ],
+  "editable_governor_config": {}
 }

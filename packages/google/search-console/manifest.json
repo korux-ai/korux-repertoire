@@ -28,7 +28,14 @@
         "type": "array",
         "items": {
           "type": "string",
-          "enum": ["query", "page", "country", "device", "searchAppearance", "date"]
+          "enum": [
+            "query",
+            "page",
+            "country",
+            "device",
+            "searchAppearance",
+            "date"
+          ]
         },
         "maxItems": 4
       },
@@ -43,39 +50,66 @@
       },
       "search_type": {
         "type": "string",
-        "enum": ["web", "image", "video", "news"]
+        "enum": [
+          "web",
+          "image",
+          "video",
+          "news"
+        ]
       }
     }
   },
   "output_schema": {
     "type": "object",
-    "required": ["content"],
+    "required": [
+      "content"
+    ],
     "properties": {
-      "ok": { "type": "boolean" },
-      "content": { "type": "string" },
-      "summary": { "type": "string" },
-      "row_count": { "type": "integer" }
+      "ok": {
+        "type": "boolean"
+      },
+      "content": {
+        "type": "string"
+      },
+      "summary": {
+        "type": "string"
+      },
+      "row_count": {
+        "type": "integer"
+      }
     }
   },
   "params": [
     {
       "name": "start_date",
       "required": false,
-      "sources": ["nl_fixed", "step_field", "default"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "default"
+      ],
       "description": "Start date (default 28daysAgo)",
       "confirm_if_missing": false
     },
     {
       "name": "end_date",
       "required": false,
-      "sources": ["nl_fixed", "step_field", "default"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "default"
+      ],
       "description": "End date (default 3daysAgo; GSC data lags)",
       "confirm_if_missing": false
     },
     {
       "name": "dimensions",
       "required": false,
-      "sources": ["nl_fixed", "step_field", "default"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "default"
+      ],
       "description": "Group by query, page, country, device, date, …",
       "example_nl": "Show top Search Console queries for the last month",
       "confirm_if_missing": false
@@ -83,7 +117,10 @@
     {
       "name": "row_limit",
       "required": false,
-      "sources": ["step_field", "default"],
+      "sources": [
+        "step_field",
+        "default"
+      ],
       "description": "Max rows (default 25, max 1000)",
       "confirm_if_missing": false
     }
@@ -141,5 +178,9 @@
   "binding_tool": "google/search-console",
   "status": "beta",
   "trust": "first-party",
-  "aliases": ["gsc", "search-console"]
+  "aliases": [
+    "gsc",
+    "search-console"
+  ],
+  "editable_governor_config": {}
 }

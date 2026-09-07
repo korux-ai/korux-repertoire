@@ -15,59 +15,112 @@
   "propose_guide": "After marketing/product-promo (or ab-copy) and when workspace has product + logo images, compose a single social_post artifact: image (composed) + title + caption. Layouts: xhs_portrait (default 3:4), square, landscape. Downstream xiaohongshu/publish / instagram/publish should map image_file_id/caption/title from this step output — do not special-case skill ids. Runtime needs Pillow on the Korux host. Prefer human review before external publish.",
   "input_schema": {
     "type": "object",
-    "required": ["product_image_file_id"],
+    "required": [
+      "product_image_file_id"
+    ],
     "properties": {
-      "product_image_file_id": { "type": "string" },
-      "logo_file_id": { "type": "string" },
-      "headline": { "type": "string", "maxLength": 80 },
-      "caption": { "type": "string", "maxLength": 2000 },
-      "company_name": { "type": "string", "maxLength": 120 },
+      "product_image_file_id": {
+        "type": "string"
+      },
+      "logo_file_id": {
+        "type": "string"
+      },
+      "headline": {
+        "type": "string",
+        "maxLength": 80
+      },
+      "caption": {
+        "type": "string",
+        "maxLength": 2000
+      },
+      "company_name": {
+        "type": "string",
+        "maxLength": 120
+      },
       "layout": {
         "type": "string",
-        "enum": ["xhs_portrait", "square", "landscape"]
+        "enum": [
+          "xhs_portrait",
+          "square",
+          "landscape"
+        ]
       },
       "accent_color": {
         "type": "string",
         "maxLength": 7,
         "description": "Hex color e.g. #C41E3A"
       },
-      "style": { "type": "string", "maxLength": 200 }
+      "style": {
+        "type": "string",
+        "maxLength": 200
+      }
     }
   },
   "output_schema": {
     "type": "object",
-    "required": ["content"],
+    "required": [
+      "content"
+    ],
     "properties": {
-      "ok": { "type": "boolean" },
-      "kind": { "type": "string" },
-      "title": { "type": "string" },
-      "caption": { "type": "string" },
-      "layout": { "type": "string" },
-      "image_base64": { "type": "string" },
-      "content_type": { "type": "string" },
-      "content": { "type": "string" },
-      "summary": { "type": "string" }
+      "ok": {
+        "type": "boolean"
+      },
+      "kind": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "caption": {
+        "type": "string"
+      },
+      "layout": {
+        "type": "string"
+      },
+      "image_base64": {
+        "type": "string"
+      },
+      "content_type": {
+        "type": "string"
+      },
+      "content": {
+        "type": "string"
+      },
+      "summary": {
+        "type": "string"
+      }
     }
   },
   "params": [
     {
       "name": "product_image_file_id",
       "required": true,
-      "sources": ["step_field", "upstream"],
+      "sources": [
+        "step_field",
+        "upstream"
+      ],
       "description": "Workspace product photo file_id",
       "confirm_if_missing": true
     },
     {
       "name": "logo_file_id",
       "required": false,
-      "sources": ["step_field", "upstream", "nl_fixed"],
+      "sources": [
+        "step_field",
+        "upstream",
+        "nl_fixed"
+      ],
       "description": "Workspace company logo file_id",
       "confirm_if_missing": false
     },
     {
       "name": "headline",
       "required": false,
-      "sources": ["upstream", "step_field", "nl_fixed"],
+      "sources": [
+        "upstream",
+        "step_field",
+        "nl_fixed"
+      ],
       "description": "Short on-image headline",
       "propose_hint": "Prefer marketing/product-promo title/headline.",
       "confirm_if_missing": false
@@ -75,7 +128,10 @@
     {
       "name": "caption",
       "required": false,
-      "sources": ["upstream", "step_field"],
+      "sources": [
+        "upstream",
+        "step_field"
+      ],
       "description": "Note body / caption for publish (not only on-image)",
       "propose_hint": "Map from product-promo caption; used by xiaohongshu/publish.",
       "confirm_if_missing": false
@@ -83,14 +139,22 @@
     {
       "name": "layout",
       "required": false,
-      "sources": ["nl_fixed", "step_field", "default"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "default"
+      ],
       "description": "xhs_portrait (default), square, or landscape",
       "confirm_if_missing": false
     },
     {
       "name": "company_name",
       "required": false,
-      "sources": ["nl_fixed", "step_field", "upstream"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "upstream"
+      ],
       "description": "Brand/store name drawn on card footer",
       "confirm_if_missing": false
     }
@@ -98,7 +162,9 @@
   "editable_governor_config": {
     "blocked_keywords": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "label": "Blocked keywords (headline/caption)",
       "default": []
     },
@@ -110,7 +176,9 @@
       "label": "Max input image bytes"
     }
   },
-  "auth": { "required": false },
+  "auth": {
+    "required": false
+  },
   "runtime": {
     "kind": "package",
     "entry": "runtime.invoke",
@@ -121,5 +189,8 @@
   "invoke_tool": "design/template-compose",
   "status": "beta",
   "trust": "first-party",
-  "aliases": ["template-compose", "product-card-compose"]
+  "aliases": [
+    "template-compose",
+    "product-card-compose"
+  ]
 }

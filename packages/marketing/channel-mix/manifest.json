@@ -26,11 +26,18 @@
       },
       "budget_band": {
         "type": "string",
-        "enum": ["none", "low", "medium", "high"]
+        "enum": [
+          "none",
+          "low",
+          "medium",
+          "high"
+        ]
       },
       "preferred_channels": {
         "type": "array",
-        "items": { "type": "string" },
+        "items": {
+          "type": "string"
+        },
         "maxItems": 8
       },
       "brief": {
@@ -42,17 +49,27 @@
   },
   "output_schema": {
     "type": "object",
-    "required": ["content"],
+    "required": [
+      "content"
+    ],
     "properties": {
-      "content": { "type": "string" },
-      "summary": { "type": "string" },
+      "content": {
+        "type": "string"
+      },
+      "summary": {
+        "type": "string"
+      },
       "channels": {
         "type": "array",
-        "items": { "type": "string" }
+        "items": {
+          "type": "string"
+        }
       },
       "connectors": {
         "type": "array",
-        "items": { "type": "string" }
+        "items": {
+          "type": "string"
+        }
       }
     }
   },
@@ -60,7 +77,10 @@
     {
       "name": "brief",
       "required": false,
-      "sources": ["upstream", "step_field"],
+      "sources": [
+        "upstream",
+        "step_field"
+      ],
       "description": "Upstream campaign brief text when present",
       "propose_hint": "Prefer upstream marketing/campaign-brief content as `brief`.",
       "confirm_if_missing": false
@@ -68,7 +88,11 @@
     {
       "name": "goal",
       "required": false,
-      "sources": ["nl_fixed", "step_field", "upstream"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "upstream"
+      ],
       "description": "Campaign goal if not in brief",
       "example_nl": "Which channels for a B2B SaaS webinar push?",
       "confirm_if_missing": false
@@ -76,14 +100,22 @@
     {
       "name": "audience",
       "required": false,
-      "sources": ["nl_fixed", "step_field", "upstream"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "upstream"
+      ],
       "description": "Audience hint",
       "confirm_if_missing": false
     },
     {
       "name": "budget_band",
       "required": false,
-      "sources": ["nl_fixed", "step_field", "default"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "default"
+      ],
       "description": "none/low/medium/high — default none (organic-first)",
       "confirm_if_missing": false
     }
@@ -93,5 +125,8 @@
   },
   "status": "beta",
   "trust": "first-party",
-  "aliases": ["channel-mix"]
+  "aliases": [
+    "channel-mix"
+  ],
+  "editable_governor_config": {}
 }

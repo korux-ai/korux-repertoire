@@ -15,10 +15,19 @@
   "propose_guide": "Publish blog/landing CMS copy after compose when the site is on Webflow. Default is staged (not live). Set publish=true only when NL explicitly asks to go live. Field keys in field_data must match the collection schema (slug always required with name).",
   "input_schema": {
     "type": "object",
-    "required": ["name", "slug"],
+    "required": [
+      "name",
+      "slug"
+    ],
     "properties": {
-      "name": { "type": "string", "maxLength": 500 },
-      "slug": { "type": "string", "maxLength": 200 },
+      "name": {
+        "type": "string",
+        "maxLength": 500
+      },
+      "slug": {
+        "type": "string",
+        "maxLength": 200
+      },
       "field_data": {
         "type": "object",
         "description": "Extra CMS fields matching the collection schema (Plain Text, Rich Text, etc.)"
@@ -32,33 +41,56 @@
   "output_schema": {
     "type": "object",
     "properties": {
-      "ok": { "type": "boolean" },
-      "item_id": { "type": "string" },
-      "slug": { "type": "string" },
-      "published": { "type": "boolean" },
-      "content": { "type": "string" },
-      "summary": { "type": "string" }
+      "ok": {
+        "type": "boolean"
+      },
+      "item_id": {
+        "type": "string"
+      },
+      "slug": {
+        "type": "string"
+      },
+      "published": {
+        "type": "boolean"
+      },
+      "content": {
+        "type": "string"
+      },
+      "summary": {
+        "type": "string"
+      }
     }
   },
   "params": [
     {
       "name": "name",
       "required": true,
-      "sources": ["upstream", "step_field", "nl_fixed"],
+      "sources": [
+        "upstream",
+        "step_field",
+        "nl_fixed"
+      ],
       "description": "CMS item name (required Webflow field)",
       "confirm_if_missing": true
     },
     {
       "name": "slug",
       "required": true,
-      "sources": ["upstream", "step_field", "nl_fixed"],
+      "sources": [
+        "upstream",
+        "step_field",
+        "nl_fixed"
+      ],
       "description": "URL slug for the item",
       "confirm_if_missing": true
     },
     {
       "name": "field_data",
       "required": false,
-      "sources": ["upstream", "step_field"],
+      "sources": [
+        "upstream",
+        "step_field"
+      ],
       "description": "Additional collection fields (e.g. post-body, summary)",
       "propose_hint": "Map composed HTML/text into schema field slugs from the Webflow collection.",
       "confirm_if_missing": false
@@ -66,7 +98,11 @@
     {
       "name": "publish",
       "required": false,
-      "sources": ["nl_fixed", "step_field", "default"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "default"
+      ],
       "description": "false (default) stages; true creates live",
       "confirm_if_missing": false
     }
@@ -74,13 +110,17 @@
   "editable_governor_config": {
     "blocked_keywords": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "label": "Blocked keywords",
       "default": []
     },
     "blocked_url_hosts": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "label": "Blocked URL hosts",
       "default": []
     },
@@ -125,5 +165,7 @@
   "binding_tool": "webflow/cms-publish",
   "status": "beta",
   "trust": "first-party",
-  "aliases": ["webflow-cms"]
+  "aliases": [
+    "webflow-cms"
+  ]
 }

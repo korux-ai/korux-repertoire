@@ -16,26 +16,46 @@
   "input_schema": {
     "type": "object",
     "properties": {
-      "meeting_id": { "type": "string" },
-      "summary": { "type": "string" }
+      "meeting_id": {
+        "type": "string"
+      },
+      "summary": {
+        "type": "string"
+      }
     }
   },
   "output_schema": {
     "type": "object",
     "properties": {
-      "ok": { "type": "boolean" },
-      "provider": { "type": "string" },
-      "user_id": { "type": "string" },
-      "email": { "type": "string" },
-      "meeting_id": { "type": "string" },
-      "summary": { "type": "string" }
+      "ok": {
+        "type": "boolean"
+      },
+      "provider": {
+        "type": "string"
+      },
+      "user_id": {
+        "type": "string"
+      },
+      "email": {
+        "type": "string"
+      },
+      "meeting_id": {
+        "type": "string"
+      },
+      "summary": {
+        "type": "string"
+      }
     }
   },
   "params": [
     {
       "name": "meeting_id",
       "required": false,
-      "sources": ["nl_fixed", "step_field", "trigger"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "trigger"
+      ],
       "description": "Optional meeting id for monitor context",
       "confirm_if_missing": false
     }
@@ -87,5 +107,8 @@
   "binding_tool": "google/meet",
   "status": "beta",
   "trust": "first-party",
-  "aliases": ["google-meet"]
+  "aliases": [
+    "google-meet"
+  ],
+  "editable_governor_config": {}
 }

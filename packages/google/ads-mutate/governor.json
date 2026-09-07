@@ -4,22 +4,37 @@
   "capability_version": "1.0.0",
   "defaults": {
     "intercept_on_invoke": true,
-    "editable_fields": ["action", "campaign_id", "status", "budget_id", "amount_micros", "customer_id"]
+    "editable_fields": [
+      "action",
+      "campaign_id",
+      "status",
+      "budget_id",
+      "amount_micros",
+      "customer_id"
+    ]
   },
   "rules": [
     {
       "id": "block_empty_campaign_id",
-      "when": { "args.campaign_id": { "empty": true } },
+      "when": {
+        "args.campaign_id": {
+          "empty": true
+        }
+      },
       "action": "reject",
       "code": "VALIDATION",
       "message": "campaign_id is empty"
     },
     {
       "id": "require_human_by_default",
-      "when": { "writes_external": true },
+      "when": {
+        "writes_external": true
+      },
       "action": "intercept",
       "gate": "require_human",
       "message": "Google Ads mutate (spend-affecting) requires human approval"
     }
-  ]
+  ],
+  "implementation": "declarative",
+  "notes": "Evaluated by Korux platform declarative engine; optional runtime/governor.py overrides."
 }

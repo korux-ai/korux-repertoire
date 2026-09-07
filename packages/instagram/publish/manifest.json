@@ -15,7 +15,10 @@
   "propose_guide": "External Instagram Feed post after Internal compose: caption from upstream output. An image is required (JPEG/PNG via image_file_id). Do not share Vault binding with facebook/publish.",
   "input_schema": {
     "type": "object",
-    "required": ["caption", "image_file_id"],
+    "required": [
+      "caption",
+      "image_file_id"
+    ],
     "properties": {
       "caption": {
         "type": "string",
@@ -29,17 +32,29 @@
   "output_schema": {
     "type": "object",
     "properties": {
-      "ok": { "type": "boolean" },
-      "media_id": { "type": "string" },
-      "content": { "type": "string" },
-      "summary": { "type": "string" }
+      "ok": {
+        "type": "boolean"
+      },
+      "media_id": {
+        "type": "string"
+      },
+      "content": {
+        "type": "string"
+      },
+      "summary": {
+        "type": "string"
+      }
     }
   },
   "params": [
     {
       "name": "caption",
       "required": true,
-      "sources": ["upstream", "step_field", "nl_fixed"],
+      "sources": [
+        "upstream",
+        "step_field",
+        "nl_fixed"
+      ],
       "description": "Feed caption; must come from an upstream compose step",
       "example_nl": "Post the campaign image to Instagram with the previous caption",
       "propose_hint": "Set `caption` from upstream compose and `image_file_id` from a file step.",
@@ -48,7 +63,10 @@
     {
       "name": "image_file_id",
       "required": true,
-      "sources": ["step_field", "upstream"],
+      "sources": [
+        "step_field",
+        "upstream"
+      ],
       "description": "Required workspace image file_id (one JPEG/PNG)",
       "confirm_if_missing": true
     }
@@ -56,13 +74,17 @@
   "editable_governor_config": {
     "blocked_keywords": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "label": "Blocked keywords",
       "default": []
     },
     "blocked_url_hosts": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "label": "Blocked URL hosts",
       "default": []
     },

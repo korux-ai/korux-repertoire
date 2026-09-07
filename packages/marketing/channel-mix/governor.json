@@ -4,7 +4,15 @@
   "capability_version": "1.0.0",
   "defaults": {
     "intercept_on_invoke": false,
-    "editable_fields": ["goal", "audience", "budget_band", "preferred_channels", "brief"]
+    "editable_fields": [
+      "goal",
+      "audience",
+      "budget_band",
+      "preferred_channels",
+      "brief"
+    ]
   },
-  "rules": []
+  "rules": [],
+  "implementation": "declarative",
+  "notes": "Evaluated by Korux platform declarative engine; optional runtime/governor.py overrides."
 }

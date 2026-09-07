@@ -8,8 +8,9 @@ Think: n8n / Zapier-style nodes, but every package includes:
 
 | File | Role |
 |------|------|
-| `manifest.json` | What it does, risk level, I/O boundary (`writes_external`, gates) |
-| `governor.json` | Runtime rules — human approval, validation, block |
+| `manifest.json` | What it does, risk level, I/O boundary (`writes_external`, gates), optional `editable_governor_config` |
+| `governor.json` | Track A runtime rules — human approval, validation, block (evaluated by Korux) |
+| `runtime/governor.py` | Optional Track B — `evaluate_governor` (no `import korux`) |
 | `runtime/` + `docs/` | Executable connector + credential / setup guide |
 
 **Start here (no Korux install needed):**

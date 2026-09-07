@@ -35,22 +35,36 @@
       },
       "seen_ids": {
         "type": "array",
-        "items": { "type": "string" }
+        "items": {
+          "type": "string"
+        }
       },
       "uids": {
         "type": "array",
-        "items": { "type": "string" }
+        "items": {
+          "type": "string"
+        }
       }
     }
   },
   "output_schema": {
     "type": "object",
     "properties": {
-      "messages": { "type": "array" },
-      "count": { "type": "integer" },
-      "subject": { "type": "string" },
-      "from": { "type": "string" },
-      "body": { "type": "string" }
+      "messages": {
+        "type": "array"
+      },
+      "count": {
+        "type": "integer"
+      },
+      "subject": {
+        "type": "string"
+      },
+      "from": {
+        "type": "string"
+      },
+      "body": {
+        "type": "string"
+      }
     }
   },
   "params": [],
@@ -134,7 +148,9 @@
       {
         "id": "custom",
         "label": "Custom",
-        "defaults": { "folder": "INBOX" },
+        "defaults": {
+          "folder": "INBOX"
+        },
         "note": "Fill host / port yourself."
       }
     ],
@@ -151,5 +167,6 @@
   "binding_tool": "inbound-email-monitor",
   "step_kind": "monitor",
   "status": "stable",
-  "trust": "first-party"
+  "trust": "first-party",
+  "editable_governor_config": {}
 }

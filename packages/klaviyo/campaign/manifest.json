@@ -18,53 +18,99 @@
     "properties": {
       "action": {
         "type": "string",
-        "enum": ["create", "send", "create_and_send"]
+        "enum": [
+          "create",
+          "send",
+          "create_and_send"
+        ]
       },
-      "name": { "type": "string", "maxLength": 200 },
-      "subject": { "type": "string", "maxLength": 200 },
-      "html": { "type": "string", "maxLength": 200000 },
-      "list_id": { "type": "string" },
-      "campaign_id": { "type": "string" },
-      "preview_text": { "type": "string", "maxLength": 255 }
+      "name": {
+        "type": "string",
+        "maxLength": 200
+      },
+      "subject": {
+        "type": "string",
+        "maxLength": 200
+      },
+      "html": {
+        "type": "string",
+        "maxLength": 200000
+      },
+      "list_id": {
+        "type": "string"
+      },
+      "campaign_id": {
+        "type": "string"
+      },
+      "preview_text": {
+        "type": "string",
+        "maxLength": 255
+      }
     }
   },
   "output_schema": {
     "type": "object",
     "properties": {
-      "ok": { "type": "boolean" },
-      "campaign_id": { "type": "string" },
-      "message_id": { "type": "string" },
-      "status": { "type": "string" },
-      "content": { "type": "string" },
-      "summary": { "type": "string" }
+      "ok": {
+        "type": "boolean"
+      },
+      "campaign_id": {
+        "type": "string"
+      },
+      "message_id": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string"
+      },
+      "content": {
+        "type": "string"
+      },
+      "summary": {
+        "type": "string"
+      }
     }
   },
   "params": [
     {
       "name": "action",
       "required": false,
-      "sources": ["nl_fixed", "step_field", "default"],
+      "sources": [
+        "nl_fixed",
+        "step_field",
+        "default"
+      ],
       "description": "create (default), send, or create_and_send",
       "confirm_if_missing": false
     },
     {
       "name": "subject",
       "required": false,
-      "sources": ["upstream", "step_field", "nl_fixed"],
+      "sources": [
+        "upstream",
+        "step_field",
+        "nl_fixed"
+      ],
       "description": "Email subject (required for create)",
       "confirm_if_missing": false
     },
     {
       "name": "html",
       "required": false,
-      "sources": ["upstream", "step_field"],
+      "sources": [
+        "upstream",
+        "step_field"
+      ],
       "description": "HTML body (required for create)",
       "confirm_if_missing": false
     },
     {
       "name": "campaign_id",
       "required": false,
-      "sources": ["upstream", "step_field"],
+      "sources": [
+        "upstream",
+        "step_field"
+      ],
       "description": "Required when action=send",
       "confirm_if_missing": false
     }
@@ -72,13 +118,17 @@
   "editable_governor_config": {
     "blocked_keywords": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "label": "Blocked keywords",
       "default": []
     },
     "blocked_url_hosts": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "label": "Blocked URL hosts",
       "default": []
     }

@@ -127,5 +127,6 @@
   "binding_tool": "alpaca/place-order",
   "status": "stable",
   "trust": "first-party",
-  "aliases": []
+  "aliases": [],
+  "editable_governor_config": {}
 }
