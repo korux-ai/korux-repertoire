@@ -24,7 +24,11 @@
       },
       "action": "reject",
       "code": "VALIDATION",
-      "message": "Edit prompt is empty"
+      "message": {
+        "en": "Edit prompt is empty",
+        "zh_CN": "编辑提示词为空",
+        "zh_HK": "編輯提示詞為空"
+      }
     },
     {
       "id": "block_denied_keywords",
@@ -35,7 +39,11 @@
       },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
-      "message": "Prompt contains a blocked keyword"
+      "message": {
+        "en": "Prompt contains a blocked keyword",
+        "zh_CN": "提示词包含禁止关键字",
+        "zh_HK": "提示詞包含禁止關鍵字"
+      }
     },
     {
       "id": "require_human_by_default",
@@ -44,7 +52,11 @@
       },
       "action": "intercept",
       "gate": "require_human",
-      "message": "Alibaba Wanxiang image edit requires human approval"
+      "message": {
+        "en": "Alibaba Wanxiang image edit requires human approval",
+        "zh_CN": "阿里万相图片编辑前须人工确认",
+        "zh_HK": "阿里萬相圖片編輯前須人工確認"
+      }
     }
   ],
   "implementation": "declarative",

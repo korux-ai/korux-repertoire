@@ -21,7 +21,11 @@
       },
       "action": "intercept",
       "gate": "require_human",
-      "message": "Canva design export / autofill requires human approval"
+      "message": {
+        "en": "Canva design export / autofill requires human approval",
+        "zh_CN": "Canva 设计导出/自动填充前须人工确认",
+        "zh_HK": "Canva 設計匯出/自動填充前須人工確認"
+      }
     }
   ],
   "implementation": "declarative",

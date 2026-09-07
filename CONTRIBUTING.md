@@ -52,7 +52,8 @@ Write-external packages require `writes_external=true`, a non-empty `governor.js
 
 1. Ship `governor.json` (`korux_governor_v1`) with ordered `rules` (`when` → `action`).
 2. Declare Owner-tunable fields in manifest `editable_governor_config` for every key referenced by rules (`matches_any_owner`, `length_lt_owner`, …).
-3. Korux platform evaluates via `evaluate_capability_governor` → declarative engine. **Do not** implement `evaluate_capability_governor` inside the package.
+3. Rule `message` **Should** be trilingual: `{ "en", "zh_CN", "zh_HK" }` (string still accepted; platform copies to all locales).
+4. Korux platform evaluates via `evaluate_capability_governor` → declarative engine. **Do not** implement `evaluate_capability_governor` inside the package.
 
 ### Track B — Python `evaluate_governor` (optional)
 

@@ -19,7 +19,11 @@
       },
       "action": "reject",
       "code": "VALIDATION",
-      "message": "Notion 正文为空；须使用上游步骤产出"
+      "message": {
+        "en": "Notion body is empty; use upstream step output.",
+        "zh_CN": "Notion 正文为空；须使用上游步骤产出",
+        "zh_HK": "Notion 正文為空；須使用上游步驟產出"
+      }
     },
     {
       "id": "block_short_body",
@@ -30,7 +34,11 @@
       },
       "action": "reject",
       "code": "VALIDATION",
-      "message": "Notion body shorter than owner min_body_length."
+      "message": {
+        "en": "Notion body shorter than owner min_body_length.",
+        "zh_CN": "Notion 正文短于 Owner 设定的最小长度。",
+        "zh_HK": "Notion 正文短於 Owner 設定的最小長度。"
+      }
     },
     {
       "id": "block_empty_title",
@@ -41,7 +49,11 @@
       },
       "action": "reject",
       "code": "VALIDATION",
-      "message": "Notion title is empty."
+      "message": {
+        "en": "Notion title is empty.",
+        "zh_CN": "Notion 标题为空。",
+        "zh_HK": "Notion 標題為空。"
+      }
     },
     {
       "id": "require_human_by_default",
@@ -50,7 +62,11 @@
       },
       "action": "intercept",
       "gate": "require_human",
-      "message": "写入 Notion 前须人工确认"
+      "message": {
+        "en": "Human confirmation required before writing to Notion",
+        "zh_CN": "写入 Notion 前须人工确认",
+        "zh_HK": "寫入 Notion 前須人工確認"
+      }
     }
   ],
   "implementation": "declarative",

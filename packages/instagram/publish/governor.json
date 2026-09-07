@@ -19,7 +19,11 @@
       },
       "action": "reject",
       "code": "VALIDATION",
-      "message": "Caption is empty; use upstream step output"
+      "message": {
+        "en": "Caption is empty; use upstream step output",
+        "zh_CN": "文案为空；须使用上游步骤产出",
+        "zh_HK": "文案為空；須使用上游步驟產出"
+      }
     },
     {
       "id": "block_missing_image",
@@ -30,7 +34,11 @@
       },
       "action": "reject",
       "code": "VALIDATION",
-      "message": "Instagram Feed posts require image_file_id"
+      "message": {
+        "en": "Instagram Feed posts require image_file_id",
+        "zh_CN": "Instagram Feed 发帖需要 image_file_id",
+        "zh_HK": "Instagram Feed 發帖需要 image_file_id"
+      }
     },
     {
       "id": "block_denied_keywords",
@@ -41,7 +49,11 @@
       },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
-      "message": "Caption contains a blocked keyword"
+      "message": {
+        "en": "Caption contains a blocked keyword",
+        "zh_CN": "文案包含禁止关键字",
+        "zh_HK": "文案包含禁止關鍵字"
+      }
     },
     {
       "id": "block_denied_url_hosts",
@@ -52,7 +64,11 @@
       },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
-      "message": "Caption contains a blocked URL host"
+      "message": {
+        "en": "Caption contains a blocked URL host",
+        "zh_CN": "文案包含禁止的链接域名",
+        "zh_HK": "文案包含禁止的連結域名"
+      }
     },
     {
       "id": "block_over_max_chars",
@@ -63,7 +79,11 @@
       },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
-      "message": "Caption exceeds Owner max_chars"
+      "message": {
+        "en": "Caption exceeds Owner max_chars",
+        "zh_CN": "文案超过 Owner 字数上限",
+        "zh_HK": "文案超過 Owner 字數上限"
+      }
     },
     {
       "id": "block_over_max_mentions",
@@ -74,7 +94,11 @@
       },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
-      "message": "Caption @ mention count exceeds Owner limit"
+      "message": {
+        "en": "Caption @ mention count exceeds Owner limit",
+        "zh_CN": "文案 @ 次数超过 Owner 上限",
+        "zh_HK": "文案 @ 次數超過 Owner 上限"
+      }
     },
     {
       "id": "require_human_by_default",
@@ -83,7 +107,11 @@
       },
       "action": "intercept",
       "gate": "require_human",
-      "message": "Instagram Feed posts require human approval"
+      "message": {
+        "en": "Instagram Feed posts require human approval",
+        "zh_CN": "Instagram Feed 发帖前须人工确认",
+        "zh_HK": "Instagram Feed 發帖前須人工確認"
+      }
     }
   ],
   "implementation": "declarative",

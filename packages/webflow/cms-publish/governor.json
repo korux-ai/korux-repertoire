@@ -21,7 +21,11 @@
       },
       "action": "reject",
       "code": "VALIDATION",
-      "message": "CMS item name is empty"
+      "message": {
+        "en": "CMS item name is empty",
+        "zh_CN": "CMS 条目名称为空",
+        "zh_HK": "CMS 條目名稱為空"
+      }
     },
     {
       "id": "block_empty_slug",
@@ -32,7 +36,11 @@
       },
       "action": "reject",
       "code": "VALIDATION",
-      "message": "CMS item slug is empty"
+      "message": {
+        "en": "CMS item slug is empty",
+        "zh_CN": "CMS 条目 slug 为空",
+        "zh_HK": "CMS 條目 slug 為空"
+      }
     },
     {
       "id": "block_denied_keywords",
@@ -43,7 +51,11 @@
       },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
-      "message": "CMS item name contains a blocked keyword"
+      "message": {
+        "en": "CMS item name contains a blocked keyword",
+        "zh_CN": "CMS 条目名称包含禁止关键字",
+        "zh_HK": "CMS 條目名稱包含禁止關鍵字"
+      }
     },
     {
       "id": "require_human_by_default",
@@ -52,7 +64,11 @@
       },
       "action": "intercept",
       "gate": "require_human",
-      "message": "Webflow CMS create/publish requires human approval"
+      "message": {
+        "en": "Webflow CMS create/publish requires human approval",
+        "zh_CN": "Webflow CMS 创建/发布前须人工确认",
+        "zh_HK": "Webflow CMS 建立/發佈前須人工確認"
+      }
     }
   ],
   "implementation": "declarative",

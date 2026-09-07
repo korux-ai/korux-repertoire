@@ -23,7 +23,11 @@
       },
       "action": "reject",
       "code": "VALIDATION",
-      "message": "campaign_id is empty"
+      "message": {
+        "en": "campaign_id is empty",
+        "zh_CN": "campaign_id 为空",
+        "zh_HK": "campaign_id 為空"
+      }
     },
     {
       "id": "require_human_by_default",
@@ -32,7 +36,11 @@
       },
       "action": "intercept",
       "gate": "require_human",
-      "message": "Google Ads mutate (spend-affecting) requires human approval"
+      "message": {
+        "en": "Google Ads mutate (spend-affecting) requires human approval",
+        "zh_CN": "Google Ads 变更（影响花费）前须人工确认",
+        "zh_HK": "Google Ads 變更（影響花費）前須人工確認"
+      }
     }
   ],
   "implementation": "declarative",

@@ -23,7 +23,11 @@
       },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
-      "message": "Title contains a blocked keyword"
+      "message": {
+        "en": "Title contains a blocked keyword",
+        "zh_CN": "标题包含禁止关键字",
+        "zh_HK": "標題包含禁止關鍵字"
+      }
     },
     {
       "id": "require_human_by_default",
@@ -32,7 +36,11 @@
       },
       "action": "intercept",
       "gate": "require_human",
-      "message": "TikTok publish requires human approval"
+      "message": {
+        "en": "TikTok publish requires human approval",
+        "zh_CN": "TikTok 发布前须人工确认",
+        "zh_HK": "TikTok 發佈前須人工確認"
+      }
     }
   ],
   "implementation": "declarative",

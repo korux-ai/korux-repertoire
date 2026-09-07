@@ -27,7 +27,11 @@
       },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
-      "message": "Company contains a blocked keyword"
+      "message": {
+        "en": "Company contains a blocked keyword",
+        "zh_CN": "公司名包含禁止关键字",
+        "zh_HK": "公司名包含禁止關鍵字"
+      }
     },
     {
       "id": "require_human_by_default",
@@ -36,7 +40,11 @@
       },
       "action": "intercept",
       "gate": "require_human",
-      "message": "HubSpot contact upsert requires human approval"
+      "message": {
+        "en": "HubSpot contact upsert requires human approval",
+        "zh_CN": "HubSpot 联系人写入前须人工确认",
+        "zh_HK": "HubSpot 聯絡人寫入前須人工確認"
+      }
     }
   ],
   "implementation": "declarative",

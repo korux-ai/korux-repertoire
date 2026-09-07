@@ -25,7 +25,11 @@
       },
       "action": "reject",
       "code": "VALIDATION",
-      "message": "product_image_file_id is empty"
+      "message": {
+        "en": "product_image_file_id is empty",
+        "zh_CN": "product_image_file_id 为空",
+        "zh_HK": "product_image_file_id 為空"
+      }
     },
     {
       "id": "block_denied_keywords_caption",
@@ -36,7 +40,11 @@
       },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
-      "message": "Caption contains a blocked keyword"
+      "message": {
+        "en": "Caption contains a blocked keyword",
+        "zh_CN": "文案包含禁止关键字",
+        "zh_HK": "文案包含禁止關鍵字"
+      }
     }
   ],
   "implementation": "declarative",

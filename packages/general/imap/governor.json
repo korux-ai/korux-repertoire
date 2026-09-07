@@ -15,7 +15,11 @@
       },
       "action": "pass",
       "gate": "auto",
-      "message": "IMAP poll is External read; default gate auto"
+      "message": {
+        "en": "IMAP poll is External read; default gate auto",
+        "zh_CN": "IMAP 轮询为 External 读取；默认 gate 为 auto",
+        "zh_HK": "IMAP 輪詢為 External 讀取；預設 gate 為 auto"
+      }
     }
   ],
   "implementation": "declarative",

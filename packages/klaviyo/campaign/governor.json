@@ -23,7 +23,11 @@
       },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
-      "message": "Campaign HTML contains a blocked keyword"
+      "message": {
+        "en": "Campaign HTML contains a blocked keyword",
+        "zh_CN": "活动 HTML 包含禁止关键字",
+        "zh_HK": "活動 HTML 包含禁止關鍵字"
+      }
     },
     {
       "id": "block_denied_url_hosts",
@@ -34,7 +38,11 @@
       },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
-      "message": "Campaign HTML contains a blocked URL host"
+      "message": {
+        "en": "Campaign HTML contains a blocked URL host",
+        "zh_CN": "活动 HTML 包含禁止的链接域名",
+        "zh_HK": "活動 HTML 包含禁止的連結域名"
+      }
     },
     {
       "id": "require_human_by_default",
@@ -43,7 +51,11 @@
       },
       "action": "intercept",
       "gate": "require_human",
-      "message": "Klaviyo campaign create/send requires human approval"
+      "message": {
+        "en": "Klaviyo campaign create/send requires human approval",
+        "zh_CN": "Klaviyo 活动创建/发送前须人工确认",
+        "zh_HK": "Klaviyo 活動建立/發送前須人工確認"
+      }
     }
   ],
   "implementation": "declarative",

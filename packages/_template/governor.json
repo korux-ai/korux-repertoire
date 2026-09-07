@@ -6,36 +6,68 @@
   "notes": "Track A (default): platform evaluates these when rules. Optional Track B: add runtime/governor.py with evaluate_governor.",
   "defaults": {
     "intercept_on_invoke": true,
-    "editable_fields": ["body"]
+    "editable_fields": [
+      "body"
+    ]
   },
   "rules": [
     {
       "id": "block_empty_body",
-      "when": { "args.body": { "empty": true } },
+      "when": {
+        "args.body": {
+          "empty": true
+        }
+      },
       "action": "reject",
       "code": "VALIDATION",
-      "message": "Body is empty; use upstream step output."
+      "message": {
+        "en": "Body is empty; use upstream step output.",
+        "zh_CN": "正文为空；须使用上游步骤产出。",
+        "zh_HK": "正文為空；須使用上游步驟產出。"
+      }
     },
     {
       "id": "block_banned_words",
-      "when": { "args.body": { "matches_any_owner": "blocked_keywords" } },
+      "when": {
+        "args.body": {
+          "matches_any_owner": "blocked_keywords"
+        }
+      },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
-      "message": "Body matches an owner blocked keyword."
+      "message": {
+        "en": "Body matches an owner blocked keyword.",
+        "zh_CN": "正文命中 Owner 禁止关键字。",
+        "zh_HK": "正文命中 Owner 禁止關鍵字。"
+      }
     },
     {
       "id": "block_short_body",
-      "when": { "args.body": { "length_lt_owner": "min_body_length" } },
+      "when": {
+        "args.body": {
+          "length_lt_owner": "min_body_length"
+        }
+      },
       "action": "reject",
       "code": "VALIDATION",
-      "message": "Body shorter than owner min_body_length."
+      "message": {
+        "en": "Body shorter than owner min_body_length.",
+        "zh_CN": "正文短于 Owner 设定的最小长度。",
+        "zh_HK": "正文短於 Owner 設定的最小長度。"
+      }
     },
     {
       "id": "require_human_by_default",
-      "when": { "writes_external": true },
+      "when": {
+        "writes_external": true
+      },
       "action": "intercept",
       "gate": "require_human",
-      "message": "Human confirmation required before external write."
+      "message": {
+        "en": "Human confirmation required before external write.",
+        "zh_CN": "写外联前须人工确认。",
+        "zh_HK": "寫外聯前須人工確認。"
+      }
     }
   ]
 }

@@ -22,7 +22,11 @@
       },
       "action": "reject",
       "code": "VALIDATION",
-      "message": "Post title is empty"
+      "message": {
+        "en": "Post title is empty",
+        "zh_CN": "帖子标题为空",
+        "zh_HK": "帖子標題為空"
+      }
     },
     {
       "id": "block_empty_content",
@@ -33,7 +37,11 @@
       },
       "action": "reject",
       "code": "VALIDATION",
-      "message": "Post content is empty"
+      "message": {
+        "en": "Post content is empty",
+        "zh_CN": "帖子正文为空",
+        "zh_HK": "帖子正文為空"
+      }
     },
     {
       "id": "block_denied_keywords",
@@ -44,7 +52,11 @@
       },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
-      "message": "Post content contains a blocked keyword"
+      "message": {
+        "en": "Post content contains a blocked keyword",
+        "zh_CN": "帖子正文包含禁止关键字",
+        "zh_HK": "帖子正文包含禁止關鍵字"
+      }
     },
     {
       "id": "block_denied_url_hosts",
@@ -55,7 +67,11 @@
       },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
-      "message": "Post content contains a blocked URL host"
+      "message": {
+        "en": "Post content contains a blocked URL host",
+        "zh_CN": "帖子正文包含禁止的链接域名",
+        "zh_HK": "帖子正文包含禁止的連結域名"
+      }
     },
     {
       "id": "block_over_max_chars",
@@ -66,7 +82,11 @@
       },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
-      "message": "Post content exceeds Owner max_chars"
+      "message": {
+        "en": "Post content exceeds Owner max_chars",
+        "zh_CN": "帖子正文超过 Owner 字数上限",
+        "zh_HK": "帖子正文超過 Owner 字數上限"
+      }
     },
     {
       "id": "require_human_by_default",
@@ -75,7 +95,11 @@
       },
       "action": "intercept",
       "gate": "require_human",
-      "message": "WordPress post create/publish requires human approval"
+      "message": {
+        "en": "WordPress post create/publish requires human approval",
+        "zh_CN": "WordPress 发帖/发布前须人工确认",
+        "zh_HK": "WordPress 發帖/發佈前須人工確認"
+      }
     }
   ],
   "implementation": "declarative",

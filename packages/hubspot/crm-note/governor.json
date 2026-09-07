@@ -22,7 +22,11 @@
       },
       "action": "reject",
       "code": "VALIDATION",
-      "message": "Note body is empty"
+      "message": {
+        "en": "Note body is empty",
+        "zh_CN": "备注正文为空",
+        "zh_HK": "備註正文為空"
+      }
     },
     {
       "id": "block_denied_keywords",
@@ -33,7 +37,11 @@
       },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
-      "message": "Note contains a blocked keyword"
+      "message": {
+        "en": "Note contains a blocked keyword",
+        "zh_CN": "备注包含禁止关键字",
+        "zh_HK": "備註包含禁止關鍵字"
+      }
     },
     {
       "id": "block_over_max_chars",
@@ -44,7 +52,11 @@
       },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
-      "message": "Note exceeds Owner max_chars"
+      "message": {
+        "en": "Note exceeds Owner max_chars",
+        "zh_CN": "备注超过 Owner 字数上限",
+        "zh_HK": "備註超過 Owner 字數上限"
+      }
     },
     {
       "id": "require_human_by_default",
@@ -53,7 +65,11 @@
       },
       "action": "intercept",
       "gate": "require_human",
-      "message": "HubSpot CRM writes require human approval"
+      "message": {
+        "en": "HubSpot CRM writes require human approval",
+        "zh_CN": "HubSpot CRM 写入前须人工确认",
+        "zh_HK": "HubSpot CRM 寫入前須人工確認"
+      }
     }
   ],
   "implementation": "declarative",

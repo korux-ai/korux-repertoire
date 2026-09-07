@@ -19,7 +19,11 @@
       },
       "action": "intercept",
       "gate": "require_human",
-      "message": "Meitu product image processing requires human approval"
+      "message": {
+        "en": "Meitu product image processing requires human approval",
+        "zh_CN": "美图商品图处理前须人工确认",
+        "zh_HK": "美圖商品圖處理前須人工確認"
+      }
     }
   ],
   "implementation": "declarative",

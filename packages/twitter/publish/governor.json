@@ -19,7 +19,11 @@
       },
       "action": "reject",
       "code": "VALIDATION",
-      "message": "推文正文为空；须使用上游步骤产出"
+      "message": {
+        "en": "Tweet body is empty; use upstream step output.",
+        "zh_CN": "推文正文为空；须使用上游步骤产出",
+        "zh_HK": "推文正文為空；須使用上游步驟產出"
+      }
     },
     {
       "id": "block_denied_keywords",
@@ -30,7 +34,11 @@
       },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
-      "message": "推文包含禁止关键字"
+      "message": {
+        "en": "Tweet contains a blocked keyword",
+        "zh_CN": "推文包含禁止关键字",
+        "zh_HK": "推文包含禁止關鍵字"
+      }
     },
     {
       "id": "block_denied_url_hosts",
@@ -41,7 +49,11 @@
       },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
-      "message": "推文包含禁止的链接域名"
+      "message": {
+        "en": "Tweet contains a blocked URL host",
+        "zh_CN": "推文包含禁止的链接域名",
+        "zh_HK": "推文包含禁止的連結域名"
+      }
     },
     {
       "id": "block_over_max_chars",
@@ -52,7 +64,11 @@
       },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
-      "message": "推文超过 Owner 设定的字数上限"
+      "message": {
+        "en": "Tweet exceeds Owner max character limit",
+        "zh_CN": "推文超过 Owner 设定的字数上限",
+        "zh_HK": "推文超過 Owner 設定的字數上限"
+      }
     },
     {
       "id": "block_over_max_mentions",
@@ -63,7 +79,11 @@
       },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
-      "message": "推文 @ 次数超过上限"
+      "message": {
+        "en": "Tweet @ mention count exceeds the limit",
+        "zh_CN": "推文 @ 次数超过上限",
+        "zh_HK": "推文 @ 次數超過上限"
+      }
     },
     {
       "id": "require_image_when_configured",
@@ -74,7 +94,11 @@
       },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
-      "message": "Owner 要求发帖必须带图"
+      "message": {
+        "en": "Owner requires posts to include an image",
+        "zh_CN": "Owner 要求发帖必须带图",
+        "zh_HK": "Owner 要求發帖必須帶圖"
+      }
     },
     {
       "id": "require_human_by_default",
@@ -83,7 +107,11 @@
       },
       "action": "intercept",
       "gate": "require_human",
-      "message": "发布推文前须人工确认"
+      "message": {
+        "en": "Human confirmation required before publishing a tweet",
+        "zh_CN": "发布推文前须人工确认",
+        "zh_HK": "發佈推文前須人工確認"
+      }
     }
   ],
   "implementation": "declarative",

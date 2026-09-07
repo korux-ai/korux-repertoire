@@ -19,7 +19,11 @@
       },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
-      "message": "Search query matches an owner blocked keyword."
+      "message": {
+        "en": "Search query matches an owner blocked keyword.",
+        "zh_CN": "搜索关键词命中 Owner 禁止关键字。",
+        "zh_HK": "搜尋關鍵詞命中 Owner 禁止關鍵字。"
+      }
     },
     {
       "id": "reject_empty_query",
@@ -30,7 +34,11 @@
       },
       "action": "reject",
       "code": "VALIDATION",
-      "message": "搜索关键词为空；请在上游步骤提供查询文本"
+      "message": {
+        "en": "Search query is empty; provide query text from an upstream step.",
+        "zh_CN": "搜索关键词为空；请在上游步骤提供查询文本",
+        "zh_HK": "搜尋關鍵詞為空；請在上游步驟提供查詢文本"
+      }
     }
   ],
   "implementation": "declarative",

@@ -22,7 +22,11 @@
       },
       "action": "reject",
       "code": "VALIDATION",
-      "message": "object_id is empty"
+      "message": {
+        "en": "object_id is empty",
+        "zh_CN": "object_id 为空",
+        "zh_HK": "object_id 為空"
+      }
     },
     {
       "id": "require_human_by_default",
@@ -31,7 +35,11 @@
       },
       "action": "intercept",
       "gate": "require_human",
-      "message": "Meta ads mutate (spend-affecting) requires human approval"
+      "message": {
+        "en": "Meta ads mutate (spend-affecting) requires human approval",
+        "zh_CN": "Meta 广告变更（影响花费）前须人工确认",
+        "zh_HK": "Meta 廣告變更（影響花費）前須人工確認"
+      }
     }
   ],
   "implementation": "declarative",

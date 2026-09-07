@@ -19,7 +19,11 @@
       },
       "action": "reject",
       "code": "VALIDATION",
-      "message": "Commentary is empty; use upstream step output"
+      "message": {
+        "en": "Commentary is empty; use upstream step output",
+        "zh_CN": "评论正文为空；须使用上游步骤产出",
+        "zh_HK": "評論正文為空；須使用上游步驟產出"
+      }
     },
     {
       "id": "block_denied_keywords",
@@ -30,7 +34,11 @@
       },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
-      "message": "Commentary contains a blocked keyword"
+      "message": {
+        "en": "Commentary contains a blocked keyword",
+        "zh_CN": "评论包含禁止关键字",
+        "zh_HK": "評論包含禁止關鍵字"
+      }
     },
     {
       "id": "block_denied_url_hosts",
@@ -41,7 +49,11 @@
       },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
-      "message": "Commentary contains a blocked URL host"
+      "message": {
+        "en": "Commentary contains a blocked URL host",
+        "zh_CN": "评论包含禁止的链接域名",
+        "zh_HK": "評論包含禁止的連結域名"
+      }
     },
     {
       "id": "block_over_max_chars",
@@ -52,7 +64,11 @@
       },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
-      "message": "Commentary exceeds Owner max_chars"
+      "message": {
+        "en": "Commentary exceeds Owner max_chars",
+        "zh_CN": "评论超过 Owner 字数上限",
+        "zh_HK": "評論超過 Owner 字數上限"
+      }
     },
     {
       "id": "block_over_max_mentions",
@@ -63,7 +79,11 @@
       },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
-      "message": "Commentary @ mention count exceeds Owner limit"
+      "message": {
+        "en": "Commentary @ mention count exceeds Owner limit",
+        "zh_CN": "评论 @ 次数超过 Owner 上限",
+        "zh_HK": "評論 @ 次數超過 Owner 上限"
+      }
     },
     {
       "id": "require_image_when_configured",
@@ -74,7 +94,11 @@
       },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
-      "message": "Owner requires an image on LinkedIn posts"
+      "message": {
+        "en": "Owner requires an image on LinkedIn posts",
+        "zh_CN": "Owner 要求 LinkedIn 发帖必须带图",
+        "zh_HK": "Owner 要求 LinkedIn 發帖必須帶圖"
+      }
     },
     {
       "id": "require_human_by_default",
@@ -83,7 +107,11 @@
       },
       "action": "intercept",
       "gate": "require_human",
-      "message": "LinkedIn Company Page posts require human approval"
+      "message": {
+        "en": "LinkedIn Company Page posts require human approval",
+        "zh_CN": "LinkedIn 公司页发帖前须人工确认",
+        "zh_HK": "LinkedIn 公司頁發帖前須人工確認"
+      }
     }
   ],
   "implementation": "declarative",

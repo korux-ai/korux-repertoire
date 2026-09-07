@@ -23,7 +23,11 @@
       },
       "action": "reject",
       "code": "VALIDATION",
-      "message": "邮件正文为空；须使用上游步骤产出"
+      "message": {
+        "en": "Email body is empty; use upstream step output.",
+        "zh_CN": "邮件正文为空；须使用上游步骤产出",
+        "zh_HK": "郵件正文為空；須使用上游步驟產出"
+      }
     },
     {
       "id": "block_banned_words",
@@ -34,7 +38,11 @@
       },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
-      "message": "Email body matches an owner blocked keyword."
+      "message": {
+        "en": "Email body matches an owner blocked keyword.",
+        "zh_CN": "邮件正文命中 Owner 禁止关键字。",
+        "zh_HK": "郵件正文命中 Owner 禁止關鍵字。"
+      }
     },
     {
       "id": "block_banned_words_subject",
@@ -45,7 +53,11 @@
       },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
-      "message": "Email subject matches an owner blocked keyword."
+      "message": {
+        "en": "Email subject matches an owner blocked keyword.",
+        "zh_CN": "邮件主题命中 Owner 禁止关键字。",
+        "zh_HK": "郵件主題命中 Owner 禁止關鍵字。"
+      }
     },
     {
       "id": "block_short_body",
@@ -56,7 +68,11 @@
       },
       "action": "reject",
       "code": "VALIDATION",
-      "message": "Email body shorter than owner min_body_length."
+      "message": {
+        "en": "Email body shorter than owner min_body_length.",
+        "zh_CN": "邮件正文短于 Owner 设定的最小长度。",
+        "zh_HK": "郵件正文短於 Owner 設定的最小長度。"
+      }
     },
     {
       "id": "require_human_by_default",
@@ -65,7 +81,11 @@
       },
       "action": "intercept",
       "gate": "require_human",
-      "message": "发送邮件前须人工确认"
+      "message": {
+        "en": "Human confirmation required before sending email",
+        "zh_CN": "发送邮件前须人工确认",
+        "zh_HK": "發送郵件前須人工確認"
+      }
     }
   ],
   "implementation": "declarative",

@@ -22,7 +22,11 @@
       },
       "action": "reject",
       "code": "VALIDATION",
-      "message": "Video title is empty"
+      "message": {
+        "en": "Video title is empty",
+        "zh_CN": "视频标题为空",
+        "zh_HK": "影片標題為空"
+      }
     },
     {
       "id": "block_denied_keywords",
@@ -33,7 +37,11 @@
       },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
-      "message": "Title contains a blocked keyword"
+      "message": {
+        "en": "Title contains a blocked keyword",
+        "zh_CN": "标题包含禁止关键字",
+        "zh_HK": "標題包含禁止關鍵字"
+      }
     },
     {
       "id": "require_human_by_default",
@@ -42,7 +50,11 @@
       },
       "action": "intercept",
       "gate": "require_human",
-      "message": "YouTube upload requires human approval"
+      "message": {
+        "en": "YouTube upload requires human approval",
+        "zh_CN": "YouTube 上传前须人工确认",
+        "zh_HK": "YouTube 上傳前須人工確認"
+      }
     }
   ],
   "implementation": "declarative",

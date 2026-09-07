@@ -20,7 +20,11 @@
       },
       "action": "intercept",
       "policy_id": "external.quantity_limit",
-      "message": "交易数量超过工作区上限，须人工审批"
+      "message": {
+        "en": "Order quantity exceeds workspace limit; human approval required",
+        "zh_CN": "交易数量超过工作区上限，须人工审批",
+        "zh_HK": "交易數量超過工作區上限，須人工審批"
+      }
     },
     {
       "id": "require_human_by_default",
@@ -29,7 +33,11 @@
       },
       "action": "intercept",
       "gate": "require_human",
-      "message": "下单前须人工确认"
+      "message": {
+        "en": "Human confirmation required before placing an order",
+        "zh_CN": "下单前须人工确认",
+        "zh_HK": "下單前須人工確認"
+      }
     }
   ],
   "implementation": "declarative",

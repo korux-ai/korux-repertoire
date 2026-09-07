@@ -22,7 +22,11 @@
       },
       "action": "reject",
       "code": "VALIDATION",
-      "message": "Note caption is empty"
+      "message": {
+        "en": "Note caption is empty",
+        "zh_CN": "笔记文案为空",
+        "zh_HK": "筆記文案為空"
+      }
     },
     {
       "id": "block_denied_keywords",
@@ -33,7 +37,11 @@
       },
       "action": "reject",
       "code": "GOVERNOR_POLICY",
-      "message": "Caption contains a blocked keyword"
+      "message": {
+        "en": "Caption contains a blocked keyword",
+        "zh_CN": "文案包含禁止关键字",
+        "zh_HK": "文案包含禁止關鍵字"
+      }
     },
     {
       "id": "require_human_by_default",
@@ -42,7 +50,11 @@
       },
       "action": "intercept",
       "gate": "require_human",
-      "message": "Xiaohongshu publish requires human approval"
+      "message": {
+        "en": "Xiaohongshu publish requires human approval",
+        "zh_CN": "小红书发布前须人工确认",
+        "zh_HK": "小紅書發佈前須人工確認"
+      }
     }
   ],
   "implementation": "declarative",
