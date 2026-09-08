@@ -1,0 +1,145 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "searxng/search",
+  "version": "1.0.0",
+  "kind": "connector",
+  "label": "SearXNG search",
+  "label_i18n": {
+    "en": "SearXNG search",
+    "zh_CN": "SearXNG 元搜索",
+    "zh_HK": "SearXNG 元搜尋"
+  },
+  "description": "Self-hosted metasearch via SearXNG JSON API — broader link discovery than snippet-only APIs; best before crawl4ai/fetch for deep research",
+  "description_i18n": {
+    "en": "Self-hosted metasearch via SearXNG JSON API — broader link discovery than snippet-only APIs; best before crawl4ai/fetch for deep research",
+    "zh_CN": "通过自建 SearXNG JSON API 做元搜索，比仅返回短摘要的搜索 API 更能发现候选链接；深度调研时建议再接 crawl4ai/fetch",
+    "zh_HK": "透過自建 SearXNG JSON API 做元搜尋，比僅返回短摘要的搜尋 API 更能發現候選連結；深度調研時建議再接 crawl4ai/fetch"
+  },
+  "category": "research",
+  "reads_external": true,
+  "writes_external": false,
+  "boundary": "External",
+  "default_gate": "auto",
+  "risk": "low",
+  "produces_content": true,
+  "propose_guide": "BEST WHEN: Owner has a SearXNG instance with JSON enabled; NL wants more / privacy-preserving / multi-engine web links; or tavily/web-search snippets are too thin. Prefer over tavily/web-search for self-hosted metasearch and larger candidate URL lists. Set language (e.g. zh-CN, zh-HK, en) from NL locale. NEXT: pick top URLs → crawl4ai/fetch for full markdown; use browserless/browse only if pages need a real browser. Do NOT use for stock quotes (yahoo/market-quotes) or FRED series (fred/series). NOT for posting or mutating sites.",
+  "propose_guide_i18n": {
+    "en": "BEST WHEN: Owner has a SearXNG instance with JSON enabled; NL wants more / privacy-preserving / multi-engine web links; or tavily/web-search snippets are too thin. Prefer over tavily/web-search for self-hosted metasearch and larger candidate URL lists. Set language (e.g. zh-CN, zh-HK, en) from NL locale. NEXT: pick top URLs → crawl4ai/fetch for full markdown; use browserless/browse only if pages need a real browser. Do NOT use for stock quotes (yahoo/market-quotes) or FRED series (fred/series). NOT for posting or mutating sites.",
+    "zh_CN": "最佳场景：Owner 已自建并开启 JSON 的 SearXNG；需要更多/更隐私/多引擎候选链接；或 tavily/web-search 摘要过短。自托管元搜索优先于 Tavily。按用户语言设置 language（如 zh-CN、zh-HK、en）。下一步：挑 Top URL → crawl4ai/fetch 抽正文；仅当强 JS/难抓时再用 browserless/browse。股价用 yahoo/market-quotes，宏观序列用 fred/series。不用于发帖或写外联。",
+    "zh_HK": "最佳場景：Owner 已自建並開啟 JSON 的 SearXNG；需要更多/更私隱/多引擎候選連結；或 tavily/web-search 摘要過短。自託管元搜尋優先於 Tavily。按用戶語言設定 language（如 zh-CN、zh-HK、en）。下一步：挑 Top URL → crawl4ai/fetch 抽正文；僅當強 JS/難抓時再用 browserless/browse。股價用 yahoo/market-quotes，宏觀序列用 fred/series。不用於發帖或寫外聯。"
+  },
+  "input_schema": {
+    "type": "object",
+    "required": ["query"],
+    "properties": {
+      "query": { "type": "string", "maxLength": 500 },
+      "max_results": { "type": "integer", "minimum": 1, "maximum": 20 },
+      "language": {
+        "type": "string",
+        "maxLength": 32,
+        "description": "SearXNG language code, e.g. zh-CN, zh-HK, en, all"
+      },
+      "categories": {
+        "type": "string",
+        "maxLength": 64,
+        "description": "Comma-separated SearXNG categories, e.g. general,news"
+      }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "required": ["content"],
+    "properties": {
+      "content": { "type": "string" },
+      "summary": { "type": "string" },
+      "results": { "type": "array" },
+      "result_count": { "type": "integer" }
+    }
+  },
+  "params": [
+    {
+      "name": "query",
+      "required": true,
+      "sources": ["upstream", "nl_fixed", "step_field"],
+      "description": "Search query; use NL locale terms when researching regional topics",
+      "example_nl": "Search the web for recent coverage of our product launch in Traditional Chinese",
+      "propose_hint": "Set query from NL; prefer native-language keywords when the user writes Chinese.",
+      "confirm_if_missing": true
+    },
+    {
+      "name": "max_results",
+      "required": false,
+      "sources": ["default", "nl_fixed", "step_field"],
+      "description": "Max result rows to keep (hard cap 20)",
+      "default_value": 10,
+      "confirm_if_missing": false
+    },
+    {
+      "name": "language",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "default"],
+      "description": "SearXNG language (zh-CN, zh-HK, en, all)",
+      "default_value": "all",
+      "propose_hint": "Map workspace/NL locale: Simplified → zh-CN, Traditional HK → zh-HK, English → en.",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "categories",
+      "required": false,
+      "sources": ["nl_fixed", "step_field"],
+      "description": "Optional SearXNG categories CSV",
+      "confirm_if_missing": false
+    }
+  ],
+  "auth": {
+    "required": true,
+    "binding_tool": "searxng/search",
+    "secret_kind": "searxng/search",
+    "fields": [
+      {
+        "name": "base_url",
+        "label": "SearXNG base URL",
+        "type": "text",
+        "required": true,
+        "sensitive": false
+      },
+      {
+        "name": "api_key",
+        "label": "Optional API token / Authorization bearer",
+        "type": "password",
+        "required": false,
+        "sensitive": true
+      }
+    ],
+    "example_json": "{\"base_url\":\"https://searx.example.com\",\"api_key\":\"optional-token\"}"
+  },
+  "runtime": {
+    "kind": "package",
+    "entry": "runtime.invoke",
+    "transport": "in_process",
+    "timeout_ms": 45000,
+    "idempotent": true
+  },
+  "invoke_tool": "searxng/search",
+  "binding_tool": "searxng/search",
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": ["searxng", "metasearch"],
+  "editable_governor_config": {
+    "blocked_keywords": {
+      "type": "array",
+      "items": { "type": "string" },
+      "label": "Blocked keywords",
+      "description": "Reject when query matches any listed substring (case-insensitive).",
+      "default": []
+    },
+    "max_results": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 20,
+      "default": 10,
+      "label": "Max results per search",
+      "description": "Owner-facing cap hint for Governance UI / platform clamp."
+    }
+  }
+}

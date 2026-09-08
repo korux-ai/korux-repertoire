@@ -1,0 +1,116 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "fedwatch/probabilities",
+  "version": "1.0.0",
+  "kind": "connector",
+  "label": "Fed policy probabilities",
+  "label_i18n": {
+    "en": "Fed policy probabilities",
+    "zh_CN": "联储政策概率",
+    "zh_HK": "聯儲政策概率"
+  },
+  "description": "Fetch FOMC meeting policy probabilities from an institutional proxy JSON endpoint (optional Vault base_url). Language-neutral fields; marks under-anchored futures backup when primary is blocked.",
+  "description_i18n": {
+    "en": "Fetch FOMC meeting policy probabilities from an institutional proxy JSON endpoint (optional Vault base_url). Language-neutral fields; marks under-anchored futures backup when primary is blocked.",
+    "zh_CN": "从机构代理 JSON 端点拉取 FOMC 政策概率（可选 Vault base_url）。字段语言中立；主源失败时可标记 under-anchored 的期货后备。",
+    "zh_HK": "從機構代理 JSON 端點拉取 FOMC 政策概率（可選 Vault base_url）。欄位語言中立；主源失敗時可標記 under-anchored 的期貨後備。"
+  },
+  "category": "research",
+  "reads_external": true,
+  "writes_external": false,
+  "boundary": "External",
+  "default_gate": "auto",
+  "risk": "low",
+  "produces_content": true,
+  "propose_guide": "BEST WHEN: NL needs Fed hike/hold probabilities with as_of. Prefer this over news snippets for rate odds. If public proxy is blocked (403), Owner should Vault-bind a reachable base_url mirror. Optional allow_futures_backup uses Yahoo ZQ=F as secondary under-anchored hint — never treat as primary meeting odds. Prediction markets belong in polymarket/sentiment (sentiment only). Output is language-neutral.",
+  "propose_guide_i18n": {
+    "en": "BEST WHEN: NL needs Fed hike/hold probabilities with as_of. Prefer this over news snippets for rate odds. If public proxy is blocked (403), Owner should Vault-bind a reachable base_url mirror. Optional allow_futures_backup uses Yahoo ZQ=F as secondary under-anchored hint — never treat as primary meeting odds. Prediction markets belong in polymarket/sentiment (sentiment only). Output is language-neutral.",
+    "zh_CN": "最佳场景：需要带 as_of 的加息/维持概率。利率概率优先本工具而非新闻摘抄。若公网代理 403，Owner 应 Vault 绑定可用 base_url。allow_futures_backup 可用 Yahoo ZQ=F 作次级 under-anchored 提示，不得当 primary。预测市场用 polymarket/sentiment。输出语言中立。",
+    "zh_HK": "最佳場景：需要帶 as_of 的加息/維持概率。利率概率優先本工具而非新聞摘錄。若公網代理 403，Owner 應 Vault 綁定可用 base_url。allow_futures_backup 可用 Yahoo ZQ=F 作次級 under-anchored 提示，不得當 primary。預測市場用 polymarket/sentiment。輸出語言中立。"
+  },
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "allow_futures_backup": {
+        "type": "boolean",
+        "description": "When primary proxy fails, attempt Yahoo ZQ=F secondary hint (default true)"
+      },
+      "base_url": {
+        "type": "string",
+        "maxLength": 512,
+        "description": "Optional override; Vault secret.base_url preferred"
+      },
+      "path": {
+        "type": "string",
+        "maxLength": 256,
+        "description": "API path, default /api/fed/latest"
+      }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "required": ["content"],
+    "properties": {
+      "content": { "type": "string" },
+      "summary": { "type": "string" },
+      "role": { "type": "string" },
+      "confidence": { "type": "string" },
+      "as_of": { "type": "string" },
+      "meetings": { "type": "array" },
+      "refresh_required": { "type": "boolean" }
+    }
+  },
+  "params": [
+    {
+      "name": "allow_futures_backup",
+      "required": false,
+      "sources": ["default", "nl_fixed", "step_field"],
+      "default_value": true,
+      "description": "Fall back to Yahoo ZQ=F under-anchored hint when primary fails",
+      "confirm_if_missing": false
+    }
+  ],
+  "auth": {
+    "required": false,
+    "binding_tool": "fedwatch/probabilities",
+    "secret_kind": "fedwatch/probabilities",
+    "fields": [
+      {
+        "name": "base_url",
+        "label": "Proxy base URL",
+        "type": "text",
+        "required": false,
+        "sensitive": false,
+        "default_value": "https://rateprobability.com"
+      },
+      {
+        "name": "path",
+        "label": "API path",
+        "type": "text",
+        "required": false,
+        "sensitive": false,
+        "default_value": "/api/fed/latest"
+      },
+      {
+        "name": "api_key",
+        "label": "Optional Bearer token",
+        "type": "password",
+        "required": false,
+        "sensitive": true
+      }
+    ],
+    "example_json": "{\"base_url\":\"https://rateprobability.com\",\"path\":\"/api/fed/latest\",\"api_key\":\"optional\"}"
+  },
+  "runtime": {
+    "kind": "package",
+    "entry": "runtime.invoke",
+    "transport": "in_process",
+    "timeout_ms": 45000,
+    "idempotent": true
+  },
+  "invoke_tool": "fedwatch/probabilities",
+  "binding_tool": "fedwatch/probabilities",
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": ["fedwatch", "fed-probabilities", "cme-fedwatch-proxy"]
+}

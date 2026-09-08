@@ -1,0 +1,39 @@
+{
+  "spec_version": "korux_governor_v1",
+  "capability_id": "searxng/search",
+  "capability_version": "1.0.0",
+  "defaults": {
+    "intercept_on_invoke": false,
+    "editable_fields": ["query", "max_results", "language", "categories"]
+  },
+  "rules": [
+    {
+      "id": "reject_empty_query",
+      "when": {
+        "args.query": { "empty": true }
+      },
+      "action": "reject",
+      "code": "VALIDATION",
+      "message": {
+        "en": "Search query is empty; provide query text from NL or an upstream step.",
+        "zh_CN": "搜索关键词为空；请从自然语言或上游步骤提供查询文本。",
+        "zh_HK": "搜尋關鍵詞為空；請從自然語言或上游步驟提供查詢文本。"
+      }
+    },
+    {
+      "id": "block_denied_keywords",
+      "when": {
+        "args.query": { "matches_any_owner": "blocked_keywords" }
+      },
+      "action": "reject",
+      "code": "GOVERNOR_POLICY",
+      "message": {
+        "en": "Search query matches an owner blocked keyword.",
+        "zh_CN": "搜索关键词命中 Owner 禁止关键字。",
+        "zh_HK": "搜尋關鍵詞命中 Owner 禁止關鍵字。"
+      }
+    }
+  ],
+  "implementation": "declarative",
+  "notes": "Read-only metasearch. Owner should set blocked_keywords for disallowed research topics. Prefer self-hosted SearXNG; public instances often disable JSON."
+}

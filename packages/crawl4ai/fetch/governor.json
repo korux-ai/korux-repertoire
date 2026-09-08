@@ -1,0 +1,39 @@
+{
+  "spec_version": "korux_governor_v1",
+  "capability_id": "crawl4ai/fetch",
+  "capability_version": "1.0.0",
+  "defaults": {
+    "intercept_on_invoke": false,
+    "editable_fields": ["url", "filter", "focus_query", "max_chars"]
+  },
+  "rules": [
+    {
+      "id": "reject_empty_url",
+      "when": {
+        "args.url": { "empty": true }
+      },
+      "action": "reject",
+      "code": "VALIDATION",
+      "message": {
+        "en": "url is empty; pass a concrete http(s) URL from search results.",
+        "zh_CN": "url 为空；请传入搜索结果中的具体 http(s) 链接。",
+        "zh_HK": "url 為空；請傳入搜尋結果中的具體 http(s) 連結。"
+      }
+    },
+    {
+      "id": "block_denied_url_hosts",
+      "when": {
+        "args.url": { "url_host_in_owner": "blocked_url_hosts" }
+      },
+      "action": "reject",
+      "code": "GOVERNOR_POLICY",
+      "message": {
+        "en": "Target URL host is blocked by Owner policy (SSRF / internal host guard).",
+        "zh_CN": "目标 URL 域名命中 Owner 禁止列表（防 SSRF / 内网）。",
+        "zh_HK": "目標 URL 域名命中 Owner 禁止列表（防 SSRF / 內網）。"
+      }
+    }
+  ],
+  "implementation": "declarative",
+  "notes": "Runtime also rejects obvious private/link-local targets. Owner should extend blocked_url_hosts for corp intranet hostnames."
+}

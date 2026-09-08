@@ -54,6 +54,14 @@ Current packages:
 | `general/mail` | SMTP send (`runtime.invoke`) |
 | `general/imap` | IMAP inbound monitor |
 | `tavily/web-search` | Tavily web research (`runtime.invoke`) |
+| `searxng/search` | Self-hosted SearXNG metasearch |
+| `crawl4ai/fetch` | Crawl4AI `/md` full-page markdown |
+| `browserless/browse` | Browserless `/content` headless render (JS fallback) |
+| `research/web-deep-dive` | Skill (no runtime): deep web research plan for Propose |
+| `yahoo/market-quotes` | Yahoo Finance quotes (+ %1D / optional %5D, marketState, as_of) |
+| `fred/series` | FRED macro series observations |
+| `fedwatch/probabilities` | FOMC odds proxy (+ optional under-anchored ZQ=F backup) |
+| `polymarket/sentiment` | Polymarket public odds — sentiment only |
 | `twitter/publish` | X API post |
 | `facebook/publish` | Graph API Page post |
 | `linkedin/publish` | LinkedIn Company Page post |

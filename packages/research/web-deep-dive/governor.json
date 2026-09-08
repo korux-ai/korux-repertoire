@@ -1,0 +1,12 @@
+{
+  "spec_version": "korux_governor_v1",
+  "capability_id": "research/web-deep-dive",
+  "capability_version": "1.0.0",
+  "defaults": {
+    "intercept_on_invoke": false,
+    "editable_fields": ["topic", "locale", "depth", "known_urls"]
+  },
+  "rules": [],
+  "implementation": "declarative",
+  "notes": "Internal Propose/planning skill only; live HTTP is done by searxng/search, crawl4ai/fetch, browserless/browse, or tavily/web-search."
+}

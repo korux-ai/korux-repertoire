@@ -1,10 +1,20 @@
 {
   "spec_version": "korux_capability_v1",
   "id": "yahoo/market-quotes",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "kind": "connector",
   "label": "Yahoo market quotes",
-  "description": "Fetch structured equity/index quotes from Yahoo Finance public endpoints for downstream compose",
+  "label_i18n": {
+    "en": "Yahoo market quotes",
+    "zh_CN": "Yahoo 行情报价",
+    "zh_HK": "Yahoo 行情報價"
+  },
+  "description": "Fetch structured equity/index quotes from Yahoo Finance (price, %1D, optional %5D, marketState, as_of) for downstream compose — language-neutral fields",
+  "description_i18n": {
+    "en": "Fetch structured equity/index quotes from Yahoo Finance (price, %1D, optional %5D, marketState, as_of) for downstream compose — language-neutral fields",
+    "zh_CN": "从 Yahoo Finance 拉取结构化报价（价格、%1D、可选 %5D、marketState、as_of）供下游成文；字段语言中立",
+    "zh_HK": "從 Yahoo Finance 拉取結構化報價（價格、%1D、可選 %5D、marketState、as_of）供下游成文；欄位語言中立"
+  },
   "category": "research",
   "reads_external": true,
   "writes_external": false,
@@ -12,7 +22,12 @@
   "default_gate": "auto",
   "risk": "low",
   "produces_content": true,
-  "propose_guide": "Use when NL asks for stock/index prices, OHLCV-style quotes, or structured market levels. Prefer this over tavily/web-search for numeric quotes. Set symbols from NL (e.g. ^GSPC, AAPL).",
+  "propose_guide": "BEST WHEN: NL needs stock/index/FX/commodity levels or % changes. Prefer over web search for numeric quotes. Set symbols from NL (e.g. ^GSPC, SPY, DX-Y.NYB). include_history=true (default) adds approx %5D from daily chart. Output fields are language-neutral; compose follows workflow/Staff language. Do NOT invent prices when this step fails.",
+  "propose_guide_i18n": {
+    "en": "BEST WHEN: NL needs stock/index/FX/commodity levels or % changes. Prefer over web search for numeric quotes. Set symbols from NL (e.g. ^GSPC, SPY, DX-Y.NYB). include_history=true (default) adds approx %5D from daily chart. Output fields are language-neutral; compose follows workflow/Staff language. Do NOT invent prices when this step fails.",
+    "zh_CN": "最佳场景：需要指数/个股/外汇/商品价位或涨跌幅。数值优先本工具而非网页搜索。从 NL 填 symbols。默认 include_history=true 用日线近似 %5D。输出字段语言中立；成文跟 Workflow/Staff 语言。失败时禁止编造价格。",
+    "zh_HK": "最佳場景：需要指數/個股/外匯/商品價位或升跌幅。數值優先本工具而非網頁搜尋。從 NL 填 symbols。預設 include_history=true 用日線近似 %5D。輸出欄位語言中立；成文跟 Workflow/Staff 語言。失敗時禁止編造價格。"
+  },
   "input_schema": {
     "type": "object",
     "required": ["symbols"],
@@ -21,8 +36,23 @@
         "type": "array",
         "items": { "type": "string" },
         "minItems": 1,
-        "maxItems": 20
+        "maxItems": 40
+      },
+      "include_history": {
+        "type": "boolean",
+        "description": "When true, enrich each quote with approx pct_5d from daily chart"
       }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "required": ["content"],
+    "properties": {
+      "content": { "type": "string" },
+      "summary": { "type": "string" },
+      "quotes": { "type": "array" },
+      "symbols": { "type": "array" },
+      "fetched_at": { "type": "string" }
     }
   },
   "params": [
@@ -32,6 +62,14 @@
       "sources": ["nl_fixed", "step_field", "upstream"],
       "description": "Ticker symbols (Yahoo style), e.g. AAPL, ^GSPC, 0700.HK",
       "confirm_if_missing": true
+    },
+    {
+      "name": "include_history",
+      "required": false,
+      "sources": ["default", "nl_fixed", "step_field"],
+      "description": "Enrich with approx %5D from chart (default true)",
+      "default_value": true,
+      "confirm_if_missing": false
     }
   ],
   "auth": {
@@ -42,11 +80,12 @@
     "kind": "package",
     "entry": "runtime.invoke",
     "transport": "in_process",
-    "timeout_ms": 45000,
+    "timeout_ms": 90000,
     "idempotent": true
   },
   "invoke_tool": "yahoo/market-quotes",
   "binding_tool": "yahoo/market-quotes",
   "status": "beta",
-  "trust": "first-party"
+  "trust": "first-party",
+  "aliases": ["yahoo-quotes", "yfinance-quotes"]
 }

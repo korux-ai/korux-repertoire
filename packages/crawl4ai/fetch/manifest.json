@@ -1,0 +1,148 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "crawl4ai/fetch",
+  "version": "1.0.0",
+  "kind": "connector",
+  "label": "Crawl4AI fetch",
+  "label_i18n": {
+    "en": "Crawl4AI fetch",
+    "zh_CN": "Crawl4AI 正文抓取",
+    "zh_HK": "Crawl4AI 正文擷取"
+  },
+  "description": "Fetch clean page markdown via a Crawl4AI Docker/HTTP server (/md) — use after search when you need full article body, not snippets",
+  "description_i18n": {
+    "en": "Fetch clean page markdown via a Crawl4AI Docker/HTTP server (/md) — use after search when you need full article body, not snippets",
+    "zh_CN": "通过 Crawl4AI Docker/HTTP 服务（/md）抓取干净页面 Markdown；在搜索之后、需要全文而非摘要时使用",
+    "zh_HK": "透過 Crawl4AI Docker/HTTP 服務（/md）擷取乾淨頁面 Markdown；在搜尋之後、需要全文而非摘要時使用"
+  },
+  "category": "research",
+  "reads_external": true,
+  "writes_external": false,
+  "boundary": "External",
+  "default_gate": "auto",
+  "risk": "medium",
+  "produces_content": true,
+  "propose_guide": "BEST WHEN: NL already has a concrete URL (or upstream searxng/search / tavily/web-search returned URLs) and needs the full readable body for summarize/RAG. Prefer over browserless/browse for ordinary articles, docs, and blogs (lighter). Set filter=fit (default) for readable markdown; bm25+focus_query when only a section matters. FALLBACK to browserless/browse when the page is SPA / bot-walled / empty after crawl. Do NOT use to invent URLs without a prior search step. Do NOT crawl internal/admin hosts — Owner should set blocked_url_hosts.",
+  "propose_guide_i18n": {
+    "en": "BEST WHEN: NL already has a concrete URL (or upstream searxng/search / tavily/web-search returned URLs) and needs the full readable body for summarize/RAG. Prefer over browserless/browse for ordinary articles, docs, and blogs (lighter). Set filter=fit (default) for readable markdown; bm25+focus_query when only a section matters. FALLBACK to browserless/browse when the page is SPA / bot-walled / empty after crawl. Do NOT use to invent URLs without a prior search step. Do NOT crawl internal/admin hosts — Owner should set blocked_url_hosts.",
+    "zh_CN": "最佳场景：已有明确 URL（或上游 searxng/search / tavily/web-search 返回链接），需要全文做摘要/RAG。普通文章、文档、博客优先本工具，比 browserless/browse 更轻。默认 filter=fit；只要局部相关内容时用 bm25+focus_query。若 SPA/反爬/正文为空再改 browserless/browse。不要凭空编造 URL。勿抓内网/管理域——Owner 应配置 blocked_url_hosts。",
+    "zh_HK": "最佳場景：已有明確 URL（或上游 searxng/search / tavily/web-search 返回連結），需要全文做摘要/RAG。普通文章、文件、網誌優先本工具，比 browserless/browse 更輕。預設 filter=fit；只要局部相關內容時用 bm25+focus_query。若 SPA/反爬/正文為空再改 browserless/browse。不要憑空編造 URL。勿抓內網/管理域——Owner 應配置 blocked_url_hosts。"
+  },
+  "input_schema": {
+    "type": "object",
+    "required": ["url"],
+    "properties": {
+      "url": { "type": "string", "maxLength": 2048 },
+      "filter": {
+        "type": "string",
+        "enum": ["fit", "raw", "bm25", "llm"],
+        "description": "Crawl4AI /md filter mode"
+      },
+      "focus_query": {
+        "type": "string",
+        "maxLength": 500,
+        "description": "Optional query for bm25/llm filters"
+      },
+      "max_chars": {
+        "type": "integer",
+        "minimum": 500,
+        "maximum": 200000
+      }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "required": ["content"],
+    "properties": {
+      "content": { "type": "string" },
+      "summary": { "type": "string" },
+      "markdown": { "type": "string" },
+      "url": { "type": "string" }
+    }
+  },
+  "params": [
+    {
+      "name": "url",
+      "required": true,
+      "sources": ["upstream", "nl_fixed", "step_field"],
+      "description": "http(s) page URL to fetch as markdown",
+      "propose_hint": "Pass a URL from searxng/search or tavily/web-search results, not a bare keyword.",
+      "confirm_if_missing": true
+    },
+    {
+      "name": "filter",
+      "required": false,
+      "sources": ["default", "nl_fixed", "step_field"],
+      "description": "fit | raw | bm25 | llm (default fit)",
+      "default_value": "fit",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "focus_query",
+      "required": false,
+      "sources": ["upstream", "nl_fixed", "step_field"],
+      "description": "Relevance query when filter is bm25 or llm",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "max_chars",
+      "required": false,
+      "sources": ["default", "step_field"],
+      "description": "Truncate returned markdown length",
+      "default_value": 50000,
+      "confirm_if_missing": false
+    }
+  ],
+  "auth": {
+    "required": true,
+    "binding_tool": "crawl4ai/fetch",
+    "secret_kind": "crawl4ai/fetch",
+    "fields": [
+      {
+        "name": "base_url",
+        "label": "Crawl4AI server base URL",
+        "type": "text",
+        "required": true,
+        "sensitive": false,
+        "default_value": "http://127.0.0.1:11235"
+      },
+      {
+        "name": "api_key",
+        "label": "Optional Bearer token",
+        "type": "password",
+        "required": false,
+        "sensitive": true
+      }
+    ],
+    "example_json": "{\"base_url\":\"http://127.0.0.1:11235\",\"api_key\":\"optional-token\"}"
+  },
+  "runtime": {
+    "kind": "package",
+    "entry": "runtime.invoke",
+    "transport": "in_process",
+    "timeout_ms": 120000,
+    "idempotent": true
+  },
+  "invoke_tool": "crawl4ai/fetch",
+  "binding_tool": "crawl4ai/fetch",
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": ["crawl4ai", "web-fetch-md"],
+  "editable_governor_config": {
+    "blocked_url_hosts": {
+      "type": "array",
+      "items": { "type": "string" },
+      "label": "Blocked URL hosts",
+      "description": "Reject when the target URL host matches (SSRF / internal host guard).",
+      "default": ["localhost", "127.0.0.1", "metadata.google.internal"]
+    },
+    "max_content_length": {
+      "type": "integer",
+      "minimum": 500,
+      "maximum": 200000,
+      "default": 50000,
+      "label": "Max markdown characters",
+      "description": "Owner hint for truncating fetched content."
+    }
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "browserless/browse",
+  "version": "1.0.0",
+  "kind": "connector",
+  "label": "Browserless browse",
+  "label_i18n": {
+    "en": "Browserless browse",
+    "zh_CN": "Browserless 浏览器渲染",
+    "zh_HK": "Browserless 瀏覽器渲染"
+  },
+  "description": "Render a URL in a remote headless Chrome (Browserless /content) — last resort when Crawl4AI returns empty or the page needs real JS",
+  "description_i18n": {
+    "en": "Render a URL in a remote headless Chrome (Browserless /content) — last resort when Crawl4AI returns empty or the page needs real JS",
+    "zh_CN": "用远程无头 Chrome（Browserless /content）渲染页面——Crawl4AI 正文为空或强依赖 JS 时的后备方案",
+    "zh_HK": "用遠端無頭 Chrome（Browserless /content）渲染頁面——Crawl4AI 正文為空或強依賴 JS 時的後備方案"
+  },
+  "category": "research",
+  "reads_external": true,
+  "writes_external": false,
+  "boundary": "External",
+  "default_gate": "auto",
+  "risk": "medium",
+  "produces_content": true,
+  "propose_guide": "BEST WHEN: crawl4ai/fetch failed, returned empty, or NL explicitly says the site is SPA / JS-rendered / bot-protected and a real browser is required. Costlier and slower than crawl4ai/fetch — do NOT use as the default fetch for every URL. Prefer after searxng/search (or tavily) selected a specific URL. Returns truncated HTML text for downstream summarize. Owner MUST configure blocked_url_hosts against intranet/metadata. Optional require_human via Governance if browser minutes are expensive.",
+  "propose_guide_i18n": {
+    "en": "BEST WHEN: crawl4ai/fetch failed, returned empty, or NL explicitly says the site is SPA / JS-rendered / bot-protected and a real browser is required. Costlier and slower than crawl4ai/fetch — do NOT use as the default fetch for every URL. Prefer after searxng/search (or tavily) selected a specific URL. Returns truncated HTML text for downstream summarize. Owner MUST configure blocked_url_hosts against intranet/metadata. Optional require_human via Governance if browser minutes are expensive.",
+    "zh_CN": "最佳场景：crawl4ai/fetch 失败/空正文，或用户明确说 SPA/强 JS/反爬需要真浏览器。比 crawl4ai 更贵更慢，不要默认每条 URL 都用。应在 searxng/search（或 Tavily）选定具体链接后使用。返回截断 HTML 供下游摘要。Owner 必须配置 blocked_url_hosts 防内网/元数据。若浏览器分钟昂贵，可在 Governance 打开人工确认。",
+    "zh_HK": "最佳場景：crawl4ai/fetch 失敗/空正文，或用戶明確說 SPA/強 JS/反爬需要真瀏覽器。比 crawl4ai 更貴更慢，不要預設每條 URL 都用。應在 searxng/search（或 Tavily）選定具體連結後使用。返回截斷 HTML 供下游摘要。Owner 必須配置 blocked_url_hosts 防內網/元數據。若瀏覽器分鐘昂貴，可在 Governance 打開人工確認。"
+  },
+  "input_schema": {
+    "type": "object",
+    "required": ["url"],
+    "properties": {
+      "url": { "type": "string", "maxLength": 2048 },
+      "max_chars": {
+        "type": "integer",
+        "minimum": 500,
+        "maximum": 200000
+      },
+      "stealth": { "type": "boolean" }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "required": ["content"],
+    "properties": {
+      "content": { "type": "string" },
+      "summary": { "type": "string" },
+      "html": { "type": "string" },
+      "url": { "type": "string" }
+    }
+  },
+  "params": [
+    {
+      "name": "url",
+      "required": true,
+      "sources": ["upstream", "nl_fixed", "step_field"],
+      "description": "http(s) URL to render in headless Chrome",
+      "propose_hint": "Only after a search step or explicit URL; prefer crawl4ai/fetch first.",
+      "confirm_if_missing": true
+    },
+    {
+      "name": "max_chars",
+      "required": false,
+      "sources": ["default", "step_field"],
+      "description": "Truncate returned HTML length",
+      "default_value": 80000,
+      "confirm_if_missing": false
+    },
+    {
+      "name": "stealth",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "default"],
+      "description": "Pass stealth=true launch query when using Browserless cloud",
+      "default_value": false,
+      "confirm_if_missing": false
+    }
+  ],
+  "auth": {
+    "required": true,
+    "binding_tool": "browserless/browse",
+    "secret_kind": "browserless/browse",
+    "fields": [
+      {
+        "name": "base_url",
+        "label": "Browserless base URL",
+        "type": "text",
+        "required": true,
+        "sensitive": false,
+        "default_value": "https://production-sfo.browserless.io"
+      },
+      {
+        "name": "api_key",
+        "label": "Browserless token",
+        "type": "password",
+        "required": true,
+        "sensitive": true
+      }
+    ],
+    "example_json": "{\"base_url\":\"https://production-sfo.browserless.io\",\"api_key\":\"YOUR_BROWSERLESS_TOKEN\"}"
+  },
+  "runtime": {
+    "kind": "package",
+    "entry": "runtime.invoke",
+    "transport": "in_process",
+    "timeout_ms": 120000,
+    "idempotent": true
+  },
+  "invoke_tool": "browserless/browse",
+  "binding_tool": "browserless/browse",
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": ["browserless", "headless-browse"],
+  "editable_governor_config": {
+    "blocked_url_hosts": {
+      "type": "array",
+      "items": { "type": "string" },
+      "label": "Blocked URL hosts",
+      "description": "Reject when the target URL host matches (SSRF / internal host guard).",
+      "default": ["localhost", "127.0.0.1", "metadata.google.internal"]
+    },
+    "max_content_length": {
+      "type": "integer",
+      "minimum": 500,
+      "maximum": 200000,
+      "default": 80000,
+      "label": "Max HTML characters",
+      "description": "Owner hint for truncating rendered HTML."
+    },
+    "require_human_confirm": {
+      "type": "boolean",
+      "default": false,
+      "label": "Require human before browse",
+      "description": "When true, platform may intercept (pair with Governance UI / Track B if enabled)."
+    }
+  }
+}

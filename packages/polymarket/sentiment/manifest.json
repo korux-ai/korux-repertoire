@@ -1,0 +1,90 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "polymarket/sentiment",
+  "version": "1.0.0",
+  "kind": "connector",
+  "label": "Polymarket sentiment",
+  "label_i18n": {
+    "en": "Polymarket sentiment",
+    "zh_CN": "Polymarket 情绪概率",
+    "zh_HK": "Polymarket 情緒概率"
+  },
+  "description": "Read-only Polymarket public odds for sentiment reference. Never use as primary institutional FedWatch. Language-neutral fields.",
+  "description_i18n": {
+    "en": "Read-only Polymarket public odds for sentiment reference. Never use as primary institutional FedWatch. Language-neutral fields.",
+    "zh_CN": "只读拉取 Polymarket 公开概率，仅作情绪参考；不得当作机构 FedWatch 主源。字段语言中立。",
+    "zh_HK": "只讀拉取 Polymarket 公開概率，僅作情緒參考；不得當作機構 FedWatch 主源。欄位語言中立。"
+  },
+  "category": "research",
+  "reads_external": true,
+  "writes_external": false,
+  "boundary": "External",
+  "default_gate": "auto",
+  "risk": "low",
+  "produces_content": true,
+  "propose_guide": "BEST WHEN: NL wants prediction-market sentiment on Fed/politics/events. ALWAYS label as sentiment_only. For institutional Fed odds use fedwatch/probabilities instead. Set query (e.g. fed rate) or event_slug. Output language-neutral; compose follows workflow/Staff language.",
+  "propose_guide_i18n": {
+    "en": "BEST WHEN: NL wants prediction-market sentiment on Fed/politics/events. ALWAYS label as sentiment_only. For institutional Fed odds use fedwatch/probabilities instead. Set query (e.g. fed rate) or event_slug. Output language-neutral; compose follows workflow/Staff language.",
+    "zh_CN": "最佳场景：需要预测市场情绪（联储/政治/事件）。必须标 sentiment_only。机构概率用 fedwatch/probabilities。填 query 或 event_slug。输出语言中立。",
+    "zh_HK": "最佳場景：需要預測市場情緒（聯儲/政治/事件）。必須標 sentiment_only。機構概率用 fedwatch/probabilities。填 query 或 event_slug。輸出語言中立。"
+  },
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "query": { "type": "string", "maxLength": 200 },
+      "event_slug": { "type": "string", "maxLength": 200 },
+      "max_markets": { "type": "integer", "minimum": 1, "maximum": 15 }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "required": ["content"],
+    "properties": {
+      "content": { "type": "string" },
+      "summary": { "type": "string" },
+      "role": { "type": "string" },
+      "events": { "type": "array" },
+      "as_of": { "type": "string" }
+    }
+  },
+  "params": [
+    {
+      "name": "query",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "upstream"],
+      "description": "Search text, e.g. fed rate september",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "event_slug",
+      "required": false,
+      "sources": ["nl_fixed", "step_field"],
+      "description": "Exact Polymarket event slug when known",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "max_markets",
+      "required": false,
+      "sources": ["default", "step_field"],
+      "default_value": 8,
+      "description": "Max markets per event",
+      "confirm_if_missing": false
+    }
+  ],
+  "auth": {
+    "required": false,
+    "binding_tool": "polymarket/sentiment"
+  },
+  "runtime": {
+    "kind": "package",
+    "entry": "runtime.invoke",
+    "transport": "in_process",
+    "timeout_ms": 45000,
+    "idempotent": true
+  },
+  "invoke_tool": "polymarket/sentiment",
+  "binding_tool": "polymarket/sentiment",
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": ["polymarket", "prediction-market-sentiment"]
+}

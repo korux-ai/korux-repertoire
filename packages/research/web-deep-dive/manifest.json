@@ -1,0 +1,98 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "research/web-deep-dive",
+  "version": "1.0.0",
+  "kind": "skill",
+  "label": "Web deep-dive research plan",
+  "label_i18n": {
+    "en": "Web deep-dive research plan",
+    "zh_CN": "网络深度调研计划",
+    "zh_HK": "網絡深度調研計劃"
+  },
+  "description": "Propose an Internal multi-step web research plan that picks searxng/search, crawl4ai/fetch, and optional browserless/browse vs lightweight tavily/web-search",
+  "description_i18n": {
+    "en": "Propose an Internal multi-step web research plan that picks searxng/search, crawl4ai/fetch, and optional browserless/browse vs lightweight tavily/web-search",
+    "zh_CN": "提出内部多步网络调研计划：在轻量 tavily/web-search 与 searxng/search → crawl4ai/fetch（可选 browserless/browse）之间选型",
+    "zh_HK": "提出內部多步網絡調研計劃：在輕量 tavily/web-search 與 searxng/search → crawl4ai/fetch（可選 browserless/browse）之間選型"
+  },
+  "category": "research",
+  "reads_external": false,
+  "writes_external": false,
+  "boundary": "Internal",
+  "default_gate": "auto",
+  "risk": "low",
+  "produces_content": true,
+  "propose_guide": "Use when NL asks for thorough / deep / detailed web research, competitive intel, or says Tavily results are too thin. Emit an Internal plan (not live HTTP): (1) choose searxng/search when Owner has SearXNG — else tavily/web-search for quick snippets; (2) select Top-N URLs; (3) crawl4ai/fetch each for markdown; (4) browserless/browse only as fallback for JS/SPA failures; (5) summarize with sources. Set language hints (zh-CN / zh-HK / en) from NL. Do not invent credentials. Do not publish or write-external in this skill.",
+  "propose_guide_i18n": {
+    "en": "Use when NL asks for thorough / deep / detailed web research, competitive intel, or says Tavily results are too thin. Emit an Internal plan (not live HTTP): (1) choose searxng/search when Owner has SearXNG — else tavily/web-search for quick snippets; (2) select Top-N URLs; (3) crawl4ai/fetch each for markdown; (4) browserless/browse only as fallback for JS/SPA failures; (5) summarize with sources. Set language hints (zh-CN / zh-HK / en) from NL. Do not invent credentials. Do not publish or write-external in this skill.",
+    "zh_CN": "当用户要详尽/深度/详细网上调研、竞品情报，或抱怨 Tavily 太少时使用。产出内部计划（不直接 HTTP）：(1) Owner 有 SearXNG 则用 searxng/search，否则快查用 tavily/web-search；(2) 选 Top-N URL；(3) 用 crawl4ai/fetch 抽 Markdown；(4) 仅 JS/SPA 失败时用 browserless/browse；(5) 带出处摘要。按用户语言标注 zh-CN/zh-HK/en。不要编造凭证。本 skill 不发帖、不写外联。",
+    "zh_HK": "當用戶要詳盡/深度/詳細網上調研、競品情報，或抱怨 Tavily 太少時使用。產出內部計劃（不直接 HTTP）：(1) Owner 有 SearXNG 則用 searxng/search，否則快查用 tavily/web-search；(2) 選 Top-N URL；(3) 用 crawl4ai/fetch 抽 Markdown；(4) 僅 JS/SPA 失敗時用 browserless/browse；(5) 帶出處摘要。按用戶語言標註 zh-CN/zh-HK/en。不要編造憑證。本 skill 不發帖、不寫外聯。"
+  },
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "topic": { "type": "string", "maxLength": 1000 },
+      "locale": {
+        "type": "string",
+        "maxLength": 16,
+        "description": "zh_CN | zh_HK | en | …"
+      },
+      "depth": {
+        "type": "string",
+        "enum": ["quick", "standard", "deep"]
+      },
+      "known_urls": {
+        "type": "array",
+        "items": { "type": "string" },
+        "maxItems": 10
+      }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "required": ["content"],
+    "properties": {
+      "content": { "type": "string" },
+      "summary": { "type": "string" }
+    }
+  },
+  "params": [
+    {
+      "name": "topic",
+      "required": false,
+      "sources": ["nl_fixed", "upstream", "step_field"],
+      "description": "Research topic or question",
+      "example_nl": "Deep-dive web research on our competitor pricing pages in Traditional Chinese",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "locale",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "default"],
+      "description": "Preferred research locale for search language",
+      "default_value": "en",
+      "propose_hint": "Map Simplified Chinese → zh_CN, Hong Kong Traditional → zh_HK.",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "depth",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "default"],
+      "description": "quick | standard | deep",
+      "default_value": "deep",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "known_urls",
+      "required": false,
+      "sources": ["upstream", "nl_fixed", "step_field"],
+      "description": "Optional URLs already known; skip search and go to fetch",
+      "confirm_if_missing": false
+    }
+  ],
+  "auth": { "required": false },
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": ["web-deep-dive", "deep-research-plan"],
+  "editable_governor_config": {}
+}
