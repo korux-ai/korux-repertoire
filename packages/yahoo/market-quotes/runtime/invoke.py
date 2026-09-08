@@ -1,4 +1,10 @@
-"""Yahoo Finance quotes + short history — stdlib HTTPS; no Korux imports."""
+"""Yahoo Finance quotes + short history — stdlib HTTPS; no Korux imports.
+
+Yahoo disabled unofficial multi-symbol ``/v7/finance/quote`` (HTTP 401 /
+"User is unable to access this feature"). This package prefers ``/v8/finance/chart``
+per symbol (still unofficial / rate-limited) and only tries v7 when a session
+crumb is available.
+"""
 
 from __future__ import annotations
 
@@ -6,15 +12,24 @@ import json
 import os
 import ssl
 from datetime import datetime, timezone
+from http.cookiejar import CookieJar
 from typing import Any
 from urllib.error import HTTPError, URLError
+from urllib.parse import quote as urlquote
 from urllib.parse import urlencode
-from urllib.request import Request, urlopen
+from urllib.request import HTTPCookieProcessor, HTTPSHandler, Request, build_opener
 
 QUOTE_URL = "https://query1.finance.yahoo.com/v7/finance/quote"
 CHART_URL = "https://query1.finance.yahoo.com/v8/finance/chart"
+CRUMB_URL = "https://query1.finance.yahoo.com/v1/test/getcrumb"
+COOKIE_SEED_URL = "https://fc.yahoo.com"
 HTTP_TIMEOUT_S = 30
 MAX_SYMBOLS = 40
+BROWSER_UA = (
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+    "AppleWebKit/537.36 (KHTML, like Gecko) "
+    "Chrome/122.0.0.0 Safari/537.36"
+)
 
 
 def _fail(code: str, message: str) -> dict[str, Any]:
@@ -144,86 +159,97 @@ def _mock_quotes(symbols: list[str]) -> list[dict[str, Any]]:
     return out
 
 
-def _http_get_json(url: str) -> dict[str, Any]:
-    req = Request(
-        url,
-        headers={
-            "User-Agent": "KoruxCapability/1.0 (+https://github.com/korux-ai)",
-            "Accept": "application/json",
-        },
-        method="GET",
-    )
-    ctx = ssl.create_default_context()
-    with urlopen(req, timeout=HTTP_TIMEOUT_S, context=ctx) as resp:
-        body = resp.read().decode("utf-8", errors="replace")
-    data = json.loads(body)
-    if not isinstance(data, dict):
-        return {}
-    return data
+class _YahooHttp:
+    """Shared cookie jar + browser UA for Yahoo unofficial endpoints."""
 
-
-def _fetch_quotes(symbols: list[str]) -> list[dict[str, Any]]:
-    params = urlencode({"symbols": ",".join(symbols)})
-    data = _http_get_json(f"{QUOTE_URL}?{params}")
-    result = (data.get("quoteResponse") or {}).get("result") or []
-    if not isinstance(result, list):
-        return []
-    quotes: list[dict[str, Any]] = []
-    for row in result:
-        if not isinstance(row, dict):
-            continue
-        price = row.get("regularMarketPrice")
-        prev = row.get("regularMarketPreviousClose")
-        change_pct = row.get("regularMarketChangePercent")
-        if change_pct is None:
-            try:
-                change_pct = _pct(
-                    float(price) if price is not None else None,
-                    float(prev) if prev is not None else None,
-                )
-            except (TypeError, ValueError):
-                change_pct = None
-        state = row.get("marketState")
-        as_of = _as_of_iso(row.get("regularMarketTime"))
-        quotes.append(
-            {
-                "symbol": row.get("symbol"),
-                "shortName": row.get("shortName"),
-                "longName": row.get("longName"),
-                "currency": row.get("currency"),
-                "regularMarketPrice": price,
-                "regularMarketPreviousClose": prev,
-                "regularMarketChangePercent": change_pct,
-                "regularMarketTime": row.get("regularMarketTime"),
-                "marketState": state,
-                "as_of": as_of,
-                "pct_1d": round(float(change_pct), 4)
-                if isinstance(change_pct, (int, float))
-                else change_pct,
-                "pct_5d": None,
-                "session_note": _session_note(str(state) if state is not None else None),
-                "history_source": "quote",
-            }
+    def __init__(self) -> None:
+        self._cj = CookieJar()
+        self._ctx = ssl.create_default_context()
+        self._opener = build_opener(
+            HTTPCookieProcessor(self._cj),
+            HTTPSHandler(context=self._ctx),
         )
-    return quotes
+        self._crumb: str | None = None
+        self._seeded = False
+
+    def get_json(self, url: str) -> dict[str, Any]:
+        body = self.get_text(url)
+        data = json.loads(body)
+        if not isinstance(data, dict):
+            return {}
+        return data
+
+    def get_text(self, url: str) -> str:
+        req = Request(
+            url,
+            headers={
+                "User-Agent": BROWSER_UA,
+                "Accept": "application/json,text/plain,*/*",
+            },
+            method="GET",
+        )
+        with self._opener.open(req, timeout=HTTP_TIMEOUT_S) as resp:
+            return resp.read().decode("utf-8", errors="replace")
+
+    def ensure_session(self) -> None:
+        if self._seeded:
+            return
+        try:
+            # May 404; still often sets A1/A3 cookies.
+            self.get_text(COOKIE_SEED_URL)
+        except (HTTPError, URLError, TimeoutError, OSError):
+            pass
+        self._seeded = True
+
+    def crumb(self) -> str | None:
+        if self._crumb:
+            return self._crumb
+        self.ensure_session()
+        try:
+            raw = self.get_text(CRUMB_URL).strip()
+        except (HTTPError, URLError, TimeoutError, OSError):
+            return None
+        if not raw or "<" in raw or "Too Many" in raw:
+            return None
+        self._crumb = raw
+        return self._crumb
 
 
-def _fetch_pct_5d(symbol: str) -> float | None:
-    """Compute ~5 trading-day % change from daily chart closes."""
-    params = urlencode({"range": "1mo", "interval": "1d"})
-    url = f"{CHART_URL}/{symbol}?{params}"
-    try:
-        data = _http_get_json(url)
-    except (HTTPError, URLError, TimeoutError, json.JSONDecodeError, OSError):
-        return None
-    result = (data.get("chart") or {}).get("result")
-    if not isinstance(result, list) or not result:
-        return None
-    first = result[0] if isinstance(result[0], dict) else {}
-    indicators = (first.get("indicators") or {}).get("quote") or []
-    if not indicators or not isinstance(indicators[0], dict):
-        return None
-    closes = indicators[0].get("close") or []
+def _quote_row_from_v7(row: dict[str, Any]) -> dict[str, Any]:
+    price = row.get("regularMarketPrice")
+    prev = row.get("regularMarketPreviousClose")
+    change_pct = row.get("regularMarketChangePercent")
+    if change_pct is None:
+        try:
+            change_pct = _pct(
+                float(price) if price is not None else None,
+                float(prev) if prev is not None else None,
+            )
+        except (TypeError, ValueError):
+            change_pct = None
+    state = row.get("marketState")
+    as_of = _as_of_iso(row.get("regularMarketTime"))
+    return {
+        "symbol": row.get("symbol"),
+        "shortName": row.get("shortName"),
+        "longName": row.get("longName"),
+        "currency": row.get("currency"),
+        "regularMarketPrice": price,
+        "regularMarketPreviousClose": prev,
+        "regularMarketChangePercent": change_pct,
+        "regularMarketTime": row.get("regularMarketTime"),
+        "marketState": state,
+        "as_of": as_of,
+        "pct_1d": round(float(change_pct), 4)
+        if isinstance(change_pct, (int, float))
+        else change_pct,
+        "pct_5d": None,
+        "session_note": _session_note(str(state) if state is not None else None),
+        "history_source": "quote",
+    }
+
+
+def _pct_5d_from_closes(closes: list[Any]) -> float | None:
     if not isinstance(closes, list):
         return None
     vals = [float(c) for c in closes if isinstance(c, (int, float))]
@@ -235,15 +261,134 @@ def _fetch_pct_5d(symbol: str) -> float | None:
     return _pct(last, base)
 
 
-def _enrich_history(quotes: list[dict[str, Any]]) -> None:
-    for q in quotes:
-        sym = str(q.get("symbol") or "").strip()
-        if not sym:
-            continue
-        pct5 = _fetch_pct_5d(sym)
-        if pct5 is not None:
-            q["pct_5d"] = pct5
-            q["history_source"] = "quote+chart"
+def _market_state_from_chart_meta(meta: dict[str, Any]) -> str | None:
+    raw = meta.get("marketState")
+    if raw:
+        return str(raw)
+    # Chart meta often omits marketState; infer coarsely from trading periods.
+    now = meta.get("regularMarketTime") or meta.get("currentTradingPeriod")
+    _ = now
+    return None
+
+
+def _quote_from_chart(http: _YahooHttp, symbol: str, *, want_history: bool) -> dict[str, Any] | None:
+    range_ = "1mo" if want_history else "5d"
+    path_sym = urlquote(symbol, safe="")
+    params = urlencode({"range": range_, "interval": "1d"})
+    url = f"{CHART_URL}/{path_sym}?{params}"
+    data = http.get_json(url)
+    result = (data.get("chart") or {}).get("result")
+    if not isinstance(result, list) or not result:
+        return None
+    first = result[0] if isinstance(result[0], dict) else {}
+    meta = first.get("meta") if isinstance(first.get("meta"), dict) else {}
+    price = meta.get("regularMarketPrice")
+    prev = meta.get("chartPreviousClose")
+    if prev is None:
+        prev = meta.get("previousClose")
+    try:
+        price_f = float(price) if price is not None else None
+        prev_f = float(prev) if prev is not None else None
+    except (TypeError, ValueError):
+        price_f, prev_f = None, None
+    change_pct = _pct(price_f, prev_f)
+    state = _market_state_from_chart_meta(meta)
+    as_of = _as_of_iso(meta.get("regularMarketTime"))
+    pct5 = None
+    if want_history:
+        indicators = (first.get("indicators") or {}).get("quote") or []
+        if indicators and isinstance(indicators[0], dict):
+            pct5 = _pct_5d_from_closes(indicators[0].get("close") or [])
+    return {
+        "symbol": meta.get("symbol") or symbol,
+        "shortName": meta.get("shortName") or meta.get("symbol") or symbol,
+        "longName": meta.get("longName"),
+        "currency": meta.get("currency"),
+        "regularMarketPrice": price_f if price_f is not None else price,
+        "regularMarketPreviousClose": prev_f if prev_f is not None else prev,
+        "regularMarketChangePercent": change_pct,
+        "regularMarketTime": meta.get("regularMarketTime"),
+        "marketState": state,
+        "as_of": as_of,
+        "pct_1d": change_pct,
+        "pct_5d": pct5,
+        "session_note": _session_note(str(state) if state is not None else None),
+        "history_source": "chart",
+    }
+
+
+def _fetch_quotes_v7(http: _YahooHttp, symbols: list[str]) -> list[dict[str, Any]]:
+    crumb = http.crumb()
+    params: dict[str, str] = {"symbols": ",".join(symbols)}
+    if crumb:
+        params["crumb"] = crumb
+    data = http.get_json(f"{QUOTE_URL}?{urlencode(params)}")
+    result = (data.get("quoteResponse") or {}).get("result") or []
+    if not isinstance(result, list):
+        return []
+    quotes: list[dict[str, Any]] = []
+    for row in result:
+        if isinstance(row, dict):
+            quotes.append(_quote_row_from_v7(row))
+    return quotes
+
+
+def _fetch_quotes_chart(
+    http: _YahooHttp, symbols: list[str], *, want_history: bool
+) -> list[dict[str, Any]]:
+    quotes: list[dict[str, Any]] = []
+    errors: list[str] = []
+    for sym in symbols:
+        try:
+            row = _quote_from_chart(http, sym, want_history=want_history)
+            if row:
+                quotes.append(row)
+            else:
+                errors.append(f"{sym}: empty chart")
+        except HTTPError as exc:
+            errors.append(f"{sym}: HTTP {exc.code}")
+        except (URLError, TimeoutError, json.JSONDecodeError, OSError) as exc:
+            errors.append(f"{sym}: {exc}")
+    if not quotes and errors:
+        raise RuntimeError("; ".join(errors[:5]))
+    return quotes
+
+
+def _fetch_quotes(symbols: list[str], *, want_history: bool) -> list[dict[str, Any]]:
+    http = _YahooHttp()
+    # Prefer chart: v7 quote is often hard-disabled (401 feature gate).
+    try:
+        quotes = _fetch_quotes_chart(http, symbols, want_history=want_history)
+        if quotes:
+            return quotes
+    except RuntimeError:
+        pass
+    except HTTPError:
+        pass
+
+    try:
+        quotes = _fetch_quotes_v7(http, symbols)
+        if quotes and want_history:
+            for q in quotes:
+                sym = str(q.get("symbol") or "").strip()
+                if not sym:
+                    continue
+                try:
+                    enriched = _quote_from_chart(http, sym, want_history=True)
+                except (HTTPError, URLError, TimeoutError, json.JSONDecodeError, OSError):
+                    enriched = None
+                if enriched and enriched.get("pct_5d") is not None:
+                    q["pct_5d"] = enriched["pct_5d"]
+                    q["history_source"] = "quote+chart"
+        if quotes:
+            return quotes
+    except HTTPError as exc:
+        if exc.code in {401, 403}:
+            # Last attempt already preferred chart; surface clear provider message.
+            raise
+        raise
+
+    return []
 
 
 async def invoke(
@@ -256,15 +401,27 @@ async def invoke(
     symbols = _normalize_symbols(payload)
     if not symbols:
         return _fail("VALIDATION", "symbols is required (non-empty list)")
+    want_history = _want_history(payload)
     try:
         if _http_mock():
             quotes = _mock_quotes(symbols)
         else:
-            quotes = _fetch_quotes(symbols)
-            if quotes and _want_history(payload):
-                _enrich_history(quotes)
+            quotes = _fetch_quotes(symbols, want_history=want_history)
     except HTTPError as exc:
+        if exc.code == 401:
+            return _fail(
+                "PROVIDER",
+                "Yahoo HTTP 401 — unofficial quote API disabled by Yahoo; "
+                "chart fallback also failed (retry later or use another market-data source)",
+            )
+        if exc.code == 429:
+            return _fail(
+                "PROVIDER",
+                "Yahoo HTTP 429 — rate limited; wait and retry (unofficial endpoints)",
+            )
         return _fail("PROVIDER", f"Yahoo HTTP {exc.code}")
+    except RuntimeError as exc:
+        return _fail("PROVIDER", f"Yahoo chart fetch failed: {exc}")
     except (URLError, TimeoutError, json.JSONDecodeError, OSError) as exc:
         return _fail("PROVIDER", f"Yahoo request failed: {exc}")
     if not quotes:
