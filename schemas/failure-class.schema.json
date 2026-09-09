@@ -1,0 +1,8 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://korux.ai/schemas/failure-class.schema.json",
+  "title": "korux_failure_class_v1",
+  "description": "Closed failure class set for capability invoke errors (Korux v2.2.37).",
+  "type": "string",
+  "enum": ["auth", "empty", "unavailable", "validation", "denied", "provider"]
+}

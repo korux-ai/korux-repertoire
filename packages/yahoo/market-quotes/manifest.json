@@ -1,8 +1,11 @@
 {
   "spec_version": "korux_capability_v1",
   "id": "yahoo/market-quotes",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "kind": "connector",
+  "errors": {
+    "emitted": ["auth", "empty", "unavailable", "validation", "provider"]
+  },
   "label": "Yahoo market quotes",
   "label_i18n": {
     "en": "Yahoo market quotes",

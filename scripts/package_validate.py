@@ -10,6 +10,11 @@ from typing import Any
 CAPABILITY_SPEC_VERSION = "korux_capability_v1"
 GOVERNOR_SPEC_VERSION = "korux_governor_v1"
 
+# Closed failure classes (korux_failure_class_v1 / Korux v2.2.37).
+FAILURE_CLASSES: frozenset[str] = frozenset(
+    {"auth", "empty", "unavailable", "validation", "denied", "provider"}
+)
+
 MANIFEST_REQUIRED_FIELDS: tuple[str, ...] = (
     "spec_version",
     "id",
@@ -319,10 +324,72 @@ def validate_package_dir(package_dir: Path) -> list[str]:
             errors.append(f"{root}: auth.required=true requires docs/credential.md")
 
     errors.extend(validate_params(manifest.get("params"), path="params", manifest=manifest))
+    errors.extend(_validate_errors_emitted(manifest, path=str(manifest_path)))
     errors.extend(_validate_repertoire_manifest_runtime(root, manifest))
     errors.extend(_validate_package_runtime(root, manifest))
+    errors.extend(_validate_invoke_error_class(root, manifest))
     errors.extend(_validate_no_korux_imports(root))
     return errors
+
+
+def _errors_emitted_list(manifest: dict[str, Any]) -> list[str] | None:
+    """Return declared emitted classes, or None if field absent."""
+    raw = manifest.get("errors")
+    if isinstance(raw, dict) and "emitted" in raw:
+        emitted = raw.get("emitted")
+    elif "errors.emitted" in manifest:
+        emitted = manifest.get("errors.emitted")
+    else:
+        return None
+    if emitted is None:
+        return None
+    if not isinstance(emitted, list):
+        return []  # invalid shape — caller reports
+    return [str(x).strip() for x in emitted]
+
+
+def _validate_errors_emitted(manifest: dict[str, Any], *, path: str) -> list[str]:
+    emitted = _errors_emitted_list(manifest)
+    if emitted is None:
+        return []
+    if not isinstance(emitted, list) or (
+        "errors" in manifest
+        and isinstance(manifest.get("errors"), dict)
+        and not isinstance(manifest["errors"].get("emitted"), list)
+    ):
+        return [f"{path}: errors.emitted must be an array of failure classes"]
+    errors: list[str] = []
+    for item in emitted:
+        if item not in FAILURE_CLASSES:
+            errors.append(
+                f"{path}: errors.emitted entry {item!r} not in closed set "
+                f"{sorted(FAILURE_CLASSES)}"
+            )
+    return errors
+
+
+def _validate_invoke_error_class(root: Path, manifest: dict[str, Any]) -> list[str]:
+    """Hard-fail when package declares errors.emitted but invoke lacks error.class.
+
+    Legacy packages without errors.emitted are scorecard-warn only (Signed §5.4).
+    """
+    emitted = _errors_emitted_list(manifest)
+    if emitted is None:
+        return []
+    invoke_py = root / "runtime" / "invoke.py"
+    if not invoke_py.is_file():
+        return []
+    try:
+        text = invoke_py.read_text(encoding="utf-8")
+    except OSError as exc:
+        return [f"{invoke_py}: {exc}"]
+    # Require a class key on failure paths (template uses error.class / failure_class).
+    if not re.search(r"""['"]class['"]\s*:""", text) and "failure_class" not in text:
+        return [
+            f"{invoke_py}: packages declaring errors.emitted must emit "
+            "error.class on ok:false (see schemas/invoke-error.schema.json)"
+        ]
+    return []
 
 
 def _validate_no_korux_imports(root: Path) -> list[str]:

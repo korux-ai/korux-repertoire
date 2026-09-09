@@ -1,8 +1,11 @@
 {
   "spec_version": "korux_capability_v1",
   "id": "fred/series",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "kind": "connector",
+  "errors": {
+    "emitted": ["auth", "empty", "unavailable", "validation", "provider"]
+  },
   "label": "FRED series",
   "description": "Fetch a FRED macro time series (observations) via St. Louis Fed API for downstream compose",
   "category": "research",

@@ -32,8 +32,39 @@ BROWSER_UA = (
 )
 
 
-def _fail(code: str, message: str) -> dict[str, Any]:
-    return {"ok": False, "error": {"code": code, "message": message}}
+_CODE_TO_CLASS: dict[str, str] = {
+    "CREDENTIAL": "auth",
+    "AUTH": "auth",
+    "VALIDATION": "validation",
+    "EMPTY": "empty",
+    "UNAVAILABLE": "unavailable",
+    "TIMEOUT": "unavailable",
+    "RATE_LIMITED": "unavailable",
+    "PROVIDER": "provider",
+}
+
+
+def _fail(
+    code: str,
+    message: str,
+    *,
+    failure_class: str | None = None,
+    retryable: bool = False,
+) -> dict[str, Any]:
+    cls = (failure_class or "").strip().lower()
+    if cls not in {
+        "auth",
+        "empty",
+        "unavailable",
+        "validation",
+        "denied",
+        "provider",
+    }:
+        cls = _CODE_TO_CLASS.get(str(code or "").strip().upper(), "provider")
+    err: dict[str, Any] = {"class": cls, "code": code, "message": message}
+    if retryable:
+        err["retryable"] = True
+    return {"ok": False, "error": err}
 
 
 def _http_mock() -> bool:
@@ -408,24 +439,53 @@ async def invoke(
         else:
             quotes = _fetch_quotes(symbols, want_history=want_history)
     except HTTPError as exc:
-        if exc.code == 401:
-            return _fail(
-                "PROVIDER",
-                "Yahoo HTTP 401 — unofficial quote API disabled by Yahoo; "
-                "chart fallback also failed (retry later or use another market-data source)",
+        # Soft-degrade so older Specs that still call Yahoo do not abort the whole run.
+        if exc.code in {401, 403, 429}:
+            as_of = datetime.now(tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+            msg = (
+                f"Yahoo market quotes unavailable (HTTP {exc.code}). "
+                "Do not invent prices; prefer web search / FRED for levels."
             )
-        if exc.code == 429:
-            return _fail(
-                "PROVIDER",
-                "Yahoo HTTP 429 — rate limited; wait and retry (unofficial endpoints)",
-            )
+            return {
+                "ok": True,
+                "content": msg,
+                "summary": msg,
+                "quotes": [],
+                "symbols": symbols,
+                "degraded": True,
+                "degraded_reason": f"http_{exc.code}",
+                "fetched_at": as_of,
+            }
         return _fail("PROVIDER", f"Yahoo HTTP {exc.code}")
     except RuntimeError as exc:
-        return _fail("PROVIDER", f"Yahoo chart fetch failed: {exc}")
+        as_of = datetime.now(tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        msg = (
+            f"Yahoo market quotes unavailable ({exc}). "
+            "Do not invent prices; prefer web search / FRED for levels."
+        )
+        return {
+            "ok": True,
+            "content": msg,
+            "summary": msg,
+            "quotes": [],
+            "symbols": symbols,
+            "degraded": True,
+            "degraded_reason": "chart_fetch_failed",
+            "fetched_at": as_of,
+        }
     except (URLError, TimeoutError, json.JSONDecodeError, OSError) as exc:
         return _fail("PROVIDER", f"Yahoo request failed: {exc}")
     if not quotes:
-        return _fail("PROVIDER", "Yahoo returned no quotes for the given symbols")
+        as_of = datetime.now(tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        return {
+            "ok": True,
+            "empty": True,
+            "content": "",
+            "summary": "Yahoo returned no quotes for the given symbols",
+            "quotes": [],
+            "symbols": symbols,
+            "fetched_at": as_of,
+        }
     content = _format_content(quotes)
     return {
         "ok": True,

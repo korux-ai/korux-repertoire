@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://korux.ai/schemas/invoke-error.schema.json",
+  "title": "Capability invoke error envelope",
+  "description": "Shape of result.error when ok is false (korux_failure_class_v1).",
+  "type": "object",
+  "required": ["class", "code", "message"],
+  "additionalProperties": true,
+  "properties": {
+    "class": { "$ref": "failure-class.schema.json" },
+    "code": { "type": "string", "minLength": 1 },
+    "message": { "type": "string", "minLength": 1 },
+    "retryable": { "type": "boolean" }
+  }
+}

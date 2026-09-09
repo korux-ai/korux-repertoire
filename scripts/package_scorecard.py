@@ -126,7 +126,53 @@ def score_package(package_dir: Path) -> PackageReport:
     _score_ids(report, root, manifest)
     _score_skill_shape(report, root, manifest)
     _score_i18n(report, manifest)
+    _score_failure_class(report, root, manifest)
     return report
+
+
+def _score_failure_class(
+    report: PackageReport, root: Path, manifest: dict[str, Any]
+) -> None:
+    """Warn when connector invoke still uses legacy {code,message}-only failures."""
+    if _short_text(manifest.get("kind")) != "connector":
+        return
+    invoke_py = root / "runtime" / "invoke.py"
+    if not invoke_py.is_file():
+        return
+    try:
+        text = invoke_py.read_text(encoding="utf-8")
+    except OSError as exc:
+        report.findings.append(Finding("warn", "invoke_unreadable", str(exc)))
+        return
+    looks_like_fail = bool(
+        re.search(r"\b_fail\b", text)
+        or re.search(r"""['"]ok['"]\s*:\s*False""", text)
+    )
+    has_class = bool(
+        re.search(r"""['"]class['"]\s*:""", text) or "failure_class" in text
+    )
+    if looks_like_fail and not has_class:
+        report.findings.append(
+            Finding(
+                "warn",
+                "error_class_missing",
+                "runtime/invoke.py failure paths lack error.class "
+                "(korux_failure_class_v1); new packages Must emit class — "
+                "see schemas/invoke-error.schema.json",
+            )
+        )
+    errors_block = manifest.get("errors")
+    emitted = None
+    if isinstance(errors_block, dict):
+        emitted = errors_block.get("emitted")
+    if emitted is None and looks_like_fail:
+        report.findings.append(
+            Finding(
+                "warn",
+                "errors_emitted_missing",
+                "manifest Should declare errors.emitted (closed failure classes)",
+            )
+        )
 
 
 def _score_copy(report: PackageReport, manifest: dict[str, Any]) -> None:

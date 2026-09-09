@@ -3,6 +3,9 @@
   "id": "example-connector",
   "version": "0.1.0",
   "kind": "connector",
+  "errors": {
+    "emitted": ["auth", "empty", "unavailable", "validation", "denied", "provider"]
+  },
   "label": "Example connector",
   "description": "Template capability package for contributors",
   "category": "other",

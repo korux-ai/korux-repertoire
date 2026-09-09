@@ -16,8 +16,39 @@ DEFAULT_LIMIT = 10
 MAX_LIMIT = 100
 
 
-def _fail(code: str, message: str) -> dict[str, Any]:
-    return {"ok": False, "error": {"code": code, "message": message}}
+_CODE_TO_CLASS: dict[str, str] = {
+    "CREDENTIAL": "auth",
+    "AUTH": "auth",
+    "VALIDATION": "validation",
+    "EMPTY": "empty",
+    "UNAVAILABLE": "unavailable",
+    "TIMEOUT": "unavailable",
+    "RATE_LIMITED": "unavailable",
+    "PROVIDER": "provider",
+}
+
+
+def _fail(
+    code: str,
+    message: str,
+    *,
+    failure_class: str | None = None,
+    retryable: bool = False,
+) -> dict[str, Any]:
+    cls = (failure_class or "").strip().lower()
+    if cls not in {
+        "auth",
+        "empty",
+        "unavailable",
+        "validation",
+        "denied",
+        "provider",
+    }:
+        cls = _CODE_TO_CLASS.get(str(code or "").strip().upper(), "provider")
+    err: dict[str, Any] = {"class": cls, "code": code, "message": message}
+    if retryable:
+        err["retryable"] = True
+    return {"ok": False, "error": err}
 
 
 def _http_mock() -> bool:
@@ -119,7 +150,14 @@ async def invoke(
             return _fail("PROVIDER", f"FRED request failed: {exc}")
 
     if not observations:
-        return _fail("PROVIDER", f"FRED returned no observations for {series_id}")
+        return {
+            "ok": True,
+            "empty": True,
+            "content": "",
+            "summary": f"FRED returned no observations for {series_id}",
+            "series_id": series_id,
+            "observations": [],
+        }
     content = _format_content(series_id, observations)
     return {
         "ok": True,

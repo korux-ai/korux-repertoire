@@ -15,6 +15,7 @@ This repository accepts **capability packages**: manifest, governor, docs, and (
 2. **`kind: connector`** — **must** ship `runtime/invoke.py` with `runtime.kind=package` and `runtime.entry=runtime.invoke`.
 3. **`kind: skill`** — **may** omit `runtime/` (catalog / Propose only); if present, same invoke contract applies.
 4. **No `runtime.entry: korux.modules…`** — kernel paths belong in Korux core, not this repo.
+5. **Failure classes (v2.2.37 / `korux_failure_class_v1`)** — when `ok: false`, `error` **Must** include a closed-set `class`: `auth` | `empty` | `unavailable` | `validation` | `denied` | `provider`. Do not raise bare strings. Prefer template `_fail(code, message, failure_class=…)` / `schemas/invoke-error.schema.json`. Empty business data → `ok: true` + `empty: true`; soft degrade → `ok: true` + `degraded: true` (does **not** trigger Spec `failure_policy`). New packages that declare `errors.emitted` are **hard**-validated; legacy packages get scorecard **warn** until migrated.
 
 ## Local validation
 

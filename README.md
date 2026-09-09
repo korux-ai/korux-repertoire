@@ -117,6 +117,8 @@ A package on disk is not enough to invoke: catalog **enabled**, staff Vault bind
 ./scripts/package_release.sh v0.5.1
 ```
 
+**Failure classes (Korux v2.2.37):** Release tooling recognizes `error.class` on invoke failures. New packages that declare `errors.emitted` must emit `class` (validate hard). Legacy connectors without `class` get scorecard **warn**; platform adapters still map codes. Schemas: `schemas/failure-class.schema.json`, `schemas/invoke-error.schema.json`. Contract: [Korux runtime-contract](https://github.com/korux-ai/korux/blob/main/docs/spec/capability-package/runtime-contract.md).
+
 Pushing tag `vX.Y.Z` uploads the zip to [Releases](https://github.com/korux-ai/korux-repertoire/releases) via Actions.
 
 ## Contributing
