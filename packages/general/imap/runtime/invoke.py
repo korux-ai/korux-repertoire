@@ -207,6 +207,41 @@ def _message_from_imap_bytes(raw: bytes, *, fallback_id: str) -> dict[str, Any]:
     }
 
 
+# NetEase (163/126/yeah) rejects SELECT until client sends IMAP ID after LOGIN.
+_NETEASE_IMAP_HOSTS = frozenset(
+    {
+        "imap.163.com",
+        "imap.126.com",
+        "imap.yeah.net",
+    }
+)
+
+
+def _needs_netease_imap_id(host: str) -> bool:
+    h = str(host or "").strip().lower()
+    if h in _NETEASE_IMAP_HOSTS:
+        return True
+    return h.endswith((".163.com", ".126.com", ".yeah.net"))
+
+
+def _send_netease_imap_id(conn: imaplib.IMAP4) -> None:
+    """Satisfy 163/126 'Unsafe Login' gate (SELECT fails without ID)."""
+    # imaplib has no public ID helper; register command for AUTH state.
+    imaplib.Commands["ID"] = ("AUTH",)
+    typ, data = conn._simple_command(
+        "ID",
+        '("name" "Korux" "version" "1.0.0" "vendor" "Korux" "support-email" "support@korux.ai")',
+    )
+    if typ != "OK":
+        detail = data[0].decode(errors="replace") if data and data[0] else typ
+        raise RuntimeError(f"IMAP ID failed: {detail}")
+    # Drain untagged ID response so the connection stays usable.
+    try:
+        conn._untagged_response(typ, data, "ID")
+    except Exception:
+        pass
+
+
 def _connect_imap(cfg: dict[str, Any]) -> imaplib.IMAP4:
     host = str(cfg.get("host") or "").strip().lower()
     port = int(cfg.get("port") or 993)
@@ -218,6 +253,8 @@ def _connect_imap(cfg: dict[str, Any]) -> imaplib.IMAP4:
     else:
         conn = imaplib.IMAP4(host, port, timeout=30)
     conn.login(username, password)
+    if _needs_netease_imap_id(host):
+        _send_netease_imap_id(conn)
     return conn
 
 
