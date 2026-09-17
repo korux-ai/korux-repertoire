@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "kind": "connector",
   "label": "Zoom",
+  "label_i18n": {
+    "en": "Zoom",
+    "zh_CN": "Zoom",
+    "zh_HK": "Zoom"
+  },
   "description": "Verify Zoom identity via Server-to-Server OAuth or bearer token (GET /v2/users/me)",
+  "description_i18n": {
+    "en": "Verify Zoom identity via Server-to-Server OAuth or bearer token (GET /v2/users/me)",
+    "zh_CN": "通过 Server-to-Server OAuth 或 bearer 校验 Zoom 身份（GET /v2/users/me）",
+    "zh_HK": "透過 Server-to-Server OAuth 或 bearer 校驗 Zoom 身分（GET /v2/users/me）"
+  },
   "category": "meeting",
   "reads_external": true,
   "writes_external": false,
@@ -98,5 +108,11 @@
   "status": "beta",
   "trust": "first-party",
   "aliases": [],
-  "editable_governor_config": {}
+  "editable_governor_config": {},
+  "propose_guide": "Use when a workflow needs Zoom identity binding via users/me. Does not create meetings.",
+  "propose_guide_i18n": {
+    "en": "Use when a workflow needs Zoom identity binding via users/me. Does not create meetings.",
+    "zh_CN": "工作流需要通过 users/me 绑定 Zoom 身份时使用。不创建会议。",
+    "zh_HK": "工作流需要透過 users/me 綁定 Zoom 身分時使用。不建立會議。"
+  }
 }

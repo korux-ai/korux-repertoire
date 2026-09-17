@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "kind": "connector",
   "label": "Google Analytics 4 report",
+  "label_i18n": {
+    "en": "Google Analytics 4 report",
+    "zh_CN": "Google Analytics 4 报告",
+    "zh_HK": "Google Analytics 4 報告"
+  },
   "description": "Run a read-only GA4 Data API report (dimensions/metrics over a date range) after Vault binding",
+  "description_i18n": {
+    "en": "Run a read-only GA4 Data API report (dimensions/metrics over a date range) after Vault binding",
+    "zh_CN": "只读拉取 GA4 Data API 报告（维度/指标与日期范围；需 Vault）",
+    "zh_HK": "只讀拉取 GA4 Data API 報告（維度/指標與日期範圍；需 Vault）"
+  },
   "category": "analytics",
   "reads_external": true,
   "writes_external": false,
@@ -13,6 +23,11 @@
   "risk": "low",
   "produces_content": true,
   "propose_guide": "Use before summarize when NL asks for traffic, conversions, or page performance. Prefer property_id from Vault; set date range and metrics on the step when stated in NL.",
+  "propose_guide_i18n": {
+    "en": "Use before summarize when NL asks for traffic, conversions, or page performance. Prefer property_id from Vault.",
+    "zh_CN": "用户问流量、转化或页面表现时，在摘要前使用。优先用 Vault 中的 property_id。",
+    "zh_HK": "用戶問流量、轉化或頁面表現時，在摘要前使用。優先用 Vault 中的 property_id。"
+  },
   "input_schema": {
     "type": "object",
     "properties": {

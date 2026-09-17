@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "kind": "connector",
   "label": "Meta Ads insights",
+  "label_i18n": {
+    "en": "Meta Ads insights",
+    "zh_CN": "Meta 广告洞察",
+    "zh_HK": "Meta 廣告洞察"
+  },
   "description": "Read Meta Marketing API ad account insights (spend, impressions, clicks, CPA fields) — read-only, no bid changes",
+  "description_i18n": {
+    "en": "Read Meta Marketing API ad account insights (spend, impressions, clicks, CPA) — read-only, no bid changes",
+    "zh_CN": "只读 Meta Marketing API 广告账户洞察（花费、展现、点击、CPA）——不改出价",
+    "zh_HK": "只讀 Meta Marketing API 廣告帳戶洞察（花費、展現、點擊、CPA）——不改出價"
+  },
   "category": "analytics",
   "reads_external": true,
   "writes_external": false,
@@ -13,6 +23,11 @@
   "risk": "low",
   "produces_content": true,
   "propose_guide": "Use when NL asks for Meta/Facebook/Instagram ads performance, spend, or CPA. Read-only — never change budgets or creatives. Prefer follow-up marketing/performance-review. Default date_preset=last_7d, level=campaign.",
+  "propose_guide_i18n": {
+    "en": "When NL asks Meta/FB/IG ads performance. Read-only. Prefer follow-up marketing/performance-review.",
+    "zh_CN": "用户问 Meta/FB/IG 广告表现时使用。只读。建议后续做营销复盘。",
+    "zh_HK": "用戶問 Meta/FB/IG 廣告表現時使用。只讀。建議後續做營銷複盤。"
+  },
   "input_schema": {
     "type": "object",
     "properties": {

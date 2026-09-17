@@ -1,0 +1,1 @@
+# supabase/rows package runtime.

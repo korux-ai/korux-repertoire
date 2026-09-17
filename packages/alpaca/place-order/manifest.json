@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "kind": "connector",
   "label": "Place trade order",
+  "label_i18n": {
+    "en": "Place trade order",
+    "zh_CN": "下单（Alpaca 模拟）",
+    "zh_HK": "落盤（Alpaca 模擬）"
+  },
   "description": "Submit a market order to Alpaca paper trading after Vault binding and Governor gate (not a local stub)",
+  "description_i18n": {
+    "en": "Submit a market order to Alpaca paper trading after Vault binding and Governor gate",
+    "zh_CN": "在 Vault 绑定与 Governor 门控后，向 Alpaca 模拟盘提交市价单",
+    "zh_HK": "在 Vault 綁定與 Governor 門控後，向 Alpaca 模擬盤提交市價單"
+  },
   "category": "trading",
   "reads_external": false,
   "writes_external": true,
@@ -13,6 +23,11 @@
   "risk": "high",
   "produces_content": false,
   "propose_guide": "Gated paper trade only. Set symbol, side, and quantity from NL or step fields. Live Alpaca URLs are refused.",
+  "propose_guide_i18n": {
+    "en": "Gated paper trade only. Set symbol, side, and quantity from NL. Live Alpaca URLs are refused.",
+    "zh_CN": "仅用于带门控的模拟交易。从自然语言设置代码、买卖方向与数量。拒绝实盘 URL。",
+    "zh_HK": "僅用於帶門控的模擬交易。從自然語言設定代碼、買賣方向與數量。拒絕實盤 URL。"
+  },
   "input_schema": {
     "type": "object",
     "required": [

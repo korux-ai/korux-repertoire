@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "kind": "connector",
   "label": "Microsoft Teams",
+  "label_i18n": {
+    "en": "Microsoft Teams",
+    "zh_CN": "Microsoft Teams",
+    "zh_HK": "Microsoft Teams"
+  },
   "description": "Verify Microsoft identity for Teams workflows via Graph /me or app-only organization lookup after Vault binding",
+  "description_i18n": {
+    "en": "Verify Microsoft identity for Teams workflows via Graph /me after Vault binding",
+    "zh_CN": "通过 Graph /me 校验 Microsoft 身份，供 Teams 工作流（需 Vault）",
+    "zh_HK": "透過 Graph /me 校驗 Microsoft 身分，供 Teams 工作流（需 Vault）"
+  },
   "category": "meeting",
   "reads_external": true,
   "writes_external": false,
@@ -13,6 +23,11 @@
   "risk": "low",
   "produces_content": false,
   "propose_guide": "Use when a workflow needs Microsoft Teams identity binding. Pass optional meeting_id from monitor/trigger context. Does not create Teams meetings.",
+  "propose_guide_i18n": {
+    "en": "When a workflow needs Microsoft Teams identity binding. Does not create Teams meetings.",
+    "zh_CN": "工作流需要绑定 Teams 身份时使用。不创建会议。",
+    "zh_HK": "工作流需要綁定 Teams 身分時使用。不建立會議。"
+  },
   "input_schema": {
     "type": "object",
     "properties": {

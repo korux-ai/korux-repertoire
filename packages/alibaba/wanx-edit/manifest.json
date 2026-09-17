@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "kind": "connector",
   "label": "Alibaba Wanxiang image edit",
+  "label_i18n": {
+    "en": "Alibaba Wanxiang image edit",
+    "zh_CN": "阿里云万相图像编辑",
+    "zh_HK": "阿里雲萬相圖像編輯"
+  },
   "description": "Edit a product/marketing image with a text prompt via Alibaba DashScope Wanxiang (万相) multimodal generation after Vault binding and Governor gate",
+  "description_i18n": {
+    "en": "Edit a product/marketing image with a text prompt via Alibaba DashScope Wanxiang after Vault binding and Governor gate",
+    "zh_CN": "通过阿里云 DashScope 万相，用文本提示编辑商品/营销图（需 Vault 绑定与 Governor）",
+    "zh_HK": "透過阿里雲 DashScope 萬相，用文本提示編輯商品/營銷圖（需 Vault 綁定與 Governor）"
+  },
   "category": "design",
   "reads_external": true,
   "writes_external": true,
@@ -13,6 +23,11 @@
   "risk": "medium",
   "produces_content": true,
   "propose_guide": "After the owner uploads a product photo, use this to rewrite background, lighting, or style with a Chinese/English prompt before social publish. Prefer image_file_id (Korux injects context.image) or a public https image_url. Default model wan2.6-image (sync). Output image URLs expire (~24h) — re-host before facebook/publish / instagram/publish. Do not invent API keys.",
+  "propose_guide_i18n": {
+    "en": "After the owner uploads a product photo, rewrite background/lighting/style with a prompt before social publish. Prefer image_file_id. Pair with meitu cutout and design/template-compose.",
+    "zh_CN": "Owner 上传商品图后，用提示词改背景/光线/风格再发社媒。优先 image_file_id。可搭配美图抠图与 design/template-compose。",
+    "zh_HK": "Owner 上傳商品圖後，用提示詞改背景/光線/風格再發社媒。優先 image_file_id。可搭配美圖摳圖與 design/template-compose。"
+  },
   "input_schema": {
     "type": "object",
     "required": [

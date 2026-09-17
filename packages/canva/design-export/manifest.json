@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "kind": "connector",
   "label": "Canva design export",
+  "label_i18n": {
+    "en": "Canva design export",
+    "zh_CN": "Canva 设计导出",
+    "zh_HK": "Canva 設計匯出"
+  },
   "description": "Export a Canva design (PNG/JPG/PDF), optionally autofill a Brand Template first, via Connect API after Vault binding and Governor gate",
+  "description_i18n": {
+    "en": "Export a Canva design (PNG/JPG/PDF), optionally autofill a Brand Template first, via Connect API after Vault binding and Governor gate",
+    "zh_CN": "通过 Canva Connect API 导出设计（PNG/JPG/PDF），可选先自动填充品牌模板（需 Vault 与 Governor）",
+    "zh_HK": "透過 Canva Connect API 匯出設計（PNG/JPG/PDF），可選先自動填充品牌模板（需 Vault 與 Governor）"
+  },
   "category": "design",
   "reads_external": true,
   "writes_external": true,
@@ -13,6 +23,11 @@
   "risk": "medium",
   "produces_content": true,
   "propose_guide": "Generate/export creative from Canva. Prefer action=export with an existing design_id. Use autofill_and_export only when a Brand Template id and text field map are known (Enterprise). Returns export URL(s) — do not claim permanent CDN hosting. Downstream social connectors may need a Korux file step to re-host the asset.",
+  "propose_guide_i18n": {
+    "en": "Export creative from Canva. Prefer action=export with design_id. Use autofill_and_export only when Brand Template id and fields are known (Enterprise).",
+    "zh_CN": "从 Canva 导出素材。优先 action=export + design_id。仅在已知品牌模板与字段时用 autofill_and_export（企业版）。",
+    "zh_HK": "從 Canva 匯出素材。優先 action=export + design_id。僅在已知品牌模板與欄位時用 autofill_and_export（企業版）。"
+  },
   "input_schema": {
     "type": "object",
     "properties": {

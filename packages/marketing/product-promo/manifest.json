@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "kind": "skill",
   "label": "Product promo card",
+  "label_i18n": {
+    "en": "Product promo card",
+    "zh_CN": "单品促销卡片文案",
+    "zh_HK": "單品促銷卡片文案"
+  },
   "description": "Propose short product promo copy and layout hints from company style + product context for template compose and Xiaohongshu publish",
+  "description_i18n": {
+    "en": "Propose short product promo copy and layout hints for template compose and Xiaohongshu publish",
+    "zh_CN": "提出短促商品促销文案与版式提示，供模板合成与小红书发布",
+    "zh_HK": "提出短促商品促銷文案與版式提示，供模板合成與小紅書發佈"
+  },
   "category": "marketing",
   "reads_external": false,
   "writes_external": false,
@@ -13,6 +23,11 @@
   "risk": "low",
   "produces_content": true,
   "propose_guide": "Use when NL uploads a new product photo and workspace has store name, logo, or preferred style. Emit Internal social_post planning fields: title (≤20 Chinese chars ideal), caption (short XHS body with 1–3 hashtags), headline for on-image text, layout=xhs_portrait, accent/style notes. Do not publish. Next: design/template-compose (product_image_file_id + logo_file_id + headline/caption) → xiaohongshu/publish under human gate. Reuse brand voice; never invent fake discounts or medical claims.",
+  "propose_guide_i18n": {
+    "en": "When NL uploads a product photo with store/logo/style. Emit Internal social_post fields — do not publish. Next: template-compose → xiaohongshu/publish.",
+    "zh_CN": "用户上传商品图且有店名/Logo/风格时使用。产出内部 social_post 字段——不外发。下一步：模板合成→小红书。",
+    "zh_HK": "用戶上傳商品圖且有店名/Logo/風格時使用。產出內部 social_post 欄位——不外發。下一步：模板合成→小紅書。"
+  },
   "input_schema": {
     "type": "object",
     "properties": {

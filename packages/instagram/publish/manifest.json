@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "kind": "connector",
   "label": "Instagram Feed post",
+  "label_i18n": {
+    "en": "Instagram Feed post",
+    "zh_CN": "Instagram Feed 发帖",
+    "zh_HK": "Instagram Feed 發帖"
+  },
   "description": "Publish one Feed image post to an Instagram professional account linked to a Facebook Page via Graph API after Vault binding and Governor gate",
+  "description_i18n": {
+    "en": "Publish one Feed image post to an Instagram professional account via Graph API after Vault binding and Governor gate",
+    "zh_CN": "向 Instagram 专业账号发布一张 Feed 图片帖（Graph API；需 Vault 与 Governor）",
+    "zh_HK": "向 Instagram 專業帳號發佈一張 Feed 圖片帖（Graph API；需 Vault 與 Governor）"
+  },
   "category": "social",
   "reads_external": false,
   "writes_external": true,
@@ -13,6 +23,11 @@
   "risk": "medium",
   "produces_content": false,
   "propose_guide": "External Instagram Feed post after Internal compose: caption from upstream output. An image is required (JPEG/PNG via image_file_id). Do not share Vault binding with facebook/publish.",
+  "propose_guide_i18n": {
+    "en": "External Feed post after compose: caption from upstream. Image required (JPEG/PNG). Do not share Vault with facebook/publish.",
+    "zh_CN": "成文后发 Feed：文案用上游产出。必须有图（JPEG/PNG）。勿与 facebook/publish 共用 Vault。",
+    "zh_HK": "成文後發 Feed：文案用上游產出。必須有圖（JPEG/PNG）。勿與 facebook/publish 共用 Vault。"
+  },
   "input_schema": {
     "type": "object",
     "required": [

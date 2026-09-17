@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "kind": "connector",
   "label": "Facebook Page post",
+  "label_i18n": {
+    "en": "Facebook Page post",
+    "zh_CN": "Facebook 主页发帖",
+    "zh_HK": "Facebook 專頁發帖"
+  },
   "description": "Post to a Facebook Page (text, optional JPEG/PNG) via Graph API after Vault binding and Governor gate",
+  "description_i18n": {
+    "en": "Post to a Facebook Page (text, optional JPEG/PNG) via Graph API after Vault binding and Governor gate",
+    "zh_CN": "通过 Graph API 向 Facebook 主页发帖（文本，可选图片；需 Vault 与 Governor）",
+    "zh_HK": "透過 Graph API 向 Facebook 專頁發帖（文本，可選圖片；需 Vault 與 Governor）"
+  },
   "category": "social",
   "reads_external": false,
   "writes_external": true,
@@ -13,6 +23,11 @@
   "risk": "medium",
   "produces_content": false,
   "propose_guide": "External Page post after Internal compose/summarize: message must be upstream structured output, not the task NL verbatim. Optional image_file_id from a prior file step.",
+  "propose_guide_i18n": {
+    "en": "External Page post after Internal compose: message from upstream output, not task NL verbatim. Optional image_file_id.",
+    "zh_CN": "内部成文后再发主页：正文用上游结构化产出，勿直接用任务原话。可选 image_file_id。",
+    "zh_HK": "內部成文後再發專頁：正文用上游結構化產出，勿直接用任務原話。可選 image_file_id。"
+  },
   "input_schema": {
     "type": "object",
     "required": [

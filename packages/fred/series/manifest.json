@@ -4,10 +4,26 @@
   "version": "1.0.1",
   "kind": "connector",
   "errors": {
-    "emitted": ["auth", "empty", "unavailable", "validation", "provider"]
+    "emitted": [
+      "auth",
+      "empty",
+      "unavailable",
+      "validation",
+      "provider"
+    ]
   },
   "label": "FRED series",
+  "label_i18n": {
+    "en": "FRED series",
+    "zh_CN": "FRED 宏观序列",
+    "zh_HK": "FRED 宏觀序列"
+  },
   "description": "Fetch a FRED macro time series (observations) via St. Louis Fed API for downstream compose",
+  "description_i18n": {
+    "en": "Fetch a FRED macro time series (observations) via St. Louis Fed API for downstream compose",
+    "zh_CN": "通过圣路易斯联储 FRED API 拉取宏观时间序列观测值，供下游成文",
+    "zh_HK": "透過聖路易斯聯儲 FRED API 拉取宏觀時間序列觀測值，供下游成文"
+  },
   "category": "research",
   "reads_external": true,
   "writes_external": false,
@@ -16,26 +32,46 @@
   "risk": "low",
   "produces_content": true,
   "propose_guide": "Use when NL asks for FRED macro series (rates, CPI, DGS10, DXY proxies, etc.). Requires Vault fred/series API key. Set series_id from NL.",
+  "propose_guide_i18n": {
+    "en": "Use when NL asks for FRED macro series (rates, CPI, DGS10, etc.). Requires Vault API key. Set series_id from NL.",
+    "zh_CN": "当需要 FRED 宏观序列（利率、CPI、DGS10 等）时使用。需 Vault API key。从自然语言设置 series_id。",
+    "zh_HK": "當需要 FRED 宏觀序列（利率、CPI、DGS10 等）時使用。需 Vault API key。從自然語言設定 series_id。"
+  },
   "input_schema": {
     "type": "object",
-    "required": ["series_id"],
+    "required": [
+      "series_id"
+    ],
     "properties": {
-      "series_id": { "type": "string", "maxLength": 64 },
-      "limit": { "type": "integer", "minimum": 1, "maximum": 100 }
+      "series_id": {
+        "type": "string",
+        "maxLength": 64
+      },
+      "limit": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 100
+      }
     }
   },
   "params": [
     {
       "name": "series_id",
       "required": true,
-      "sources": ["nl_fixed", "step_field"],
+      "sources": [
+        "nl_fixed",
+        "step_field"
+      ],
       "description": "FRED series id, e.g. DGS10, CPIAUCSL",
       "confirm_if_missing": true
     },
     {
       "name": "limit",
       "required": false,
-      "sources": ["default", "step_field"],
+      "sources": [
+        "default",
+        "step_field"
+      ],
       "default_value": 10,
       "description": "Max recent observations to return",
       "confirm_if_missing": false

@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "kind": "connector",
   "label": "Twitter / X post",
+  "label_i18n": {
+    "en": "Twitter / X post",
+    "zh_CN": "Twitter / X 发帖",
+    "zh_HK": "Twitter / X 發帖"
+  },
   "description": "Post one tweet (text, optional JPEG/PNG) via X API after Vault binding and Governor gate",
+  "description_i18n": {
+    "en": "Post one tweet (text, optional JPEG/PNG) via X API after Vault binding and Governor gate",
+    "zh_CN": "通过 X API 发一条推文（文本，可选图片；需 Vault 与 Governor）",
+    "zh_HK": "透過 X API 發一則推文（文本，可選圖片；需 Vault 與 Governor）"
+  },
   "category": "social",
   "reads_external": false,
   "writes_external": true,
@@ -16,6 +26,11 @@
   ],
   "produces_content": false,
   "propose_guide": "External post after Internal compose/summarize: tweet body must be upstream structured output, not the task NL verbatim. Optional image_file_id from a prior file step.",
+  "propose_guide_i18n": {
+    "en": "External post after compose: tweet body from upstream, not task NL. Optional image_file_id.",
+    "zh_CN": "成文后外发：推文正文用上游产出，勿用任务原话。可选 image_file_id。",
+    "zh_HK": "成文後外發：推文正文用上游產出，勿用任務原話。可選 image_file_id。"
+  },
   "input_schema": {
     "type": "object",
     "required": [

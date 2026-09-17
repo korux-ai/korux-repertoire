@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "kind": "skill",
   "label": "Marketing performance review",
+  "label_i18n": {
+    "en": "Marketing performance review",
+    "zh_CN": "营销表现复盘",
+    "zh_HK": "營銷表現複盤"
+  },
   "description": "Propose a performance review / learnings brief from analytics or ads report content (GA4, GSC, Meta insights)",
+  "description_i18n": {
+    "en": "Propose a performance review / learnings brief from analytics or ads report content",
+    "zh_CN": "根据分析或广告报告内容提出表现复盘/学习要点",
+    "zh_HK": "根據分析或廣告報告內容提出表現複盤/學習要點"
+  },
   "category": "marketing",
   "reads_external": false,
   "writes_external": false,
@@ -13,6 +23,11 @@
   "risk": "low",
   "produces_content": true,
   "propose_guide": "Use after google/analytics-report, google/search-console, or meta/ads-insights when NL asks what worked, what to change, or a weekly marketing review. Take upstream report `content` as `report`. Emit Internal sections: wins, lags, hypotheses, next experiments, recommended connector actions — do not change ads bids or send mail in this skill.",
+  "propose_guide_i18n": {
+    "en": "After GA4/GSC/Meta insights when NL asks what worked. Emit Internal wins/lags/next experiments — do not mutate ads.",
+    "zh_CN": "在 GA4/GSC/Meta 洞察之后，用户问效果如何时使用。产出内部得失与下一步——不改广告。",
+    "zh_HK": "在 GA4/GSC/Meta 洞察之後，用戶問效果如何時使用。產出內部得失與下一步——不改廣告。"
+  },
   "input_schema": {
     "type": "object",
     "properties": {

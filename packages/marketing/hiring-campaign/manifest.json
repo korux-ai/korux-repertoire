@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "kind": "skill",
   "label": "Hiring campaign",
+  "label_i18n": {
+    "en": "Hiring campaign",
+    "zh_CN": "招聘营销计划",
+    "zh_HK": "招聘營銷計劃"
+  },
   "description": "Propose an employer-brand / recruiting marketing plan (roles, audience, channels, compliance)",
+  "description_i18n": {
+    "en": "Propose an employer-brand / recruiting marketing plan (roles, audience, channels, compliance)",
+    "zh_CN": "提出雇主品牌/招聘营销计划（岗位、受众、渠道、合规）",
+    "zh_HK": "提出僱主品牌/招聘營銷計劃（崗位、受眾、渠道、合規）"
+  },
   "category": "marketing",
   "reads_external": false,
   "writes_external": false,
@@ -13,6 +23,11 @@
   "risk": "low",
   "produces_content": true,
   "propose_guide": "Use when NL asks for a hiring push, employer brand campaign, campus recruit, or open-role promo. Emit Internal structure: roles/levels, candidate persona, EVP/message pillars, channel mix (LinkedIn Company Page, career site CMS, email nurture, optional Meta reach — ads write is out of catalog), calendar, KPIs (applicants, qualified, offer accept), and compliance (EEO, no discriminatory language, accurate compensation claims). Downstream: marketing/brand-voice → ab-copy → linkedin/publish, wordpress/post or webflow/cms-publish, mailchimp/campaign or klaviyo/campaign, hubspot/contact-upsert for CRM leads — all write-external under human gates. Never invent salary bands or legal disclaimers; flag when Owner must supply them.",
+  "propose_guide_i18n": {
+    "en": "When NL asks for hiring/employer-brand/campus recruit plan. Emit Internal structure; writes go to gated connectors.",
+    "zh_CN": "用户要招聘/雇主品牌/校园招聘计划时使用。产出内部结构；外发走带门控连接器。",
+    "zh_HK": "用戶要招聘/僱主品牌/校園招聘計劃時使用。產出內部結構；外發走帶門控連接器。"
+  },
   "input_schema": {
     "type": "object",
     "properties": {

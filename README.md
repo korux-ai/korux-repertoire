@@ -97,6 +97,7 @@ Current packages:
 | `marketing/product-promo` | Skill (no runtime): one-product promo → compose/XHS |
 | `alpaca/place-order` | Alpaca paper trade |
 | `notion/pages` | Notion page create |
+| `supabase/rows` | Supabase PostgREST rows (allowlisted tables) |
 | `zoom/account` | Zoom OAuth + users/me |
 
 `kind: skill` may omit `runtime/` (catalog / Propose only). Connectors must ship `runtime.invoke`. Framework-bound skills stay in Korux (`packages/korux/*`).

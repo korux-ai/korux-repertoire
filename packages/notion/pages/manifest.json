@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "kind": "connector",
   "label": "Notion",
+  "label_i18n": {
+    "en": "Notion",
+    "zh_CN": "Notion 页面",
+    "zh_HK": "Notion 頁面"
+  },
   "description": "Create a Notion page (or database row) via Notion API after Vault binding and Governor gate",
+  "description_i18n": {
+    "en": "Create a Notion page (or database row) via Notion API after Vault binding and Governor gate",
+    "zh_CN": "通过 Notion API 创建页面（或数据库行；需 Vault 与 Governor）",
+    "zh_HK": "透過 Notion API 建立頁面（或資料庫列；需 Vault 與 Governor）"
+  },
   "category": "docs",
   "reads_external": true,
   "writes_external": true,
@@ -13,6 +23,11 @@
   "risk": "medium",
   "produces_content": true,
   "propose_guide": "Write Notion after Internal extract/summarize. Title and body from upstream, not task NL verbatim.",
+  "propose_guide_i18n": {
+    "en": "Write Notion after Internal extract/summarize. Title and body from upstream, not task NL verbatim.",
+    "zh_CN": "内部抽取/摘要后写入 Notion。标题与正文用上游产出，勿用任务原话。",
+    "zh_HK": "內部抽取/摘要後寫入 Notion。標題與正文用上游產出，勿用任務原話。"
+  },
   "input_schema": {
     "type": "object",
     "properties": {

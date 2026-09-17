@@ -4,7 +4,17 @@
   "version": "1.1.0",
   "kind": "connector",
   "label": "Web research",
+  "label_i18n": {
+    "en": "Web research",
+    "zh_CN": "网页检索（Tavily）",
+    "zh_HK": "網頁檢索（Tavily）"
+  },
   "description": "Search the public web via Tavily and return ranked snippets for downstream summarize steps",
+  "description_i18n": {
+    "en": "Search the public web via Tavily and return ranked snippets for downstream summarize steps",
+    "zh_CN": "通过 Tavily 搜索公开网页，返回排序摘要片段供下游摘要",
+    "zh_HK": "透過 Tavily 搜尋公開網頁，返回排序摘要片段供下游摘要"
+  },
   "category": "research",
   "reads_external": true,
   "writes_external": false,
@@ -13,6 +23,11 @@
   "risk": "low",
   "produces_content": true,
   "propose_guide": "Separate step before llm-summarize when NL asks to search the web. Set `query` on the step when NL states a fixed search theme.",
+  "propose_guide_i18n": {
+    "en": "Separate step before summarize when NL asks to search the web. Set query when NL states a fixed theme. For deeper bodies use searxng + crawl4ai.",
+    "zh_CN": "用户要搜网页时，在摘要前单独一步。有固定主题则设置 query。要全文用 searxng + crawl4ai。",
+    "zh_HK": "用戶要搜網頁時，在摘要前單獨一步。有固定主題則設定 query。要全文用 searxng + crawl4ai。"
+  },
   "input_schema": {
     "type": "object",
     "required": [

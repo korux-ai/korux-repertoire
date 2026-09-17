@@ -4,7 +4,17 @@
   "version": "1.1.0",
   "kind": "connector",
   "label": "Send email",
+  "label_i18n": {
+    "en": "Send email",
+    "zh_CN": "发送邮件",
+    "zh_HK": "發送郵件"
+  },
   "description": "Send email via SMTP after Vault binding and Governor gate",
+  "description_i18n": {
+    "en": "Send email via SMTP after Vault binding and Governor gate",
+    "zh_CN": "在 Vault 绑定与 Governor 门控后通过 SMTP 发送邮件",
+    "zh_HK": "在 Vault 綁定與 Governor 門控後透過 SMTP 發送郵件"
+  },
   "category": "email",
   "reads_external": false,
   "writes_external": true,
@@ -16,6 +26,11 @@
   ],
   "produces_content": false,
   "propose_guide": "External send after Internal summarize/read steps: email body must be upstream structured output, not the task NL verbatim.",
+  "propose_guide_i18n": {
+    "en": "External send after Internal summarize: body from upstream structured output, not task NL verbatim.",
+    "zh_CN": "内部摘要后再外发：正文用上游结构化产出，勿直接用任务原话。",
+    "zh_HK": "內部摘要後再外發：正文用上游結構化產出，勿直接用任務原話。"
+  },
   "input_schema": {
     "type": "object",
     "required": [

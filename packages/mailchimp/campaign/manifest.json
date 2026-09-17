@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "kind": "connector",
   "label": "Mailchimp campaign",
+  "label_i18n": {
+    "en": "Mailchimp campaign",
+    "zh_CN": "Mailchimp 邮件活动",
+    "zh_HK": "Mailchimp 郵件活動"
+  },
   "description": "Create a Mailchimp regular campaign with HTML/text content, optionally send after Vault binding and Governor gate",
+  "description_i18n": {
+    "en": "Create a Mailchimp regular campaign with HTML/text content, optionally send after Vault binding and Governor gate",
+    "zh_CN": "创建 Mailchimp 常规邮件活动（HTML/文本），可选发送（需 Vault 与 Governor）",
+    "zh_HK": "建立 Mailchimp 常規郵件活動（HTML/文本），可選發送（需 Vault 與 Governor）"
+  },
   "category": "email",
   "reads_external": false,
   "writes_external": true,
@@ -13,6 +23,11 @@
   "risk": "high",
   "produces_content": false,
   "propose_guide": "Use after compose for audience email. Default action creates a saved campaign only. Use action=send or create_and_send only when NL explicitly asks to send.",
+  "propose_guide_i18n": {
+    "en": "Audience email after compose. Default saves campaign only. send/create_and_send only when NL explicitly asks.",
+    "zh_CN": "成文后做受众邮件。默认只保存活动。仅当用户明确要求时发送。",
+    "zh_HK": "成文後做受眾郵件。預設只保存活動。僅當用戶明確要求時發送。"
+  },
   "input_schema": {
     "type": "object",
     "properties": {

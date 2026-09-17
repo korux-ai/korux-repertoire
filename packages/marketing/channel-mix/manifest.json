@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "kind": "skill",
   "label": "Marketing channel mix",
+  "label_i18n": {
+    "en": "Marketing channel mix",
+    "zh_CN": "营销渠道组合",
+    "zh_HK": "營銷渠道組合"
+  },
   "description": "Propose which owned/paid/earned channels to use for a brief (and which repertoire connectors to attach next)",
+  "description_i18n": {
+    "en": "Propose which owned/paid/earned channels to use for a brief (and which repertoire connectors to attach next)",
+    "zh_CN": "根据简报建议自有/付费/赢得渠道，并点名下一步可接的 repertoire 连接器",
+    "zh_HK": "根據簡報建議自有/付費/贏得渠道，並點名下一步可接的 repertoire 連接器"
+  },
   "category": "marketing",
   "reads_external": false,
   "writes_external": false,
@@ -13,6 +23,11 @@
   "risk": "low",
   "produces_content": true,
   "propose_guide": "Use after marketing/campaign-brief (or vertical skills marketing/local-store / marketing/hiring-campaign) when NL asks which channels to use. Map goal+audience to a small channel mix and name concrete repertoire connectors when available: linkedin/publish (B2B Page), instagram/publish (visual Feed), twitter/publish / facebook/publish, mailchimp/campaign or klaviyo/campaign (email), wordpress/post or webflow/cms-publish (SEO/CMS), hubspot/contact-upsert or hubspot/crm-note (CRM), google/analytics-report (measure). Prefer 2–4 channels. Do not invoke write-external connectors in this skill — only recommend next steps for Propose. Call out when a channel needs human approval.",
+  "propose_guide_i18n": {
+    "en": "After campaign-brief when NL asks which channels. Recommend 2–4 channels and connectors — do not invoke write-external here.",
+    "zh_CN": "活动简报后用户问用哪些渠道时使用。建议 2–4 个渠道与连接器——此处不调用写外联。",
+    "zh_HK": "活動簡報後用戶問用哪些渠道時使用。建議 2–4 個渠道與連接器——此處不呼叫寫外聯。"
+  },
   "input_schema": {
     "type": "object",
     "properties": {

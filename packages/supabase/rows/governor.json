@@ -1,0 +1,48 @@
+{
+  "spec_version": "korux_governor_v1",
+  "capability_id": "supabase/rows",
+  "capability_version": "1.0.0",
+  "defaults": {
+    "intercept_on_invoke": true,
+    "editable_fields": [
+      "action",
+      "table",
+      "filters",
+      "row",
+      "columns",
+      "limit",
+      "offset",
+      "on_conflict"
+    ]
+  },
+  "rules": [
+    {
+      "id": "reject_empty_table",
+      "when": {
+        "args.table": { "empty": true }
+      },
+      "action": "reject",
+      "code": "VALIDATION",
+      "message": {
+        "en": "table is empty; provide an Owner-allowlisted table name.",
+        "zh_CN": "table 为空；请提供 Owner 白名单中的表名。",
+        "zh_HK": "table 為空；請提供 Owner 白名單中的表名。"
+      }
+    },
+    {
+      "id": "require_human_on_write",
+      "when": {
+        "writes_external": true
+      },
+      "action": "intercept",
+      "gate": "require_human",
+      "message": {
+        "en": "Supabase row write/read under write-capable binding requires human confirmation (Track B may pass select).",
+        "zh_CN": "具备写能力的 Supabase 绑定在调用前须人工确认（Track B 可对 select 放行）。",
+        "zh_HK": "具備寫能力的 Supabase 綁定在呼叫前須人工確認（Track B 可對 select 放行）。"
+      }
+    }
+  ],
+  "implementation": "declarative",
+  "notes": "Prefer Track B runtime/governor.py for allowed_tables + write-only human gate. Service role bypasses RLS — Owner must configure allowed_tables."
+}

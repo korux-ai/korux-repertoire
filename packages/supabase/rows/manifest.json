@@ -1,0 +1,218 @@
+{
+  "spec_version": "korux_capability_v1",
+  "id": "supabase/rows",
+  "version": "1.0.0",
+  "kind": "connector",
+  "errors": {
+    "emitted": ["auth", "empty", "unavailable", "validation", "denied", "provider"]
+  },
+  "label": "Supabase rows",
+  "label_i18n": {
+    "en": "Supabase rows",
+    "zh_CN": "Supabase 数据行",
+    "zh_HK": "Supabase 資料列"
+  },
+  "description": "Governed PostgREST row select/insert/update/upsert against Owner-allowlisted tables — Staff workflow database access without arbitrary SQL",
+  "description_i18n": {
+    "en": "Governed PostgREST row select/insert/update/upsert against Owner-allowlisted tables — Staff workflow database access without arbitrary SQL",
+    "zh_CN": "经治理的 PostgREST 行级 select/insert/update/upsert，仅限 Owner 表白名单——供 Staff 工作流当数据库用，禁止任意 SQL",
+    "zh_HK": "經治理的 PostgREST 列級 select/insert/update/upsert，僅限 Owner 表白名單——供 Staff 工作流當資料庫用，禁止任意 SQL"
+  },
+  "category": "data",
+  "reads_external": true,
+  "writes_external": true,
+  "boundary": "External",
+  "default_gate": "require_human",
+  "risk": "high",
+  "produces_content": true,
+  "propose_guide": "BEST WHEN: Staff workflow must persist or load structured business rows in the Owner Supabase project (task state, leads, research notes, config). Prefer action=select to read; insert/update/upsert only when NL explicitly asks to write. table MUST be in Owner allowed_tables. Do NOT use for web search, email, or social publish. Do NOT invent SQL or call RPC — out of scope. Empty Owner allowlist must be configured before Propose relies on this step.",
+  "propose_guide_i18n": {
+    "en": "BEST WHEN: Staff workflow must persist or load structured business rows in the Owner Supabase project (task state, leads, research notes, config). Prefer action=select to read; insert/update/upsert only when NL explicitly asks to write. table MUST be in Owner allowed_tables. Do NOT use for web search, email, or social publish. Do NOT invent SQL or call RPC — out of scope. Empty Owner allowlist must be configured before Propose relies on this step.",
+    "zh_CN": "最佳场景：Staff 工作流要在 Owner 的 Supabase 项目中读写结构化业务行（任务状态、线索、调研笔记、配置）。读用 action=select；仅当用户明确要求写入时用 insert/update/upsert。table 必须在 Owner allowed_tables 内。不要用于网页搜索、发信、发帖。不要编造 SQL 或调用 RPC。Owner 未配置表白名单前不要依赖本步骤。",
+    "zh_HK": "最佳場景：Staff 工作流要在 Owner 的 Supabase 專案中讀寫結構化業務列（任務狀態、線索、調研筆記、配置）。讀用 action=select；僅當用戶明確要求寫入時用 insert/update/upsert。table 必須在 Owner allowed_tables 內。不要用於網頁搜尋、發信、發帖。不要編造 SQL 或呼叫 RPC。Owner 未配置表白名單前不要依賴本步驟。"
+  },
+  "input_schema": {
+    "type": "object",
+    "required": ["action", "table"],
+    "properties": {
+      "action": {
+        "type": "string",
+        "enum": ["select", "insert", "update", "upsert"]
+      },
+      "table": {
+        "type": "string",
+        "maxLength": 64,
+        "description": "Table name in Vault schema (public by default); allowlisted by Owner"
+      },
+      "filters": {
+        "type": "object",
+        "description": "Column → value equality filters (PostgREST col=eq.value)"
+      },
+      "row": {
+        "type": "object",
+        "description": "Row object for insert/update/upsert"
+      },
+      "columns": {
+        "type": "string",
+        "maxLength": 500,
+        "description": "PostgREST select= list (default *)"
+      },
+      "limit": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 200
+      },
+      "offset": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 10000
+      },
+      "on_conflict": {
+        "type": "string",
+        "maxLength": 64,
+        "description": "Upsert conflict target column (PostgREST on_conflict)"
+      }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "required": ["content"],
+    "properties": {
+      "ok": { "type": "boolean" },
+      "empty": { "type": "boolean" },
+      "action": { "type": "string" },
+      "table": { "type": "string" },
+      "rows": { "type": "array" },
+      "row_count": { "type": "integer" },
+      "content": { "type": "string" },
+      "summary": { "type": "string" }
+    }
+  },
+  "params": [
+    {
+      "name": "action",
+      "required": true,
+      "sources": ["nl_fixed", "step_field"],
+      "description": "select | insert | update | upsert",
+      "propose_hint": "Default to select unless NL clearly asks to write rows.",
+      "confirm_if_missing": true
+    },
+    {
+      "name": "table",
+      "required": true,
+      "sources": ["nl_fixed", "step_field", "upstream"],
+      "description": "Allowlisted table name (snake_case identifier)",
+      "confirm_if_missing": true
+    },
+    {
+      "name": "filters",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "upstream"],
+      "description": "Equality filters as object",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "row",
+      "required": false,
+      "sources": ["upstream", "nl_fixed", "step_field"],
+      "description": "Row payload for write actions",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "columns",
+      "required": false,
+      "sources": ["nl_fixed", "step_field", "default"],
+      "description": "select= column list",
+      "default_value": "*",
+      "confirm_if_missing": false
+    },
+    {
+      "name": "limit",
+      "required": false,
+      "sources": ["default", "step_field", "nl_fixed"],
+      "description": "Max rows for select",
+      "default_value": 50,
+      "confirm_if_missing": false
+    },
+    {
+      "name": "offset",
+      "required": false,
+      "sources": ["default", "step_field"],
+      "description": "Select offset",
+      "default_value": 0,
+      "confirm_if_missing": false
+    },
+    {
+      "name": "on_conflict",
+      "required": false,
+      "sources": ["nl_fixed", "step_field"],
+      "description": "Upsert on_conflict column",
+      "confirm_if_missing": false
+    }
+  ],
+  "auth": {
+    "required": true,
+    "binding_tool": "supabase/rows",
+    "secret_kind": "supabase/rows",
+    "fields": [
+      {
+        "name": "project_url",
+        "label": "Supabase project URL",
+        "type": "text",
+        "required": true,
+        "sensitive": false
+      },
+      {
+        "name": "api_key",
+        "label": "Service role / secret key",
+        "type": "password",
+        "required": true,
+        "sensitive": true
+      },
+      {
+        "name": "schema",
+        "label": "Postgres schema",
+        "type": "text",
+        "required": false,
+        "sensitive": false,
+        "default_value": "public"
+      }
+    ],
+    "example_json": "{\"project_url\":\"https://xxxx.supabase.co\",\"api_key\":\"eyJhbGciOi…\",\"schema\":\"public\"}"
+  },
+  "runtime": {
+    "kind": "package",
+    "entry": "runtime.invoke",
+    "transport": "in_process",
+    "timeout_ms": 45000,
+    "idempotent": false
+  },
+  "invoke_tool": "supabase/rows",
+  "binding_tool": "supabase/rows",
+  "status": "beta",
+  "trust": "first-party",
+  "aliases": ["supabase", "supabase-db", "postgrest-rows"],
+  "editable_governor_config": {
+    "allowed_tables": {
+      "type": "array",
+      "items": { "type": "string" },
+      "label": "Allowed tables",
+      "description": "Only these table names may be accessed. Empty list denies all tables (configure before use).",
+      "default": []
+    },
+    "max_rows": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 200,
+      "default": 50,
+      "label": "Max select rows",
+      "description": "Hard cap for select limit (platform/Track B)."
+    },
+    "require_human_on_read": {
+      "type": "boolean",
+      "default": false,
+      "label": "Require human on select",
+      "description": "When true, select also intercepts for human approval."
+    }
+  }
+}

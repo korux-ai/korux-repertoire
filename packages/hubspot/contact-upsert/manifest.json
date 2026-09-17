@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "kind": "connector",
   "label": "HubSpot contact upsert",
+  "label_i18n": {
+    "en": "HubSpot contact upsert",
+    "zh_CN": "HubSpot 联系人写入",
+    "zh_HK": "HubSpot 聯絡人寫入"
+  },
   "description": "Create or update a HubSpot CRM contact by email (or patch by contact_id) after Vault binding and Governor gate",
+  "description_i18n": {
+    "en": "Create or update a HubSpot CRM contact by email (or patch by contact_id) after Vault binding and Governor gate",
+    "zh_CN": "按邮箱创建/更新 HubSpot 联系人（或按 contact_id 补丁；需 Vault 与 Governor）",
+    "zh_HK": "按電郵建立/更新 HubSpot 聯絡人（或按 contact_id 補丁；需 Vault 與 Governor）"
+  },
   "category": "crm",
   "reads_external": true,
   "writes_external": true,
@@ -13,6 +23,11 @@
   "risk": "medium",
   "produces_content": false,
   "propose_guide": "Upsert CRM contacts from leads, forms, or campaign lists. Prefer email for find-or-create; use contact_id only when updating a known record. Does not create notes — use hubspot/crm-note for activity logging.",
+  "propose_guide_i18n": {
+    "en": "Upsert CRM contacts from leads/forms. Prefer email for find-or-create. Notes → hubspot/crm-note.",
+    "zh_CN": "从线索/表单写入 CRM 联系人。优先用邮箱查找或创建。备注用 hubspot/crm-note。",
+    "zh_HK": "從線索/表單寫入 CRM 聯絡人。優先用電郵查找或建立。備註用 hubspot/crm-note。"
+  },
   "input_schema": {
     "type": "object",
     "properties": {

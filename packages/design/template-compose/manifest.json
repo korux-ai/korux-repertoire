@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "kind": "connector",
   "label": "Template product compose",
+  "label_i18n": {
+    "en": "Template product compose",
+    "zh_CN": "商品卡片模板合成",
+    "zh_HK": "商品卡片模板合成"
+  },
   "description": "Compose a social-ready product card (product photo + logo + headline) into one image and a social_post artifact after Governor gate",
+  "description_i18n": {
+    "en": "Compose a social-ready product card (product photo + logo + headline) into one image and a social_post artifact after Governor gate",
+    "zh_CN": "将商品图+Logo+标题合成一张社媒卡片图，并产出 social_post 工件（经 Governor）",
+    "zh_HK": "將商品圖+Logo+標題合成一張社媒卡片圖，並產出 social_post 工件（經 Governor）"
+  },
   "category": "design",
   "reads_external": false,
   "writes_external": false,
@@ -13,6 +23,11 @@
   "risk": "low",
   "produces_content": true,
   "propose_guide": "After marketing/product-promo (or ab-copy) and when workspace has product + logo images, compose a single social_post artifact: image (composed) + title + caption. Layouts: xhs_portrait (default 3:4), square, landscape. Downstream xiaohongshu/publish / instagram/publish should map image_file_id/caption/title from this step output — do not special-case skill ids. Runtime needs Pillow on the Korux host. Prefer human review before external publish.",
+  "propose_guide_i18n": {
+    "en": "After marketing/product-promo when product+logo images exist, compose social_post (image+title+caption). Then xiaohongshu/publish under human gate. Needs Pillow on host.",
+    "zh_CN": "在 marketing/product-promo 之后且有商品图+Logo 时，合成 social_post。再经人工门控发小红书。主机需 Pillow。",
+    "zh_HK": "在 marketing/product-promo 之後且有商品圖+Logo 時，合成 social_post。再經人工門控發小紅書。主機需 Pillow。"
+  },
   "input_schema": {
     "type": "object",
     "required": [

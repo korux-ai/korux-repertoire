@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "kind": "connector",
   "label": "WordPress post",
+  "label_i18n": {
+    "en": "WordPress post",
+    "zh_CN": "WordPress 文章",
+    "zh_HK": "WordPress 文章"
+  },
   "description": "Create a WordPress post via REST API (draft by default, optional publish) after Vault binding and Governor gate",
+  "description_i18n": {
+    "en": "Create a WordPress post via REST API (draft by default, optional publish)",
+    "zh_CN": "通过 REST API 创建 WordPress 文章（默认草稿，可选发布）",
+    "zh_HK": "透過 REST API 建立 WordPress 文章（預設草稿，可選發佈）"
+  },
   "category": "cms",
   "reads_external": false,
   "writes_external": true,
@@ -13,6 +23,11 @@
   "risk": "medium",
   "produces_content": false,
   "propose_guide": "Publish blog/landing copy after compose. Default status is draft. Set status=publish only when NL explicitly asks to publish.",
+  "propose_guide_i18n": {
+    "en": "Blog/landing copy after compose. Default draft. status=publish only when NL explicitly asks.",
+    "zh_CN": "成文后发博客/落地页。默认草稿。仅当用户明确要求时发布。",
+    "zh_HK": "成文後發網誌/落地頁。預設草稿。僅當用戶明確要求時發佈。"
+  },
   "input_schema": {
     "type": "object",
     "required": [

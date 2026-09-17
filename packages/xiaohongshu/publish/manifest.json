@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "kind": "connector",
   "label": "Xiaohongshu note publish",
+  "label_i18n": {
+    "en": "Xiaohongshu note publish",
+    "zh_CN": "小红书笔记发布",
+    "zh_HK": "小紅書筆記發佈"
+  },
   "description": "Publish an image note to Xiaohongshu (RED) via Owner-configured OpenAPI gateway after Vault binding and Governor gate",
+  "description_i18n": {
+    "en": "Publish an image note to Xiaohongshu (RED) via Owner-configured OpenAPI gateway",
+    "zh_CN": "通过 Owner 配置的 OpenAPI 网关向小红书发布图文笔记",
+    "zh_HK": "透過 Owner 配置的 OpenAPI 閘道向小紅書發佈圖文筆記"
+  },
   "category": "social",
   "reads_external": false,
   "writes_external": true,
@@ -13,6 +23,11 @@
   "risk": "high",
   "produces_content": false,
   "propose_guide": "External Xiaohongshu image note after design/template-compose or compose. Prefer upstream social_post fields: title, caption, and image (file_id or URL). Do not scrape creator.xiaohongshu.com. Requires enterprise/partner OpenAPI credentials in Vault. Always require_human.",
+  "propose_guide_i18n": {
+    "en": "After template-compose/compose. Prefer upstream title/caption/image. Do not scrape creator web. Always require_human.",
+    "zh_CN": "模板合成/成文后使用。优先上游标题/文案/图。勿爬创作者网页。必须人工确认。",
+    "zh_HK": "模板合成/成文後使用。優先上游標題/文案/圖。勿爬創作者網頁。必須人工確認。"
+  },
   "input_schema": {
     "type": "object",
     "required": [

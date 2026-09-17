@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "kind": "skill",
   "label": "Marketing brand voice",
+  "label_i18n": {
+    "en": "Marketing brand voice",
+    "zh_CN": "营销品牌语气",
+    "zh_HK": "營銷品牌語氣"
+  },
   "description": "Propose or apply a brand-voice checklist (tone, do/don't, banned phrases) before external compose or publish steps",
+  "description_i18n": {
+    "en": "Propose or apply a brand-voice checklist (tone, do/don't, banned phrases) before external compose or publish",
+    "zh_CN": "在外发成文/发布前提出或套用品牌语气清单（调性、宜忌、禁用词）",
+    "zh_HK": "在外發成文/發佈前提出或套用品牌語氣清單（調性、宜忌、禁用詞）"
+  },
   "category": "marketing",
   "reads_external": false,
   "writes_external": false,
@@ -13,6 +23,11 @@
   "risk": "low",
   "produces_content": true,
   "propose_guide": "Use when NL mentions brand voice, tone of voice, messaging guidelines, or before publishing when brand constraints matter. Produce an Internal checklist: voice attributes, do/don't, banned phrases, required disclaimers, locale. Prefer feeding banned phrases into Owner governor blocked_keywords on write-external connectors (linkedin/publish, mailchimp/campaign, etc.). Optionally take upstream draft copy and return a voice-compliance critique — do not post externally in this skill.",
+  "propose_guide_i18n": {
+    "en": "When NL mentions brand voice/tone or before publish. Emit Internal checklist; feed banned phrases into Owner governors.",
+    "zh_CN": "用户提到品牌语气/调性或发布前使用。产出内部清单；禁用词可写入 Owner governor。",
+    "zh_HK": "用戶提到品牌語氣/調性或發佈前使用。產出內部清單；禁用詞可寫入 Owner governor。"
+  },
   "input_schema": {
     "type": "object",
     "properties": {

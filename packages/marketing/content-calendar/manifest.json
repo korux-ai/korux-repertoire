@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "kind": "skill",
   "label": "Marketing content calendar",
+  "label_i18n": {
+    "en": "Marketing content calendar",
+    "zh_CN": "营销内容日历",
+    "zh_HK": "營銷內容日曆"
+  },
   "description": "Propose a week/month content calendar (themes, channels, cadence) from a campaign brief",
+  "description_i18n": {
+    "en": "Propose a week/month content calendar (themes, channels, cadence) from a campaign brief",
+    "zh_CN": "根据活动简报提出周/月内容日历（主题、渠道、节奏）",
+    "zh_HK": "根據活動簡報提出週/月內容日曆（主題、渠道、節奏）"
+  },
   "category": "marketing",
   "reads_external": false,
   "writes_external": false,
@@ -13,6 +23,11 @@
   "risk": "low",
   "produces_content": true,
   "propose_guide": "Use after marketing/campaign-brief or channel-mix when NL asks for a content calendar, editorial schedule, or posting cadence. Emit an Internal calendar (dates/slots, theme, channel, asset type, owner/status). Do not publish — later steps use marketing/ab-copy then connectors under human gates. Keep 1–4 weeks unless NL asks for a full month.",
+  "propose_guide_i18n": {
+    "en": "After brief/channel-mix when NL asks for calendar or posting cadence. Emit Internal calendar — do not publish.",
+    "zh_CN": "简报/渠道组合后用户要日历或发布节奏时使用。产出内部日历——不外发。",
+    "zh_HK": "簡報/渠道組合後用戶要日曆或發佈節奏時使用。產出內部日曆——不外發。"
+  },
   "input_schema": {
     "type": "object",
     "properties": {

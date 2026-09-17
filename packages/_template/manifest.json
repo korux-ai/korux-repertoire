@@ -7,7 +7,23 @@
     "emitted": ["auth", "empty", "unavailable", "validation", "denied", "provider"]
   },
   "label": "Example connector",
+  "label_i18n": {
+    "en": "Example connector",
+    "zh_CN": "示例连接器",
+    "zh_HK": "示例連接器"
+  },
   "description": "Template capability package for contributors",
+  "description_i18n": {
+    "en": "Template capability package for contributors",
+    "zh_CN": "供贡献者使用的能力包模板",
+    "zh_HK": "供貢獻者使用的能力包模板"
+  },
+  "propose_guide": "Replace with when-to-use guidance for Propose draft (English).",
+  "propose_guide_i18n": {
+    "en": "Replace with when-to-use guidance for Propose draft (English).",
+    "zh_CN": "替换为 Propose 选型时的使用场景说明（简体）。",
+    "zh_HK": "替換為 Propose 選型時的使用場景說明（繁體）。"
+  },
   "category": "other",
   "reads_external": false,
   "writes_external": true,

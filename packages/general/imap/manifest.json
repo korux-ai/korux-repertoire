@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "kind": "connector",
   "label": "IMAP inbox",
+  "label_i18n": {
+    "en": "IMAP inbox",
+    "zh_CN": "IMAP 收件箱",
+    "zh_HK": "IMAP 收件箱"
+  },
   "description": "Poll an IMAP inbox (e.g. Gmail) for monitor triggers; requires Vault imap binding",
+  "description_i18n": {
+    "en": "Poll an IMAP inbox (e.g. Gmail) for monitor triggers; requires Vault imap binding",
+    "zh_CN": "轮询 IMAP 收件箱（如 Gmail）作为监控触发；需 Vault imap 绑定",
+    "zh_HK": "輪詢 IMAP 收件箱（如 Gmail）作為監控觸發；需 Vault imap 綁定"
+  },
   "category": "email",
   "reads_external": true,
   "writes_external": false,
@@ -19,6 +29,11 @@
   ],
   "produces_content": true,
   "propose_guide": "Use as monitor trigger connector for inbox polling. Pair with korux/llm-summarize / general/mail for triage flows.",
+  "propose_guide_i18n": {
+    "en": "Use as monitor trigger for inbox polling. Pair with summarize / general/mail for triage.",
+    "zh_CN": "用作收件箱轮询的监控触发。可搭配摘要与 general/mail 做分拣。",
+    "zh_HK": "用作收件箱輪詢的監控觸發。可搭配摘要與 general/mail 做分揀。"
+  },
   "input_schema": {
     "type": "object",
     "properties": {

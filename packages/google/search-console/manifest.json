@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "kind": "connector",
   "label": "Google Search Console",
+  "label_i18n": {
+    "en": "Google Search Console",
+    "zh_CN": "Google Search Console",
+    "zh_HK": "Google Search Console"
+  },
   "description": "Query Search Console search analytics (clicks, impressions, CTR, position) read-only after Vault binding",
+  "description_i18n": {
+    "en": "Query Search Console search analytics (clicks, impressions, CTR, position) read-only after Vault binding",
+    "zh_CN": "只读查询 Search Console 搜索分析（点击、展现、CTR、排名；需 Vault）",
+    "zh_HK": "只讀查詢 Search Console 搜尋分析（點擊、展現、CTR、排名；需 Vault）"
+  },
   "category": "analytics",
   "reads_external": true,
   "writes_external": false,
@@ -13,6 +23,11 @@
   "risk": "low",
   "produces_content": true,
   "propose_guide": "Use when NL asks for SEO performance, top queries, or Search Console data. Prefer site_url from Vault. Default dimensions=query. Follow with summarize or marketing/performance-review-style analysis on the platform. Does not submit sitemaps or change property settings.",
+  "propose_guide_i18n": {
+    "en": "Use when NL asks for SEO performance or top queries. Prefer site_url from Vault. Follow with summarize or performance-review.",
+    "zh_CN": "用户问 SEO 表现或热门查询时使用。优先 Vault 的 site_url。后续可摘要或做表现复盘。",
+    "zh_HK": "用戶問 SEO 表現或熱門查詢時使用。優先 Vault 的 site_url。後續可摘要或做表現複盤。"
+  },
   "input_schema": {
     "type": "object",
     "properties": {

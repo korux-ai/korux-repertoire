@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "kind": "connector",
   "label": "Google Ads mutate",
+  "label_i18n": {
+    "en": "Google Ads mutate",
+    "zh_CN": "Google 广告变更",
+    "zh_HK": "Google 廣告變更"
+  },
   "description": "Pause/enable a Google Ads campaign; optional campaign budget amount_micros with Owner cap — no removals, after Vault binding and Governor gate",
+  "description_i18n": {
+    "en": "Pause/enable a Google Ads campaign; optional budget with Owner cap — no removals, after Vault binding and Governor gate",
+    "zh_CN": "暂停/启用 Google Ads 广告系列；可选预算（Owner 上限）——不可删除（需 Vault 与 Governor）",
+    "zh_HK": "暫停/啟用 Google Ads 廣告系列；可選預算（Owner 上限）——不可刪除（需 Vault 與 Governor）"
+  },
   "category": "ads",
   "reads_external": false,
   "writes_external": true,
@@ -13,6 +23,11 @@
   "risk": "high",
   "produces_content": false,
   "propose_guide": "Spend-affecting write via Google Ads API REST. Prefer action=set_status with status=PAUSED. status=ENABLED and set_budget only when NL explicitly asks and Owner caps allow. Never REMOVED. Always require_human. Needs developer_token + OAuth + customer_id.",
+  "propose_guide_i18n": {
+    "en": "Spend-affecting write. Prefer set_status=PAUSED. ENABLED/set_budget only when NL asks and Owner caps allow. Never REMOVED. Always require_human.",
+    "zh_CN": "影响花费的写入。优先暂停。启用/改预算仅当用户明确要求且未超 Owner 上限。禁止删除。必须人工确认。",
+    "zh_HK": "影響花費的寫入。優先暫停。啟用/改預算僅當用戶明確要求且未超 Owner 上限。禁止刪除。必須人工確認。"
+  },
   "input_schema": {
     "type": "object",
     "required": [

@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "kind": "connector",
   "label": "Meta Ads mutate",
+  "label_i18n": {
+    "en": "Meta Ads mutate",
+    "zh_CN": "Meta 广告变更",
+    "zh_HK": "Meta 廣告變更"
+  },
   "description": "Pause/activate Meta campaign, ad set, or ad; optional daily_budget change with Owner cap — no deletes, after Vault binding and Governor gate",
+  "description_i18n": {
+    "en": "Pause/activate Meta campaign, ad set, or ad; optional daily_budget with Owner cap — no deletes",
+    "zh_CN": "暂停/启用 Meta 广告系列/组/广告；可选日预算（Owner 上限）——不可删除",
+    "zh_HK": "暫停/啟用 Meta 廣告系列/組/廣告；可選日預算（Owner 上限）——不可刪除"
+  },
   "category": "ads",
   "reads_external": false,
   "writes_external": true,
@@ -13,6 +23,11 @@
   "risk": "high",
   "produces_content": false,
   "propose_guide": "Spend-affecting write. Prefer action=set_status with status=PAUSED for incident response. status=ACTIVE and set_budget only when NL explicitly asks and Owner caps allow. Never DELETE/ARCHIVED. Confirm object_id from meta/ads-insights first. Always require_human.",
+  "propose_guide_i18n": {
+    "en": "Spend-affecting write. Prefer PAUSED. ACTIVE/set_budget only when NL asks and caps allow. Never DELETE. require_human.",
+    "zh_CN": "影响花费的写入。优先暂停。启用/改预算仅当用户明确要求且未超上限。禁止删除。须人工确认。",
+    "zh_HK": "影響花費的寫入。優先暫停。啟用/改預算僅當用戶明確要求且未超上限。禁止刪除。須人工確認。"
+  },
   "input_schema": {
     "type": "object",
     "required": [

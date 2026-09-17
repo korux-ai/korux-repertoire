@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "kind": "connector",
   "label": "HubSpot CRM note",
+  "label_i18n": {
+    "en": "HubSpot CRM note",
+    "zh_CN": "HubSpot CRM 备注",
+    "zh_HK": "HubSpot CRM 備註"
+  },
   "description": "Create a HubSpot CRM note on a contact (by contact_id or email upsert) after Vault binding and Governor gate",
+  "description_i18n": {
+    "en": "Create a HubSpot CRM note on a contact (by contact_id or email upsert) after Vault binding and Governor gate",
+    "zh_CN": "在联系人上创建 HubSpot CRM 备注（按 contact_id 或邮箱；需 Vault 与 Governor）",
+    "zh_HK": "在聯絡人上建立 HubSpot CRM 備註（按 contact_id 或電郵；需 Vault 與 Governor）"
+  },
   "category": "crm",
   "reads_external": true,
   "writes_external": true,
@@ -13,6 +23,11 @@
   "risk": "medium",
   "produces_content": false,
   "propose_guide": "Log marketing/sales handoff notes after research or meetings. Prefer contact_id when known; otherwise email creates/finds the contact then attaches the note.",
+  "propose_guide_i18n": {
+    "en": "Log marketing/sales handoff notes after research or meetings. Prefer contact_id when known.",
+    "zh_CN": "调研或会议后记录营销/销售交接备注。已知 contact_id 时优先使用。",
+    "zh_HK": "調研或會議後記錄營銷/銷售交接備註。已知 contact_id 時優先使用。"
+  },
   "input_schema": {
     "type": "object",
     "required": [

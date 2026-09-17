@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "kind": "connector",
   "label": "Klaviyo campaign",
+  "label_i18n": {
+    "en": "Klaviyo campaign",
+    "zh_CN": "Klaviyo 邮件活动",
+    "zh_HK": "Klaviyo 郵件活動"
+  },
   "description": "Create a Klaviyo email campaign with HTML template (optional send) after Vault binding and Governor gate",
+  "description_i18n": {
+    "en": "Create a Klaviyo email campaign with HTML template (optional send) after Vault binding and Governor gate",
+    "zh_CN": "创建带 HTML 模板的 Klaviyo 邮件活动（可选发送；需 Vault 与 Governor）",
+    "zh_HK": "建立帶 HTML 模板的 Klaviyo 郵件活動（可選發送；需 Vault 與 Governor）"
+  },
   "category": "email",
   "reads_external": false,
   "writes_external": true,
@@ -13,6 +23,11 @@
   "risk": "high",
   "produces_content": false,
   "propose_guide": "Use for ecommerce/lifecycle email after compose. Default action creates campaign + template assignment without sending. Use action=send or create_and_send only when NL explicitly asks to send.",
+  "propose_guide_i18n": {
+    "en": "Ecommerce/lifecycle email after compose. Default creates without sending. send/create_and_send only when NL explicitly asks.",
+    "zh_CN": "成文后做电商/生命周期邮件。默认只创建不发送。仅当用户明确要求发送时才 send。",
+    "zh_HK": "成文後做電商/生命周期郵件。預設只建立不發送。僅當用戶明確要求發送時才 send。"
+  },
   "input_schema": {
     "type": "object",
     "properties": {

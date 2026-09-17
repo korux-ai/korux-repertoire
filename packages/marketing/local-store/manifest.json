@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "kind": "skill",
   "label": "Local store campaign",
+  "label_i18n": {
+    "en": "Local store campaign",
+    "zh_CN": "本地门店营销计划",
+    "zh_HK": "本地門店營銷計劃"
+  },
   "description": "Propose a local / multi-location retail or hospitality marketing plan (geo, offers, channels, compliance)",
+  "description_i18n": {
+    "en": "Propose a local / multi-location retail or hospitality marketing plan (geo, offers, channels, compliance)",
+    "zh_CN": "提出本地/多门店零售或餐饮酒店营销计划（地理、优惠、渠道、合规）",
+    "zh_HK": "提出本地/多門店零售或餐飲酒店營銷計劃（地理、優惠、渠道、合規）"
+  },
   "category": "marketing",
   "reads_external": false,
   "writes_external": false,
@@ -13,6 +23,11 @@
   "risk": "low",
   "produces_content": true,
   "propose_guide": "Use when NL asks for a local store, restaurant, clinic, salon, franchise, or geo-targeted promo plan. Emit Internal structure: location(s), offer, radius/audience, channel mix (Maps/GBP hints, Instagram Feed, Facebook Page, SMS/email if owned, CMS landing), week cadence, KPIs (foot traffic, bookings, coupon redemptions), and legal constraints (hours, alcohol, health claims). Prefer marketing/campaign-brief first when the goal is vague. Downstream: marketing/channel-mix → content-calendar / ab-copy → connectors (instagram/publish, facebook/publish, wordpress/post or webflow/cms-publish, mailchimp/campaign) under human gates. Do not invent store addresses or claim Google Business Profile write access unless a connector exists.",
+  "propose_guide_i18n": {
+    "en": "When NL asks for local store/restaurant/clinic/geo promo plan. Emit Internal structure — do not publish here.",
+    "zh_CN": "用户要本地门店/餐饮/诊所/地理促销计划时使用。产出内部结构——此处不外发。",
+    "zh_HK": "用戶要本地門店/餐飲/診所/地理促銷計劃時使用。產出內部結構——此處不外發。"
+  },
   "input_schema": {
     "type": "object",
     "properties": {

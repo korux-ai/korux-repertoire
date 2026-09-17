@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "kind": "connector",
   "label": "Google Meet",
+  "label_i18n": {
+    "en": "Google Meet",
+    "zh_CN": "Google Meet",
+    "zh_HK": "Google Meet"
+  },
   "description": "Verify Google identity for Meet workflows via OAuth userinfo (or refresh token) after Vault binding",
+  "description_i18n": {
+    "en": "Verify Google identity for Meet workflows via OAuth userinfo after Vault binding",
+    "zh_CN": "通过 OAuth userinfo 校验 Google 身份，供 Meet 相关工作流（需 Vault）",
+    "zh_HK": "透過 OAuth userinfo 校驗 Google 身分，供 Meet 相關工作流（需 Vault）"
+  },
   "category": "meeting",
   "reads_external": true,
   "writes_external": false,
@@ -13,6 +23,11 @@
   "risk": "low",
   "produces_content": false,
   "propose_guide": "Use when a workflow needs Google Meet identity binding. Pass optional meeting_id from monitor/trigger context. Does not create Meet conferences.",
+  "propose_guide_i18n": {
+    "en": "Use when a workflow needs Google Meet identity binding. Does not create Meet conferences.",
+    "zh_CN": "工作流需要绑定 Google Meet 身份时使用。不创建会议。",
+    "zh_HK": "工作流需要綁定 Google Meet 身分時使用。不建立會議。"
+  },
   "input_schema": {
     "type": "object",
     "properties": {

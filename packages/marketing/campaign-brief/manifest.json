@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "kind": "skill",
   "label": "Marketing campaign brief",
+  "label_i18n": {
+    "en": "Marketing campaign brief",
+    "zh_CN": "营销活动简报",
+    "zh_HK": "營銷活動簡報"
+  },
   "description": "Propose a structured marketing campaign brief (goal, audience, offer, channels, KPIs, timeline) for downstream compose and connector steps",
+  "description_i18n": {
+    "en": "Propose a structured marketing campaign brief (goal, audience, offer, channels, KPIs, timeline)",
+    "zh_CN": "提出结构化营销活动简报（目标、受众、卖点、渠道、KPI、时间线）",
+    "zh_HK": "提出結構化營銷活動簡報（目標、受眾、賣點、渠道、KPI、時間線）"
+  },
   "category": "marketing",
   "reads_external": false,
   "writes_external": false,
@@ -13,6 +23,11 @@
   "risk": "low",
   "produces_content": true,
   "propose_guide": "Use early when NL asks to plan a campaign, launch, promo, or go-to-market brief. Emit structured fields (goal, audience, offer, primary_channels, kpis, timeline, constraints) as Internal content — do not post or email yet. Follow with marketing/channel-mix if channels are unclear, then compose/ab copy, then external connectors (linkedin/publish, mailchimp/campaign, wordpress/post, etc.) under human gates. Never invent Vault credentials or skip approval on write-external steps.",
+  "propose_guide_i18n": {
+    "en": "Early when NL asks to plan a campaign/launch/promo. Emit Internal structured fields — do not publish.",
+    "zh_CN": "用户要策划活动/上线/促销时尽早使用。产出内部结构字段——不外发。",
+    "zh_HK": "用戶要策劃活動/上線/促銷時儘早使用。產出內部結構欄位——不外發。"
+  },
   "input_schema": {
     "type": "object",
     "properties": {

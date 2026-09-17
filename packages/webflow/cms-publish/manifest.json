@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "kind": "connector",
   "label": "Webflow CMS item",
+  "label_i18n": {
+    "en": "Webflow CMS item",
+    "zh_CN": "Webflow CMS 条目",
+    "zh_HK": "Webflow CMS 條目"
+  },
   "description": "Create a Webflow CMS collection item (staged draft by default, optional live publish) after Vault binding and Governor gate",
+  "description_i18n": {
+    "en": "Create a Webflow CMS collection item (staged draft by default, optional live publish)",
+    "zh_CN": "创建 Webflow CMS 集合条目（默认暂存草稿，可选上线）",
+    "zh_HK": "建立 Webflow CMS 集合條目（預設暫存草稿，可選上線）"
+  },
   "category": "cms",
   "reads_external": false,
   "writes_external": true,
@@ -13,6 +23,11 @@
   "risk": "medium",
   "produces_content": false,
   "propose_guide": "Publish blog/landing CMS copy after compose when the site is on Webflow. Default is staged (not live). Set publish=true only when NL explicitly asks to go live. Field keys in field_data must match the collection schema (slug always required with name).",
+  "propose_guide_i18n": {
+    "en": "CMS copy after compose on Webflow sites. Default staged. publish=true only when NL asks to go live.",
+    "zh_CN": "Webflow 站点成文后写 CMS。默认暂存。仅当用户明确要求上线时 publish=true。",
+    "zh_HK": "Webflow 站點成文後寫 CMS。預設暫存。僅當用戶明確要求上線時 publish=true。"
+  },
   "input_schema": {
     "type": "object",
     "required": [

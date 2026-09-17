@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "kind": "connector",
   "label": "YouTube video upload",
+  "label_i18n": {
+    "en": "YouTube video upload",
+    "zh_CN": "YouTube 视频上传",
+    "zh_HK": "YouTube 影片上傳"
+  },
   "description": "Upload a video to YouTube via Data API v3 resumable upload after Vault binding and Governor gate (default privacy=unlisted)",
+  "description_i18n": {
+    "en": "Upload a video to YouTube via Data API v3 resumable upload (default privacy=unlisted)",
+    "zh_CN": "通过 Data API v3 可续传上传 YouTube 视频（默认隐私=不公开列出）",
+    "zh_HK": "透過 Data API v3 可續傳上傳 YouTube 影片（預設私隱=不公開列出）"
+  },
   "category": "social",
   "reads_external": false,
   "writes_external": true,
@@ -13,6 +23,11 @@
   "risk": "high",
   "produces_content": false,
   "propose_guide": "Upload composed video assets to a channel. Requires video_file_id with Korux-injected context.video.bytes. Default privacy_status=unlisted — set public only when NL explicitly asks. Unverified Google Cloud projects may force private. Out of scope: live streams, playlists, Shorts-only heuristics, comments.",
+  "propose_guide_i18n": {
+    "en": "Upload composed video. Requires video_file_id. Default unlisted — public only when NL asks.",
+    "zh_CN": "上传成片。需要 video_file_id。默认不公开列出——仅当用户明确要求时公开。",
+    "zh_HK": "上傳成片。需要 video_file_id。預設不公開列出——僅當用戶明確要求時公開。"
+  },
   "input_schema": {
     "type": "object",
     "required": [

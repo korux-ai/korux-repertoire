@@ -76,7 +76,8 @@ Owner config is stored on the **agent tool binding** and edited in Governance UI
 5. **Skill (optional runtime):** omit `runtime/` if the platform handles the step via kernel / Propose (`propose_guide` required). Example: `marketing/campaign-brief`.
 6. Write `governor.json` (required when `writes_external=true`; skills may ship an empty `rules: []` pack). Optionally add Track B `runtime/governor.py`.
 7. Write `docs/credential.md` when `auth.required=true`.
-8. After local validation, open a PR with an invoke example (connectors) or propose example (skills) and CHANGELOG.
+8. **UI locale (Should):** add `label_i18n`, `description_i18n`, and preferably `propose_guide_i18n` with `en` / `zh_CN` / `zh_HK`. English `label` / `description` remain required for the public catalog. Korux capability UI **must** resolve `*_i18n[staff_locale]` when present; otherwise Staff see English even when the app language is Chinese.
+9. After local validation, open a PR with an invoke example (connectors) or propose example (skills) and CHANGELOG.
 
 Full flow: [adding a capability](https://github.com/korux-ai/korux/blob/main/docs/spec/capability-package/contributor-guide.md#2-新增能力流程).
 
