@@ -2,12 +2,16 @@
 
 from __future__ import annotations
 
+import asyncio
 import smtplib
 import ssl
 from email.message import EmailMessage
 from typing import Any
 
 _TEST_SENT: list[dict[str, Any]] = []
+
+# Keep SMTP wall-clock bound so approve/resume cannot hang the API for minutes.
+_SMTP_TIMEOUT_SEC = 15
 
 
 def clear_test_sent() -> None:
@@ -111,13 +115,15 @@ def _send_smtp(
 
     if use_ssl:
         context = ssl.create_default_context()
-        with smtplib.SMTP_SSL(host, port, timeout=30, context=context) as smtp:
+        with smtplib.SMTP_SSL(
+            host, port, timeout=_SMTP_TIMEOUT_SEC, context=context
+        ) as smtp:
             if username:
                 smtp.login(username, password)
             smtp.send_message(msg)
         return
 
-    with smtplib.SMTP(host, port, timeout=30) as smtp:
+    with smtplib.SMTP(host, port, timeout=_SMTP_TIMEOUT_SEC) as smtp:
         if use_tls:
             smtp.ehlo()
             smtp.starttls(context=ssl.create_default_context())
@@ -140,7 +146,10 @@ async def invoke(args: dict, secret: dict, context: dict) -> dict:
         return cfg
 
     try:
-        _send_smtp(
+        # Stdlib SMTP is blocking; run off the event loop so approve/resume
+        # and other API requests stay responsive while mail is in flight.
+        await asyncio.to_thread(
+            _send_smtp,
             to_email=to,
             subject=subject,
             body=body,
