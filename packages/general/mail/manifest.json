@@ -1,7 +1,7 @@
 {
   "spec_version": "korux_capability_v1",
   "id": "general/mail",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "kind": "connector",
   "label": "Send email",
   "label_i18n": {
@@ -168,11 +168,50 @@
       },
       {
         "name": "use_tls",
-        "label": "Use TLS",
+        "label": "Use STARTTLS (port 587)",
         "type": "checkbox",
-        "default_value": "true"
+        "default_value": "true",
+        "required": false
+      },
+      {
+        "name": "use_ssl",
+        "label": "Use SSL (implicit TLS, port 465)",
+        "type": "checkbox",
+        "default_value": "false",
+        "required": false
       }
-    ]
+    ],
+    "sub_presets": [
+      {
+        "id": "gmail",
+        "label": "Gmail",
+        "defaults": {
+          "host": "smtp.gmail.com",
+          "port": "587",
+          "use_tls": "true",
+          "use_ssl": "false"
+        },
+        "note": "Password must be an app password."
+      },
+      {
+        "id": "163",
+        "label": "163",
+        "defaults": {
+          "host": "smtp.163.com",
+          "port": "465",
+          "use_tls": "false",
+          "use_ssl": "true"
+        },
+        "note": "Password must be an authorization code; prefer 465 + SSL."
+      },
+      {
+        "id": "custom",
+        "label": "Custom",
+        "defaults": {},
+        "note": "Fill host / port yourself; 465 → Use SSL, 587 → Use STARTTLS."
+      }
+    ],
+    "example_json": "{\"host\":\"smtp.gmail.com\",\"port\":587,\"username\":\"you@gmail.com\",\"password\":\"xxxx xxxx xxxx xxxx\",\"from\":\"you@gmail.com\",\"use_tls\":true,\"use_ssl\":false}"
   },
   "runtime": {
     "kind": "package",
