@@ -1,4 +1,4 @@
-"""IMAP poll / mark-seen — stdlib only; no Korux imports."""
+"""IMAP poll / read / mark-seen — stdlib only; no Korux imports."""
 
 from __future__ import annotations
 
@@ -380,6 +380,14 @@ async def invoke(args: dict, secret: dict, context: dict) -> dict:
             return _fail("PROVIDER", f"IMAP mark seen failed: {exc}")
         return {"ok": True, "marked": marked}
 
+    # poll = detect UNSEEN (monitor / trigger); never consumes.
+    # read = workflow mid-flow consume; applies mark_read_on_process.
+    if action not in {"poll", "read"}:
+        return _fail(
+            "VALIDATION",
+            f"Unsupported action {action!r}; use poll, read, or mark_seen",
+        )
+
     from_filter = str((args or {}).get("from_filter") or "").strip() or None
     seen_raw = (args or {}).get("seen_ids") or []
     seen: set[str] = set()
@@ -389,7 +397,7 @@ async def invoke(args: dict, secret: dict, context: dict) -> dict:
     try:
         messages = fetch_unseen_messages(cfg, seen_ids=seen, from_filter=from_filter)
     except Exception as exc:
-        return _fail("PROVIDER", f"IMAP poll failed: {exc}")
+        return _fail("PROVIDER", f"IMAP {action} failed: {exc}")
 
     subject_contains = str((args or {}).get("subject_contains") or "").strip().lower()
     if subject_contains:
@@ -400,10 +408,27 @@ async def invoke(args: dict, secret: dict, context: dict) -> dict:
             or subject_contains in str(m.get("body") or "").lower()
         ]
 
-    return {
+    marked = 0
+    if action == "read" and messages:
+        uids = [
+            str(m.get("imap_uid") or "").strip()
+            for m in messages
+            if str(m.get("imap_uid") or "").strip()
+        ]
+        if uids:
+            try:
+                marked = mark_messages_seen(cfg, uids)
+            except Exception as exc:
+                return _fail("PROVIDER", f"IMAP mark seen after read failed: {exc}")
+
+    out: dict[str, Any] = {
         "ok": True,
+        "action": action,
         "messages": messages,
         "count": len(messages),
         "content": messages[0].get("body") if messages else "",
         "summary": messages[0].get("body") if messages else "",
     }
+    if action == "read":
+        out["marked"] = marked
+    return out

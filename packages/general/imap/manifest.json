@@ -1,7 +1,7 @@
 {
   "spec_version": "korux_capability_v1",
   "id": "general/imap",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "kind": "connector",
   "label": "IMAP inbox",
   "label_i18n": {
@@ -9,11 +9,11 @@
     "zh_CN": "IMAP 收件箱",
     "zh_HK": "IMAP 收件箱"
   },
-  "description": "Poll an IMAP inbox for UNSEEN mail — as a monitor trigger or as a Spec mid-flow step; requires Vault imap Config",
+  "description": "IMAP UNSEEN: poll for monitor triggers, or read (consume) as a Spec mid-flow step; requires Vault imap Config",
   "description_i18n": {
-    "en": "Poll an IMAP inbox for UNSEEN mail — as a monitor trigger or as a Spec mid-flow step; requires Vault imap Config",
-    "zh_CN": "轮询 IMAP 未读邮件：可用作监控触发，或用作 Spec 中间步；需 Vault imap Config",
-    "zh_HK": "輪詢 IMAP 未讀郵件：可用作監控觸發，或用作 Spec 中間步；需 Vault imap Config"
+    "en": "IMAP UNSEEN: poll for monitor triggers, or read (consume) as a Spec mid-flow step; requires Vault imap Config",
+    "zh_CN": "IMAP 未读：poll 用于监控触发，read 用于 Spec 中间步读入（可按 Config 标已读）；需 Vault imap Config",
+    "zh_HK": "IMAP 未讀：poll 用於監控觸發，read 用於 Spec 中間步讀入（可按 Config 標已讀）；需 Vault imap Config"
   },
   "category": "email",
   "reads_external": true,
@@ -28,11 +28,11 @@
     "inbound"
   ],
   "produces_content": true,
-  "propose_guide": "Two usages, same poll=UNSEEN only. (A) Monitor trigger: kind=monitor when NL is watch/inbox arrives. (B) Spec step after manual/other trigger when NL says read latest unread email mid-flow — then korux/llm-summarize. Do not invent already-seen mail. See docs/USAGE.md.",
+  "propose_guide": "Two actions on UNSEEN only. (A) Monitor trigger → action=poll (detect; do not mark). (B) Spec mid-flow → action=read (ingest; mark_read_on_process applies), then summarize/decide. Do not combine A+B for the same signal. See docs/USAGE.md.",
   "propose_guide_i18n": {
-    "en": "Two usages, same UNSEEN poll: (A) monitor trigger for inbox-arrives; (B) Spec mid-flow step after manual start to read unread mail, then summarize. Never read already-seen as 'latest'.",
-    "zh_CN": "同一 UNSEEN poll、两种用法：(A) 监控触发（来信起跑）；(B) 非 monitor 触发后的 Spec 中间步读未读邮件，再接摘要。不要把已读当「最新」。",
-    "zh_HK": "同一 UNSEEN poll、兩種用法：(A) 監控觸發（來信起跑）；(B) 非 monitor 觸發後的 Spec 中間步讀未讀郵件，再接摘要。不要把已讀當「最新」。"
+    "en": "UNSEEN only: (A) monitor → poll (detect, no mark); (B) Spec mid-flow → read (consume; mark_read_on_process). Prefer not combining A+B for the same mail.",
+    "zh_CN": "仅 UNSEEN：(A) 监控 → poll（探测、不标已读）；(B) Spec 中间步 → read（读入；套用 mark_read_on_process）。同一信号尽量不要 A+B 并用。",
+    "zh_HK": "僅 UNSEEN：(A) 監控 → poll（探測、不標已讀）；(B) Spec 中間步 → read（讀入；套用 mark_read_on_process）。同一信號盡量不要 A+B 並用。"
   },
   "input_prepare_default": {
     "mode": "static"
@@ -42,7 +42,7 @@
     "properties": {
       "action": {
         "type": "string",
-        "description": "poll (default, UNSEEN) or mark_seen"
+        "description": "poll (detect UNSEEN, default) | read (consume UNSEEN; mark_read_on_process) | mark_seen"
       },
       "from_filter": {
         "type": "string",
@@ -137,7 +137,7 @@
       },
       {
         "name": "mark_read_on_process",
-        "label": "Mark read after processing",
+        "label": "Mark read after Spec read",
         "type": "checkbox",
         "default_value": "true"
       }
