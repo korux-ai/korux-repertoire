@@ -1,7 +1,7 @@
 {
   "spec_version": "korux_capability_v1",
   "id": "general/imap",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "kind": "connector",
   "label": "IMAP inbox",
   "label_i18n": {
@@ -9,11 +9,11 @@
     "zh_CN": "IMAP 收件箱",
     "zh_HK": "IMAP 收件箱"
   },
-  "description": "Poll an IMAP inbox (e.g. Gmail) for monitor triggers; requires Vault imap binding",
+  "description": "Poll an IMAP inbox for UNSEEN mail — as a monitor trigger or as a Spec mid-flow step; requires Vault imap Config",
   "description_i18n": {
-    "en": "Poll an IMAP inbox (e.g. Gmail) for monitor triggers; requires Vault imap binding",
-    "zh_CN": "轮询 IMAP 收件箱（如 Gmail）作为监控触发；需 Vault imap 绑定",
-    "zh_HK": "輪詢 IMAP 收件箱（如 Gmail）作為監控觸發；需 Vault imap 綁定"
+    "en": "Poll an IMAP inbox for UNSEEN mail — as a monitor trigger or as a Spec mid-flow step; requires Vault imap Config",
+    "zh_CN": "轮询 IMAP 未读邮件：可用作监控触发，或用作 Spec 中间步；需 Vault imap Config",
+    "zh_HK": "輪詢 IMAP 未讀郵件：可用作監控觸發，或用作 Spec 中間步；需 Vault imap Config"
   },
   "category": "email",
   "reads_external": true,
@@ -28,18 +28,21 @@
     "inbound"
   ],
   "produces_content": true,
-  "propose_guide": "Use as monitor trigger connector for inbox polling. Pair with korux/llm-summarize / general/mail for triage flows.",
+  "propose_guide": "Two usages, same poll=UNSEEN only. (A) Monitor trigger: kind=monitor when NL is watch/inbox arrives. (B) Spec step after manual/other trigger when NL says read latest unread email mid-flow — then korux/llm-summarize. Do not invent already-seen mail. See docs/USAGE.md.",
   "propose_guide_i18n": {
-    "en": "Use as monitor trigger for inbox polling. Pair with summarize / general/mail for triage.",
-    "zh_CN": "用作收件箱轮询的监控触发。可搭配摘要与 general/mail 做分拣。",
-    "zh_HK": "用作收件箱輪詢的監控觸發。可搭配摘要與 general/mail 做分揀。"
+    "en": "Two usages, same UNSEEN poll: (A) monitor trigger for inbox-arrives; (B) Spec mid-flow step after manual start to read unread mail, then summarize. Never read already-seen as 'latest'.",
+    "zh_CN": "同一 UNSEEN poll、两种用法：(A) 监控触发（来信起跑）；(B) 非 monitor 触发后的 Spec 中间步读未读邮件，再接摘要。不要把已读当「最新」。",
+    "zh_HK": "同一 UNSEEN poll、兩種用法：(A) 監控觸發（來信起跑）；(B) 非 monitor 觸發後的 Spec 中間步讀未讀郵件，再接摘要。不要把已讀當「最新」。"
+  },
+  "input_prepare_default": {
+    "mode": "static"
   },
   "input_schema": {
     "type": "object",
     "properties": {
       "action": {
         "type": "string",
-        "description": "poll (default) or mark_seen"
+        "description": "poll (default, UNSEEN) or mark_seen"
       },
       "from_filter": {
         "type": "string",
@@ -52,13 +55,15 @@
         "type": "array",
         "items": {
           "type": "string"
-        }
+        },
+        "description": "Message-ids already processed (dedupe); not a content harvest field"
       },
       "uids": {
         "type": "array",
         "items": {
           "type": "string"
-        }
+        },
+        "description": "IMAP UIDs for mark_seen only"
       }
     }
   },
@@ -180,7 +185,7 @@
   },
   "invoke_tool": "inbound-email-monitor",
   "binding_tool": "inbound-email-monitor",
-  "step_kind": "monitor",
+  "step_kind": "connector",
   "status": "stable",
   "trust": "first-party",
   "editable_governor_config": {}
